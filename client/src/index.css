@@ -1,13 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+   margin: 0;
+   font-family: 'Inter', sans-serif;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   position: relative;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+}
+
+:root {
+   --dark-bg-slate-cl: #222531;
+   --dark-home-body-cl: #1e2122;
+   --dark-home-cl: #141516;
+   --model-bg-cl: #16191b;
+   --dark-blue-cl: #181a1f;
+   --smooth-gray-cl: #7b7f84;
+   --smooth-gray-sl-cl: #323237;
+   --smooth-lg-sl-cl: #1f2025;
+   --smooth-gray-md-cl: #28292b;
+   --main-cl: #fff;
+   --dark-cl: rgb(22, 21, 21);
+   --light-yellow-cl: #ff9422;
+   --light-green-cl: #3ac116;
+   --smooth-bn-cl: #5b1dd0;
+   --smooth-dark-gray-cl: #1a1d27;
+   --over-lay-cl: #0000005a;
+   --primary-color: #397df6;
+   --error: #be1111;
+   --dark-body-cl: #1a1c1f;
+   --gray: #e1e1e1;
+   --light-gray-cl: rgb(57, 56, 56);
+   --yellow-cl: #fbbc05;
+   --dark-red-cl: #ff5252;
+   --side-bar-cl: #1a1d27;
+   --sm-border-cl: #2e313a;
+   --dark-bl-cl: #1b1d29;
+   --smooth-gray-lg-cl: #e4e9eb;
+}
+
+.error_cl {
+   color: var(--error);
 }

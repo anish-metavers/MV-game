@@ -17,7 +17,6 @@ app.use(
       origin: '*',
    })
 );
-app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -30,10 +29,7 @@ app.use(
       },
    })
 );
-app.use(express.static(path.join(__dirname, 'bs_upload')));
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(path.resolve(__dirname), 'build')));
-app.use(express.static(path.join(__dirname, 'views')));
 
 app.use(function (req, res, next) {
    res.setHeader('Access-Control-Allow-Origin', '*');
@@ -53,6 +49,10 @@ if (process.env.NODE_ENV == 'production') {
       res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
    });
 }
+
+const adminRoute = require('./routes/adminRoute');
+
+app.use('/admin', adminRoute);
 
 // for build file
 app.get('*', (req, res) => {
