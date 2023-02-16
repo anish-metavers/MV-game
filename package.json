@@ -1,0 +1,19 @@
+{
+   "name": "mv-games-dashboard",
+   "version": "1.0.0",
+   "description": "",
+   "main": "index.js",
+   "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "server": "npm run dev --prefix server",
+      "client": "npm start --prefix client",
+      "server-dep": "npm install --prefix server",
+      "client-dep": "npm install --prefix client",
+      "client-build": "npm run build --prefix client",
+      "client-dep-uninstall": "npm uninstall --prefix client",
+      "server-dep-uninstall": "npm uninstall --prefix server"
+   },
+   "keywords": [],
+   "author": "",
+   "license": "ISC"
+}
