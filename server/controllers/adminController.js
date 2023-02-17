@@ -123,9 +123,75 @@ const deleteUserSingleRole = catchAsync(async function (req, res, next) {
    }
 });
 
+const getSingleUserRole = catchAsync(async function (req, res, next) {
+   const { roleId } = req.query;
+
+   if (!roleId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'user role id is required!',
+      });
+   }
+
+   const findSingleRole = await roleModel.findOne({ _id: roleId });
+
+   if (findSingleRole) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         role: findSingleRole,
+      });
+   }
+
+   return res.status(httpStatusCodes.NOT_FOUND).json({
+      success: false,
+      error: true,
+      message: 'single role is not found',
+   });
+});
+
+const updateSingleRole = catchAsync(async function (req, res, next) {
+   const { roleId, roleName, description } = req.body;
+
+   if (!roleId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'user role id is required!',
+      });
+   }
+
+   const findUserRoleAndUpdate = await roleModel.updateOne(
+      { _id: roleId },
+      {
+         $set: {
+            roleName,
+            description,
+         },
+      }
+   );
+
+   if (!!findUserRoleAndUpdate?.modifiedCount) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         message: 'user role is updated',
+      });
+   } else {
+      return res.status(httpStatusCodes.OK).json({
+         error: false,
+         success: false,
+         message: 'No filed changes.',
+      });
+   }
+});
+
 module.exports = {
    insertGamesCurrency,
    insertNewUsersRole,
    getAllUserRoles,
    deleteUserSingleRole,
+   getSingleUserRole,
+   updateSingleRole,
 };

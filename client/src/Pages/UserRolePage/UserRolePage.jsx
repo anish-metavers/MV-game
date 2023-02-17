@@ -28,7 +28,6 @@ function UserRolePage() {
    const [isAdmin] = useAdmin(cookie);
    const navigation = useNavigate();
    const dispatch = useDispatch();
-   const params = useParams();
 
    const { roles, getRolesLoading, getRolesError } = useSelector(
       (state) => state.admin

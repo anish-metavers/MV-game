@@ -77,3 +77,9 @@ code {
 .jodit-status-bar {
    display: none !important;
 }
+
+@media (max-width: 900px) {
+   .form_container {
+      max-width: 100%;
+   }
+}

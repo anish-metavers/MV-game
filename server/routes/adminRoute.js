@@ -13,6 +13,11 @@ router.get(
    varifyJwtToken,
    adminControllers.getAllUserRoles
 );
+router.get(
+   '/get-single-user-role',
+   varifyJwtToken,
+   adminControllers.getSingleUserRole
+);
 
 // API => POST
 router.post(
@@ -26,6 +31,14 @@ router.post(
    userRoleValidator,
    varifyJwtToken,
    adminControllers.insertNewUsersRole
+);
+
+// API => PATCH
+router.patch(
+   '/update-single-role',
+   userRoleValidator,
+   varifyJwtToken,
+   adminControllers.updateSingleRole
 );
 
 // API => DELETE

@@ -3,6 +3,8 @@ import {
    getAllUserRoles,
    deleteUserRole,
    createUserRole,
+   getSingleUserRole,
+   updateSingleRole,
 } from './adminActions';
 
 const INITAL_STATE = {
@@ -15,11 +17,23 @@ const INITAL_STATE = {
    newRoleInsertLoading: false,
    newRoleInsertError: null,
    newRoleInsertInvalidErrors: null,
+   singleRole: null,
+   singleRoleLoading: false,
+   singleRoleError: null,
+   updateSingleRoleInfo: null,
+   updateSinglRoleLoading: false,
+   updateSingleRoleError: null,
 };
 
 const adminSlice = createSlice({
    name: 'admin',
    initialState: INITAL_STATE,
+   reducers: {
+      removeSingleRoleInfo: (state) => {
+         state.updateSingleRoleInfo = null;
+         state.singleRole = null;
+      },
+   },
    extraReducers: (bulder) => {
       bulder
          .addCase(getAllUserRoles.pending, (state) => {
@@ -80,7 +94,43 @@ const adminSlice = createSlice({
                state.newRoleInsertInvalidErrors = null;
             }
          });
+
+      bulder
+         .addCase(getSingleUserRole.pending, (state) => {
+            state.singleRole = null;
+            state.singleRoleLoading = true;
+            state.singleRoleError = null;
+         })
+         .addCase(getSingleUserRole.rejected, (state, action) => {
+            state.singleRole = null;
+            state.singleRoleLoading = false;
+            state.singleRoleError = action.error.message;
+         })
+         .addCase(getSingleUserRole.fulfilled, (state, action) => {
+            state.singleRole = action.payload.data;
+            state.singleRoleLoading = false;
+            state.singleRoleError = null;
+         });
+
+      bulder
+         .addCase(updateSingleRole.pending, (state) => {
+            state.updateSingleRoleInfo = null;
+            state.updateSinglRoleLoading = true;
+            state.updateSingleRoleError = null;
+         })
+         .addCase(updateSingleRole.rejected, (state, action) => {
+            state.updateSingleRoleInfo = null;
+            state.updateSinglRoleLoading = false;
+            state.updateSingleRoleError = action.error.message;
+         })
+         .addCase(updateSingleRole.fulfilled, (state, action) => {
+            state.updateSingleRoleInfo = action.payload.data;
+            state.updateSinglRoleLoading = false;
+            state.updateSingleRoleError = null;
+         });
    },
 });
+
+export const { removeSingleRoleInfo } = adminSlice.actions;
 
 export default adminSlice.reducer;

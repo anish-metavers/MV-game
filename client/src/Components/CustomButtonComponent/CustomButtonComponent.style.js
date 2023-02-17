@@ -172,6 +172,10 @@ export const div = styled.div`
    .Publish {
       background-color: var(--primary-color);
       border-radius: 20px;
-      padding: 0.7rem 1.5rem;
+      padding: 0.5rem 2rem;
+
+      img {
+         margin-right: 0.5rem;
+      }
    }
 `;

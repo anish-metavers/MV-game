@@ -10,10 +10,15 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomButtonComponent from '../../Components/CustomButtonComponent/CustomButtonComponent';
 import { useDispatch, useSelector } from 'react-redux';
-import { createUserRole } from '../../App/Features/Admin/adminActions';
+import {
+   createUserRole,
+   getSingleUserRole,
+   updateSingleRole,
+} from '../../App/Features/Admin/adminActions';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router';
+import { removeSingleRoleInfo } from '../../App/Features/Admin/adminSlice';
 
 const Schema = yup.object({
    roleName: yup.string().required('Role name is required'),
@@ -26,6 +31,7 @@ function CreateUserRolePage() {
       register,
       handleSubmit,
       formState: { errors },
+      reset,
    } = useForm({
       resolver: yupResolver(Schema),
    });
@@ -40,12 +46,25 @@ function CreateUserRolePage() {
       newRoleInsertLoading,
       newRoleInsertError,
       newRoleInsertInvalidErrors,
+      singleRole,
+      singleRoleError,
+      updateSingleRoleInfo,
+      updateSinglRoleLoading,
+      updateSingleRoleError,
    } = useSelector((state) => state.admin);
 
    const onSubmit = function (data) {
-      if (isAdmin) {
+      if (isAdmin && !params?.id) {
          dispatch(
             createUserRole({ roleName: data?.roleName, description: content })
+         );
+      } else if (isAdmin && params?.id) {
+         dispatch(
+            updateSingleRole({
+               roleId: params?.id,
+               roleName: data?.roleName,
+               description: content,
+            })
          );
       } else {
          throw new Error('invalid user');
@@ -53,19 +72,36 @@ function CreateUserRolePage() {
    };
 
    useEffect(() => {
-      if (isAdmin) {
+      if (isAdmin && params) {
+         dispatch(getSingleUserRole({ roleId: params?.id }));
       }
    }, [isAdmin]);
+
+   useEffect(() => {
+      if (!!singleRole && singleRole?.success && singleRole?.role) {
+         reset({ roleName: singleRole?.role?.roleName });
+         setContent(singleRole?.role?.description);
+      }
+   }, [singleRole]);
+
+   useEffect(() => {
+      return () => {
+         dispatch(removeSingleRoleInfo());
+         reset();
+      };
+   }, []);
 
    return (
       <styled.div>
          <NavbarComponent />
          <styled.container className="container_div">
-            <PageHeadingComponent pageName={'Create user roles'} />
+            <PageHeadingComponent
+               pageName={params?.id ? 'Edit user role' : 'Create user roles'}
+            />
             <div className="heading_div mt-5 flex items-center justify-between">
                <div>
                   <h1 className="text-xl font-medium text-gray-700">
-                     New Role
+                     {params?.id ? 'Edit role' : 'New Role'}
                   </h1>
                   <p className="mt-3 text-gray-500 mb-4">
                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -106,13 +142,22 @@ function CreateUserRolePage() {
                      />
                   </Box>
                   <CustomButtonComponent
-                     text={'Publish'}
                      type={'submit'}
                      btnCl={'Publish mt-5'}
-                     isLoading={newRoleInsertLoading}
-                  />
+                     isLoading={
+                        params?.id
+                           ? updateSinglRoleLoading
+                           : newRoleInsertLoading
+                     }
+                  >
+                     <img src="/images/done.svg" />
+                     {params?.id ? <p>Update</p> : <p>Publish</p>}
+                  </CustomButtonComponent>
                   {!!newRoleInsertError ? (
                      <p className="text-sm error_cl">{newRoleInsertError}</p>
+                  ) : null}
+                  {!!updateSingleRoleInfo && updateSingleRoleInfo?.success ? (
+                     <p className="mt-4">{updateSingleRoleInfo?.message}</p>
                   ) : null}
                   {!!newRoleInsertInvalidErrors &&
                   newRoleInsertInvalidErrors?.error ? (
@@ -126,6 +171,12 @@ function CreateUserRolePage() {
                      <p className="mt-3 text-green-800">
                         {newRoleInsertInfo?.message}
                      </p>
+                  ) : null}
+                  {!!singleRoleError ? (
+                     <p className="text-sm error_cl">{singleRoleError}</p>
+                  ) : null}
+                  {!!updateSingleRoleError ? (
+                     <p className="text-sm error_cl">{updateSingleRoleError}</p>
                   ) : null}
                </form>
             </div>

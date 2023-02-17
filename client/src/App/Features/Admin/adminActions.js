@@ -56,3 +56,38 @@ export const createUserRole = createAsyncThunk(
       }
    }
 );
+
+export const getSingleUserRole = createAsyncThunk(
+   'admin/getSingleUserRole',
+   async ({ roleId }, { rejectWithValue }) => {
+      try {
+         const singleRoleResponse = await axiosInstance.get(
+            `/admin/get-single-user-role?roleId=${roleId}`
+         );
+         return singleRoleResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const updateSingleRole = createAsyncThunk(
+   'admin/updateSingleRole',
+   async (data, { rejectWithValue }) => {
+      try {
+         const updateRoleRespose = await axiosInstance.patch(
+            '/admin/update-single-role',
+            data
+         );
+         return updateRoleRespose;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
