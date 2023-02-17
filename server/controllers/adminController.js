@@ -42,7 +42,7 @@ const insertGamesCurrency = catchAsync(async function (req, res, next) {
 });
 
 const insertNewUsersRole = catchAsync(async function (req, res, next) {
-   const { roleName } = req.body;
+   const { roleName, description } = req.body;
 
    if (!roleName) {
       return res.status(httpStatusCodes.INVALID_INPUT).json({
@@ -53,7 +53,6 @@ const insertNewUsersRole = catchAsync(async function (req, res, next) {
 
    // check the user role is already exists or not.
    // if not then create new role
-
    const findUserRoleAlreadyExists = await roleModel.findOne({
       roleName,
    });
@@ -68,6 +67,7 @@ const insertNewUsersRole = catchAsync(async function (req, res, next) {
 
    const insertNewRole = await roleModel({
       roleName,
+      description,
    }).save();
 
    if (insertNewRole) {
@@ -75,6 +75,50 @@ const insertNewUsersRole = catchAsync(async function (req, res, next) {
          success: true,
          error: false,
          role: insertNewRole,
+         message: 'user role is created',
+      });
+   }
+});
+
+const getAllUserRoles = catchAsync(async function (req, res, next) {
+   const findAllRoles = await roleModel.find({});
+
+   if (findAllRoles) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         roles: findAllRoles,
+      });
+   }
+});
+
+const deleteUserSingleRole = catchAsync(async function (req, res, next) {
+   const { roleId } = req.query;
+
+   if (!roleId) {
+      return res.status(httpStatusCodes.INVALID_INPUT).json({
+         error: true,
+         success: false,
+         message: 'Role id is required',
+      });
+   }
+
+   // find the role and then delete
+   // if the role id is invalid then send back the error respose.
+   const findRoleAndRemove = await roleModel.deleteOne({ _id: roleId });
+
+   if (!!findRoleAndRemove.deletedCount) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         roleId,
+         message: 'user role is removed',
+      });
+   } else {
+      return res.status(httpStatusCodes.INVALID_INPUT).json({
+         success: false,
+         error: true,
+         message: 'Role is not found',
       });
    }
 });
@@ -82,4 +126,6 @@ const insertNewUsersRole = catchAsync(async function (req, res, next) {
 module.exports = {
    insertGamesCurrency,
    insertNewUsersRole,
+   getAllUserRoles,
+   deleteUserSingleRole,
 };

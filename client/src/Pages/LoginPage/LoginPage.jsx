@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as styled from './LoginPage.style';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -8,6 +8,7 @@ import CustomButtonComponent from '../../Components/CustomButtonComponent/Custom
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../App/Features/Auth/authActions';
+import { useNavigate } from 'react-router';
 
 const schema = yup.object({
    email: yup.string().email().required('Please enter your email'),
@@ -27,6 +28,8 @@ function LoginPage() {
       formState: { errors },
    } = useForm({ resolver: yupResolver(schema) });
 
+   const navigation = useNavigate();
+
    const { auth, authLoading, authError } = useSelector((state) => state.auth);
 
    const dispatch = useDispatch();
@@ -35,11 +38,17 @@ function LoginPage() {
       dispatch(login(data));
    };
 
+   useEffect(() => {
+      if (!!auth && auth?.success && auth?.user) {
+         navigation('/');
+      }
+   }, [auth]);
+
    return (
       <styled.div>
          <styled.loginFormDiv className=" shadow-lg">
             <styled.loginInputGroups>
-               <img src="/images/logo-mv_game.svg" alt="logo" />
+               <img src="/images/logo_blc.png" alt="logo" />
                <div className="login_div">
                   <div className="form_group">
                      <h1 className="text-5xl text-gray-900 font-bold">

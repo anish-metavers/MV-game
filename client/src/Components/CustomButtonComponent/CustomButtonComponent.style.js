@@ -168,4 +168,10 @@ export const div = styled.div`
       width: 100%;
       border-radius: 5px;
    }
+
+   .Publish {
+      background-color: var(--primary-color);
+      border-radius: 20px;
+      padding: 0.7rem 1.5rem;
+   }
 `;

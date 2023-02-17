@@ -18,9 +18,7 @@ exports.currencyValidator = [
 ];
 
 exports.userRoleValidator = [
-   body('roleName', 'user role name is required')
-      .isString()
-      .withMessage('role name is must be string'),
+   body('roleName', 'user role name is required').isString(),
    (req, res, next) => {
       validateErrors(req, res, next);
    },

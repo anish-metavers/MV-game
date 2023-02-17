@@ -35,7 +35,7 @@ export const loginInputGroups = styled.div`
    padding: 1rem;
 
    img {
-      width: 160px;
+      width: 30px;
       height: auto;
    }
 

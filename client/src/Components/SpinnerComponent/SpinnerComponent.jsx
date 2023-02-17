@@ -1,7 +1,7 @@
 import React from 'react';
 import * as styled from './SpinnerComponent.style';
 
-function SpennerComponent({ center }) {
+function SpinnerComponent({ center }) {
    return (
       <styled.div className="flex items-center justify-center">
          <img
@@ -13,4 +13,4 @@ function SpennerComponent({ center }) {
    );
 }
 
-export default SpennerComponent;
+export default React.memo(SpinnerComponent);

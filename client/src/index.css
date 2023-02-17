@@ -51,8 +51,29 @@ code {
    --sm-border-cl: #2e313a;
    --dark-bl-cl: #1b1d29;
    --smooth-gray-lg-cl: #e4e9eb;
+   --light-blue-cl: #f8f8fc;
 }
 
 .error_cl {
    color: var(--error);
+}
+
+:where(.css-dev-only-do-not-override-diro6f).ant-btn-primary {
+   background-color: red !important;
+}
+
+.container_div {
+   padding: 2rem 2.5rem;
+}
+
+.form_container {
+   max-width: 60%;
+}
+
+.jodit-workplace {
+   min-height: 400px !important;
+}
+
+.jodit-status-bar {
+   display: none !important;
 }
