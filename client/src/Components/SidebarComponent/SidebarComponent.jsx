@@ -15,7 +15,7 @@ function SidebarComponent() {
                <IconListComponent
                   icon={<VscRepoForked />}
                   heading={'Users Role'}
-                  link={'/user-roles'}
+                  link={'/user-roles?page=0'}
                />
             </DashboardSidebarTabComponent>
          </styled.sclDiv>

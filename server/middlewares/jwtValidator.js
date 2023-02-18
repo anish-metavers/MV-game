@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const JWT_REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN_SECRET;
+const { httpStatusCodes } = require('../helper/helper');
 const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET;
 
 const getUserTokenInfromation = function (req) {

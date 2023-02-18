@@ -3,10 +3,10 @@ import axiosInstance from '../../../Services/AxiosInstance';
 
 export const getAllUserRoles = createAsyncThunk(
    'admin/getAllUserRoles',
-   async (_, { rejectWithValue }) => {
+   async ({ page }, { rejectWithValue }) => {
       try {
          const userRolesInfo = await axiosInstance.get(
-            '/admin/get-all-user-rools'
+            `/admin/get-all-user-rools?page=${page}`
          );
          return userRolesInfo;
       } catch (err) {

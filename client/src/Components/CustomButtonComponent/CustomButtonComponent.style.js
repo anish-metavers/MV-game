@@ -178,4 +178,28 @@ export const div = styled.div`
          margin-right: 0.5rem;
       }
    }
+
+   .next_btn {
+      border: 1px solid var(--smooth-gray-lg-cl);
+      padding: 0.3rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+
+      p {
+         color: var(--dark-cl);
+         font-size: 14px;
+         margin-right: 0.2rem;
+      }
+   }
+
+   .prevbtn {
+      p {
+         margin-left: 0.2rem;
+      }
+   }
+
+   .disable_btn {
+      opacity: 0.5;
+      cursor: not-allowed;
+   }
 `;

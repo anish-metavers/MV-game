@@ -18,6 +18,11 @@ router.get(
    varifyJwtToken,
    adminControllers.getSingleUserRole
 );
+router.get(
+   '/get-game-currency',
+   varifyJwtToken,
+   adminControllers.getAllGameCurrency
+);
 
 // API => POST
 router.post(

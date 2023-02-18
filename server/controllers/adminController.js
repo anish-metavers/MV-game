@@ -2,6 +2,7 @@ const { catchAsync, httpStatusCodes } = require('../helper/helper');
 const currencyModel = require('../model/schema/currencySchema');
 const roleModel = require('../model/schema/roleSchema');
 
+// insert game curencey.
 const insertGamesCurrency = catchAsync(async function (req, res, next) {
    const { currencyName, locked, icon, description, metaDescription } =
       req.body;
@@ -9,7 +10,6 @@ const insertGamesCurrency = catchAsync(async function (req, res, next) {
    // first check currency name is already exists in database or not.
    // if the currency is already exists then send back the false response
    // other store the new currency in database.
-
    const findCurrencyIsExists = await currencyModel.findOne({ currencyName });
 
    if (findCurrencyIsExists) {
@@ -41,6 +41,34 @@ const insertGamesCurrency = catchAsync(async function (req, res, next) {
    });
 });
 
+const getAllGameCurrency = catchAsync(async function (req, res, next) {
+   // page number is required if we want to make a pagination.
+   const { page } = req.query;
+   const DOCUMENT_LIMIT = 10;
+
+   const documentCount = await currencyModel.countDocuments();
+   const findAllgamesCurrency = await currencyModel
+      .find({})
+      .skip(page * DOCUMENT_LIMIT)
+      .limit(DOCUMENT_LIMIT);
+
+   if (findAllgamesCurrency) {
+      return res.status(httpStatusCodes.OK).json({
+         error: false,
+         success: true,
+         totalDocuments: documentCount,
+         totalPages: Math.ceil(documentCount / DOCUMENT_LIMIT - 1),
+         page: +page,
+         currency: findAllgamesCurrency,
+      });
+   }
+   return res.status(httpStatusCodes.INTERNAL_SERVER).json({
+      error: true,
+      message: 'Internal server error',
+   });
+});
+
+// insert user roles.
 const insertNewUsersRole = catchAsync(async function (req, res, next) {
    const { roleName, description } = req.body;
 
@@ -81,12 +109,34 @@ const insertNewUsersRole = catchAsync(async function (req, res, next) {
 });
 
 const getAllUserRoles = catchAsync(async function (req, res, next) {
-   const findAllRoles = await roleModel.find({});
+   /**
+    * @param findAllRoles find all user roles from database.
+    * @param DOCUMENT_LIMIT how many document we want to return back
+    */
+   const { page } = req.query;
+
+   if (!page) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         error: true,
+         success: false,
+         message: 'page number is required!',
+      });
+   }
+
+   const DOCUMENT_LIMIT = 10;
+   const documentCount = await roleModel.countDocuments();
+   const findAllRoles = await roleModel
+      .find({})
+      .skip(page * DOCUMENT_LIMIT)
+      .limit(DOCUMENT_LIMIT);
 
    if (findAllRoles) {
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
+         totalPages: Math.ceil(documentCount / DOCUMENT_LIMIT - 1),
+         page: +page,
+         totalDocuments: documentCount,
          roles: findAllRoles,
       });
    }
@@ -189,6 +239,7 @@ const updateSingleRole = catchAsync(async function (req, res, next) {
 
 module.exports = {
    insertGamesCurrency,
+   getAllGameCurrency,
    insertNewUsersRole,
    getAllUserRoles,
    deleteUserSingleRole,

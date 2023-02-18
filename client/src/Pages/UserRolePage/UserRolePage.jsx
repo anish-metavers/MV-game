@@ -17,6 +17,7 @@ import {
 } from '../../App/Features/Admin/adminActions';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import { useNavigate } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
 
 function UserRolePage() {
    const [anchorEl, setAnchorEl] = useState(null);
@@ -28,6 +29,8 @@ function UserRolePage() {
    const [isAdmin] = useAdmin(cookie);
    const navigation = useNavigate();
    const dispatch = useDispatch();
+   const [params] = useSearchParams();
+   const page = params.get('page');
 
    const { roles, getRolesLoading, getRolesError } = useSelector(
       (state) => state.admin
@@ -53,11 +56,19 @@ function UserRolePage() {
       }
    };
 
+   const NextPageHandler = function () {
+      navigation(`?page=${+page + 1}`);
+   };
+
+   const PrevPageHandler = function () {
+      navigation(`?page=${+page - 1}`);
+   };
+
    useEffect(() => {
-      if (isAdmin) {
-         dispatch(getAllUserRoles());
+      if (isAdmin && page) {
+         dispatch(getAllUserRoles({ page: page }));
       }
-   }, [isAdmin]);
+   }, [isAdmin, page]);
 
    return (
       <styled.div>
@@ -116,6 +127,13 @@ function UserRolePage() {
                         edit={true}
                         deleteAction={DeleteRolesHandler}
                         editAction={EditRoleHandler}
+                        nextAndPrev={true}
+                        nextHandler={NextPageHandler}
+                        prevHandler={PrevPageHandler}
+                        disablePrevbtn={+page === 0 ? true : false}
+                        disableNextbtn={
+                           +page >= roles?.totalPages ? true : false
+                        }
                      />
                   ) : null}
                </div>
