@@ -25,6 +25,7 @@ const Schema = yup.object({
 });
 
 function CreateUserRolePage() {
+   const [Role, setRole] = useState({ roleName: '' });
    const editor = useRef(null);
    const [content, setContent] = useState('');
    const {
@@ -33,6 +34,9 @@ function CreateUserRolePage() {
       formState: { errors },
       reset,
    } = useForm({
+      defaultValues: {
+         roleName: '',
+      },
       resolver: yupResolver(Schema),
    });
 
@@ -72,7 +76,7 @@ function CreateUserRolePage() {
    };
 
    useEffect(() => {
-      if (isAdmin && params) {
+      if (isAdmin && params?.id) {
          dispatch(getSingleUserRole({ roleId: params?.id }));
       }
    }, [isAdmin]);
@@ -87,7 +91,6 @@ function CreateUserRolePage() {
    useEffect(() => {
       return () => {
          dispatch(removeSingleRoleInfo());
-         reset();
       };
    }, []);
 
@@ -141,34 +144,36 @@ function CreateUserRolePage() {
                         onChange={(newContent) => setContent(newContent)}
                      />
                   </Box>
-                  <CustomButtonComponent
-                     type={'submit'}
-                     btnCl={'Publish mt-5'}
-                     isLoading={
-                        params?.id
-                           ? updateSinglRoleLoading
-                           : newRoleInsertLoading
-                     }
-                  >
-                     <img src="/images/done.svg" />
-                     {params?.id ? <p>Update</p> : <p>Publish</p>}
-                  </CustomButtonComponent>
+                  <div className="mb-3">
+                     <CustomButtonComponent
+                        type={'submit'}
+                        btnCl={'Publish mt-5'}
+                        isLoading={
+                           params?.id
+                              ? updateSinglRoleLoading
+                              : newRoleInsertLoading
+                        }
+                     >
+                        <img src="/images/done.svg" />
+                        {params?.id ? <p>Update</p> : <p>Publish</p>}
+                     </CustomButtonComponent>
+                  </div>
                   {!!newRoleInsertError ? (
                      <p className="text-sm error_cl">{newRoleInsertError}</p>
                   ) : null}
                   {!!updateSingleRoleInfo && updateSingleRoleInfo?.success ? (
-                     <p className="mt-4">{updateSingleRoleInfo?.message}</p>
+                     <p>{updateSingleRoleInfo?.message}</p>
                   ) : null}
                   {!!newRoleInsertInvalidErrors &&
                   newRoleInsertInvalidErrors?.error ? (
-                     <div className="mt-4">
+                     <div>
                         {newRoleInsertInvalidErrors.error.map((el) => (
                            <p className="text-sm error_cl">{el?.msg}</p>
                         ))}
                      </div>
                   ) : null}
                   {!!newRoleInsertInfo && newRoleInsertInfo?.success ? (
-                     <p className="mt-3 text-green-800">
+                     <p className="text-green-800">
                         {newRoleInsertInfo?.message}
                      </p>
                   ) : null}

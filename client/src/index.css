@@ -70,10 +70,6 @@ code {
    max-width: 60%;
 }
 
-.jodit-workplace {
-   min-height: 400px !important;
-}
-
 .jodit-status-bar {
    display: none !important;
 }
