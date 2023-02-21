@@ -36,7 +36,7 @@
    "scripts": {
       "start": "react-scripts start",
       "build": "react-scripts build && mv build ../server",
-      "test": "react-scripts test",
+      "test": "NODE_OPTIONS=--experimental-vm-modules react-scripts test",
       "eject": "react-scripts eject"
    },
    "eslintConfig": {
@@ -58,6 +58,7 @@
       ]
    },
    "devDependencies": {
+      "babel-jest": "^29.4.3",
       "tailwindcss": "^3.2.6"
    }
 }

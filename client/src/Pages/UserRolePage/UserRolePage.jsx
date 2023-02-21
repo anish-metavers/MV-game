@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import * as styled from './UserRolePage.style';
 import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
 import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHeadingComponent';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import { BsThreeDotsVertical } from '@react-icons/all-files/bs/BsThreeDotsVertical';
 import { ROW } from './RoleTable';
 import TableComponent from '../../Components/TableComponent/TableComponent';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,13 +14,11 @@ import {
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import { useNavigate } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
+import { MenuItem } from '@mui/material';
+import dayjs from 'dayjs';
+import { Popconfirm } from 'antd';
 
 function UserRolePage() {
-   const [anchorEl, setAnchorEl] = useState(null);
-   const open = Boolean(anchorEl);
-   const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-   };
    const [cookie] = useCookies();
    const [isAdmin] = useAdmin(cookie);
    const navigation = useNavigate();
@@ -36,17 +30,11 @@ function UserRolePage() {
       (state) => state.admin
    );
 
-   const handleClose = () => {
-      setAnchorEl(null);
-   };
-
    const CreateUserRoleHandler = function () {
-      setAnchorEl(null);
       navigation('/user-roles/create');
    };
 
    const EditRoleHandler = function (id) {
-      setAnchorEl(null);
       navigation(`/user-roles/${id}`);
    };
 
@@ -74,46 +62,23 @@ function UserRolePage() {
       <styled.div>
          <NavbarComponent />
          <styled.container className="container_div">
-            <PageHeadingComponent pageName={'User Roles'} />
+            <PageHeadingComponent
+               pageName={'User Roles'}
+               showSubHeadingCM={true}
+               subHeading={'All Users Roles'}
+               para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.
+               Blanditiis, maiores perspiciatis. Est rerum, sit
+               voluptas molestias officia modi, provident earum ad
+               ipsam sed dolorem error odit quia, deserunt quasi!
+               Doloribus!`}
+               menu={true}
+               innerProps={
+                  <MenuItem onClick={CreateUserRoleHandler}>
+                     Create users roles
+                  </MenuItem>
+               }
+            />
             <styled.contentDiv className="mt-5">
-               <div className="flex justify-between">
-                  <div>
-                     <h1 className="text-xl font-medium text-gray-700">
-                        All Users Roles
-                     </h1>
-                     <p className="mt-3 text-gray-500">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Blanditiis, maiores perspiciatis. Est rerum, sit
-                        voluptas molestias officia modi, provident earum ad
-                        ipsam sed dolorem error odit quia, deserunt quasi!
-                        Doloribus!
-                     </p>
-                  </div>
-                  <div className="option_div">
-                     <Button
-                        id="basic-button"
-                        aria-controls={open ? 'basic-menu' : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? 'true' : undefined}
-                        onClick={handleClick}
-                     >
-                        <BsThreeDotsVertical className="text-gray-500" />
-                     </Button>
-                     <Menu
-                        id="basic-menu"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        MenuListProps={{
-                           'aria-labelledby': 'basic-button',
-                        }}
-                     >
-                        <MenuItem onClick={CreateUserRoleHandler}>
-                           Create users roles
-                        </MenuItem>
-                     </Menu>
-                  </div>
-               </div>
                <div className="mt-5">
                   {!!getRolesLoading ? <SpinnerComponent /> : null}
                   {!!getRolesError ? (
@@ -122,11 +87,6 @@ function UserRolePage() {
                   {!!roles && roles?.success && roles?.roles ? (
                      <TableComponent
                         row={ROW}
-                        data={roles?.roles}
-                        deleteOption={true}
-                        edit={true}
-                        deleteAction={DeleteRolesHandler}
-                        editAction={EditRoleHandler}
                         nextAndPrev={true}
                         nextHandler={NextPageHandler}
                         prevHandler={PrevPageHandler}
@@ -134,7 +94,42 @@ function UserRolePage() {
                         disableNextbtn={
                            +page >= roles?.totalPages ? true : false
                         }
-                     />
+                     >
+                        {roles?.roles.map((el) => (
+                           <tr key={el?._id}>
+                              <td>{el?._id}</td>
+                              <td>{el?.roleName}</td>
+                              <td>
+                                 {dayjs(el?.createdAt).format(
+                                    'DD MMMM YYYY m:h:ss A'
+                                 )}
+                              </td>
+                              <td>
+                                 {el?.updatedAt
+                                    ? dayjs(el?.updatedAt).format(
+                                         'DD MMMM YYYY h:m:ss A'
+                                      )
+                                    : '--- ---'}
+                              </td>
+                              <td className="flex items-center space-x-2">
+                                 <Popconfirm
+                                    title="Delete the task"
+                                    description="Are you sure to delete this task?"
+                                    okText="Yes"
+                                    cancelText="No"
+                                    onConfirm={() => DeleteRolesHandler(el._id)}
+                                 >
+                                    <p className="text-red-500 font-medium">
+                                       Delete
+                                    </p>
+                                 </Popconfirm>
+                                 <p onClick={() => EditRoleHandler(el._id)}>
+                                    Edit
+                                 </p>
+                              </td>
+                           </tr>
+                        ))}
+                     </TableComponent>
                   ) : null}
                </div>
             </styled.contentDiv>

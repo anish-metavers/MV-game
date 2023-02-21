@@ -25,14 +25,13 @@ const Schema = yup.object({
 });
 
 function CreateUserRolePage() {
-   const [Role, setRole] = useState({ roleName: '' });
    const editor = useRef(null);
    const [content, setContent] = useState('');
    const {
       register,
       handleSubmit,
       formState: { errors },
-      reset,
+      setValue,
    } = useForm({
       defaultValues: {
          roleName: '',
@@ -83,7 +82,7 @@ function CreateUserRolePage() {
 
    useEffect(() => {
       if (!!singleRole && singleRole?.success && singleRole?.role) {
-         reset({ roleName: singleRole?.role?.roleName });
+         setValue('roleName', singleRole?.role?.roleName);
          setContent(singleRole?.role?.description);
       }
    }, [singleRole]);
@@ -127,7 +126,10 @@ function CreateUserRolePage() {
                         {...register('roleName')}
                         label="Role Name"
                         required
-                        variant="outlined"
+                        variant="standard"
+                        InputLabelProps={{
+                           shrink: true,
+                        }}
                      />
                      {errors?.roleName?.message ? (
                         <p className="text-sm error_cl">

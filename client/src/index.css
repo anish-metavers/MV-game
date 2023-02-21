@@ -79,3 +79,11 @@ code {
       max-width: 100%;
    }
 }
+
+.space_div {
+   padding: 1rem 0;
+}
+
+.jodit-workplace {
+   min-height: 300px !important;
+}

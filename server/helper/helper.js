@@ -1,5 +1,7 @@
 const { validationResult } = require('express-validator');
 
+const AWS = require('aws-sdk');
+
 const catchAsync = function (fn) {
    /**
     * @fn function which is wrapperd by the catchAsync function to use the DRY method.
@@ -46,8 +48,36 @@ const validateErrors = function (req, res, next) {
    next();
 };
 
+const awsConfig = {
+   accessKeyId: process.env.aws_access_key_id,
+   secretAccessKey: process.env.aws_secret_access_key,
+   region: process.env.AWS_REGION,
+   correctClockSkew: true,
+};
+
+const S3 = new AWS.S3(awsConfig);
+
+//upload to s3
+const uploadToS3 = (fileData) => {
+   return new Promise((resolve, reject) => {
+      const params = {
+         Bucket: process.env.S3_BUCKET_NAME,
+         Key: `bc-games/${Date.now().toString()}.jpg`,
+         Body: fileData,
+      };
+      S3.upload(params, (err, data) => {
+         if (err) {
+            console.log(err);
+            return reject(err);
+         }
+         return resolve(data);
+      });
+   });
+};
+
 module.exports = {
    catchAsync,
    httpStatusCodes,
    validateErrors,
+   uploadToS3,
 };

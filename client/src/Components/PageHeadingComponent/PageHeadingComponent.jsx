@@ -1,7 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as styled from './PageHeadingComponent.style';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import { BsThreeDotsVertical } from '@react-icons/all-files/bs/BsThreeDotsVertical';
 
-function PageHeadingComponent({ pageName }) {
+function PageHeadingComponent({
+   pageName,
+   showSubHeadingCM,
+   subHeading,
+   para,
+   innerProps,
+   menu,
+}) {
+   const [anchorEl, setAnchorEl] = useState(null);
+   const open = Boolean(anchorEl);
+   const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+   };
+
+   const handleClose = () => {
+      setAnchorEl(null);
+   };
+
    return (
       <styled.div>
          <div className="flex items-center">
@@ -12,6 +32,40 @@ function PageHeadingComponent({ pageName }) {
          <h1 className="mt-2 text-3xl text-gray-700 font-semibold">
             Welcome to Dashboard
          </h1>
+         <div className="flex items-center justify-between">
+            {showSubHeadingCM ? (
+               <div className="mt-5">
+                  <h1 className="text-xl font-medium text-gray-700">
+                     {subHeading}
+                  </h1>
+                  <p className="mt-3 text-gray-500">{para}</p>
+               </div>
+            ) : null}
+            {menu ? (
+               <div className="option_div">
+                  <Button
+                     id="basic-button"
+                     aria-controls={open ? 'basic-menu' : undefined}
+                     aria-haspopup="true"
+                     aria-expanded={open ? 'true' : undefined}
+                     onClick={handleClick}
+                  >
+                     <BsThreeDotsVertical className="text-gray-500" />
+                  </Button>
+                  <Menu
+                     id="basic-menu"
+                     anchorEl={anchorEl}
+                     open={open}
+                     onClose={handleClose}
+                     MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                     }}
+                  >
+                     {innerProps}
+                  </Menu>
+               </div>
+            ) : null}
+         </div>
       </styled.div>
    );
 }

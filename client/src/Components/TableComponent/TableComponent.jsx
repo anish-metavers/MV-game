@@ -1,7 +1,5 @@
 import React from 'react';
 import * as styled from './TableComponent.style';
-import dayjs from 'dayjs';
-import { Popconfirm } from 'antd';
 import CustomButtonComponent from '../CustomButtonComponent/CustomButtonComponent';
 import { IoIosArrowRoundForward } from '@react-icons/all-files/io/IoIosArrowRoundForward';
 import { IoIosArrowRoundBack } from '@react-icons/all-files/io/IoIosArrowRoundBack';
@@ -9,16 +7,12 @@ import { IoIosArrowRoundBack } from '@react-icons/all-files/io/IoIosArrowRoundBa
 function TableComponent({
    row,
    cl,
-   data,
-   deleteOption,
-   edit,
-   deleteAction,
-   editAction,
    nextAndPrev,
    nextHandler,
    prevHandler,
    disablePrevbtn,
    disableNextbtn,
+   children,
 }) {
    return (
       <styled.div className={cl}>
@@ -31,44 +25,7 @@ function TableComponent({
                      ))}
                   </tr>
                </thead>
-               <tbody>
-                  {data.map((el) => (
-                     <tr key={el?._id}>
-                        <td>{el?._id}</td>
-                        <td>{el?.roleName}</td>
-                        <td>
-                           {dayjs(el?.createdAt).format(
-                              'DD MMMM YYYY m:h:ss A'
-                           )}
-                        </td>
-                        <td>
-                           {el?.updatedAt
-                              ? dayjs(el?.updatedAt).format(
-                                   'DD MMMM YYYY m:h:ss A'
-                                )
-                              : '--- ---'}
-                        </td>
-                        <td className="flex items-center space-x-2">
-                           {deleteOption ? (
-                              <Popconfirm
-                                 title="Delete the task"
-                                 description="Are you sure to delete this task?"
-                                 okText="Yes"
-                                 cancelText="No"
-                                 onConfirm={() => deleteAction(el._id)}
-                              >
-                                 <p className="text-red-500 font-medium">
-                                    Delete
-                                 </p>
-                              </Popconfirm>
-                           ) : null}
-                           {edit ? (
-                              <p onClick={() => editAction(el._id)}>Edit</p>
-                           ) : null}
-                        </td>
-                     </tr>
-                  ))}
-               </tbody>
+               <tbody>{children}</tbody>
             </table>
          </div>
          {!!nextAndPrev ? (

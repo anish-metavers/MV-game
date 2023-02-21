@@ -1,4 +1,4 @@
-import React, { useEffect, lazy, Suspense } from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router';
 import { useCookies } from 'react-cookie';
 import { useDispatch } from 'react-redux';
@@ -13,6 +13,8 @@ import LoginPage from './Pages/LoginPage/LoginPage';
 import HomePage from './Pages/HomePage/HomePage';
 import UserRolePage from './Pages/UserRolePage/UserRolePage';
 import CreateUserRolePage from './Pages/CreateUserRolePage/CreateUserRolePage';
+import GameCurrencyPage from './Pages/GameCurrencyPage/GameCurrencyPage';
+import CreateGameCurrencyPage from './Pages/CreateGameCurrencyPage/CreateGameCurrencyPage';
 
 function App() {
    const [cookie] = useCookies();
@@ -38,6 +40,15 @@ function App() {
                   element={<CreateUserRolePage />}
                />
                <Route path="/user-roles/:id" element={<CreateUserRolePage />} />
+               <Route path="/game-currency" element={<GameCurrencyPage />} />
+               <Route
+                  path="/game-currency/create"
+                  element={<CreateGameCurrencyPage />}
+               />
+               <Route
+                  path="/game-currency/:id"
+                  element={<CreateGameCurrencyPage />}
+               />
             </Route>
             <Route path="/dashboard/auth/login" element={<LoginPage />} />
          </Routes>

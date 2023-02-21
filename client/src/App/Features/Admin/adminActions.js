@@ -91,3 +91,104 @@ export const updateSingleRole = createAsyncThunk(
       }
    }
 );
+
+export const getGameCurrencysList = createAsyncThunk(
+   'admin/getGameCurrencysList',
+   async ({ page }, { rejectWithValue }) => {
+      try {
+         const gameCurrencyList = await axiosInstance.get(
+            `/admin/get-game-currency?page=${page}`
+         );
+
+         return gameCurrencyList;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const inertNewGameCurrency = createAsyncThunk(
+   'admin/inertNewGameCurrency',
+   async ({ formData }, { rejectWithValue }) => {
+      try {
+         const insertGameCurrencyResponse = await axiosInstance.post(
+            '/admin/insert-currency',
+            formData,
+            {
+               headers: {
+                  'Content-type': 'multipart/form-data',
+               },
+            }
+         );
+
+         return insertGameCurrencyResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const deleteSingleGameCurrency = createAsyncThunk(
+   'admin/deleteSingleGameCurrency',
+   async ({ id }, { rejectWithValue }) => {
+      try {
+         const deleteSingleGameCurrencyResponse = await axiosInstance.delete(
+            `/admin/delete-single-game-currency?id=${id}`
+         );
+
+         return deleteSingleGameCurrencyResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const getSingleGameCurrency = createAsyncThunk(
+   'admin/getSingleGameCurrency',
+   async ({ id }, { rejectWithValue }) => {
+      try {
+         const currencyResponse = await axiosInstance.get(
+            `/admin/get-single-game-currency?id=${id}`
+         );
+         return currencyResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const updateSingleGameCurrency = createAsyncThunk(
+   'admin/updateSingleGameCurrency',
+   async ({ id, formData }, { rejectWithValue }) => {
+      try {
+         const updateCurrencyResponse = await axiosInstance.patch(
+            `/admin/update-single-currency?id=${id}`,
+            formData,
+            {
+               headers: {
+                  'Content-type': 'multipart/form-data',
+               },
+            }
+         );
+
+         return updateCurrencyResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
