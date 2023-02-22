@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const adminControllers = require('../controllers/adminController');
-const { userRoleValidator } = require('../middlewares/DocumentValidator');
+const {
+   userRoleValidator,
+   gameProviderDocValidation,
+} = require('../middlewares/DocumentValidator');
 const { varifyJwtToken } = require('../middlewares/jwtValidator');
 const multer = require('multer');
 
@@ -14,7 +17,8 @@ let upload = multer({
       if (
          file.mimetype === 'image/jpeg' ||
          file.mimetype === 'image/png' ||
-         file.mimetype === 'image/jpg'
+         file.mimetype === 'image/jpg' ||
+         file.mimetype === 'image/avif'
       ) {
          done(null, true);
       } else {
@@ -47,6 +51,12 @@ router.get(
    varifyJwtToken,
    adminControllers.getSingleGameCurrency
 );
+router.get(
+   '/get-games-providers-lists',
+   varifyJwtToken,
+   adminControllers.getGameProvidersList
+);
+router.get('/get-games', varifyJwtToken, adminControllers.getGames);
 
 // API => POST
 router.post(
@@ -61,6 +71,18 @@ router.post(
    userRoleValidator,
    varifyJwtToken,
    adminControllers.insertNewUsersRole
+);
+router.post(
+   '/insert-games-provider',
+   varifyJwtToken,
+   gameProviderDocValidation,
+   adminControllers.insertGamesProvider
+);
+router.post(
+   '/insert-new-game',
+   upload.any(),
+   varifyJwtToken,
+   adminControllers.insertNewGame
 );
 
 // API => PATCH

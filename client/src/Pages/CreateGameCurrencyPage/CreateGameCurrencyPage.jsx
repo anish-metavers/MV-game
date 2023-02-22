@@ -168,7 +168,6 @@ function CreateGameCurrencyPage() {
                               select
                               required
                               label="Currency Locked"
-                              {...register('locked')}
                               name="locked"
                               variant="standard"
                               InputLabelProps={{

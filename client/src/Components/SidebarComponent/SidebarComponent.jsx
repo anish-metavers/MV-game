@@ -4,6 +4,7 @@ import DashboardSidebarTabComponent from '../DashboardSidebarTabComponent/Dashbo
 import IconListComponent from '../IconListComponent/IconListComponent';
 import { VscRepoForked } from '@react-icons/all-files/vsc/VscRepoForked';
 import { FcCurrencyExchange } from '@react-icons/all-files/fc/FcCurrencyExchange';
+import { GiGamepad } from '@react-icons/all-files/gi/GiGamepad';
 
 function SidebarComponent() {
    return (
@@ -22,6 +23,11 @@ function SidebarComponent() {
                   icon={<FcCurrencyExchange />}
                   heading={'Game Currency'}
                   link={'/game-currency?page=0'}
+               />
+               <IconListComponent
+                  icon={<GiGamepad />}
+                  heading={'Games'}
+                  link={'/games?page=0'}
                />
             </DashboardSidebarTabComponent>
          </styled.sclDiv>

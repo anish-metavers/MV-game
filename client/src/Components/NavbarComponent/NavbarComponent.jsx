@@ -17,12 +17,12 @@ function NavbarComponent() {
          </div>
          <div className="flex items-center">
             <div className="icon_box_div">
-               <Badge badgeContent={1} color="primary">
+               <Badge badgeContent={0} color="primary">
                   <AiFillSetting />
                </Badge>
             </div>
             <div className="icon_box_div">
-               <Badge badgeContent={4} color="primary">
+               <Badge badgeContent={0} color="primary">
                   <RiNotification4Line />
                </Badge>
             </div>

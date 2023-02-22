@@ -1,6 +1,8 @@
 const { catchAsync, httpStatusCodes, uploadToS3 } = require('../helper/helper');
 const currencyModel = require('../model/schema/currencySchema');
 const roleModel = require('../model/schema/roleSchema');
+const gameModel = require('../model/schema/gameSchema');
+const gameProviderModel = require('../model/schema/gameProvidersSchema');
 
 // insert game curencey.
 const insertGamesCurrency = catchAsync(async function (req, res, next) {
@@ -331,6 +333,165 @@ const updateSingleRole = catchAsync(async function (req, res, next) {
    }
 });
 
+const insertGamesProvider = catchAsync(async function (req, res, next) {
+   const { providerName, email, phoneNumber, description, logo } = req.body;
+
+   if (!providerName && !email) {
+      return res.status(httpStatusCodes.INVALID_INPUT).json({
+         success: false,
+         error: false,
+         message: 'Provider name and provider email is required',
+      });
+   }
+
+   // check provider name is already used
+   const findProvierName = await gameProviderModel.findOne({ providerName });
+
+   if (findProvierName) {
+      return res.status(httpStatusCodes.OK).json({
+         success: false,
+         error: true,
+         message: 'Provider name is already exists',
+      });
+   }
+
+   // check provider email is already used
+   const findProvierEmail = await gameProviderModel.findOne({ email });
+
+   if (findProvierEmail) {
+      return res.status(httpStatusCodes.OK).json({
+         success: false,
+         error: true,
+         message: 'Provider email is already exists',
+      });
+   }
+
+   const storeProviderDetails = await gameProviderModel({
+      providerName,
+      email,
+      phoneNumber,
+      description,
+      logo,
+   }).save();
+
+   if (storeProviderDetails) {
+      return res.status(httpStatusCodes.CREATED).json({
+         success: true,
+         error: false,
+         provider: storeProviderDetails,
+      });
+   }
+});
+
+const getGameProvidersList = catchAsync(async function (req, res, next) {
+   const findAllGamesProviders = await gameProviderModel.find(
+      {},
+      { _id: 1, providerName: 1, logo: 1 }
+   );
+
+   if (findAllGamesProviders) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         response: findAllGamesProviders,
+      });
+   }
+
+   return res.status(httpStatusCodes.INTERNAL_SERVER).json({
+      error: true,
+      message: 'Internal server error',
+   });
+});
+
+const insertNewGame = catchAsync(async function (req, res, next) {
+   const { name, by, description, aboutGame, gameProvider, url } = req.body;
+
+   // check the games is already exists or not.
+   const findGameIsAlreadyExists = await gameModel.findOne({ name });
+
+   if (findGameIsAlreadyExists) {
+      return res.status(httpStatusCodes.OK).json({
+         success: false,
+         error: true,
+         message: 'Game is already exists',
+      });
+   }
+
+   const uploadObject = {
+      name,
+      by,
+      description,
+      aboutGame,
+      gameProvider,
+      url,
+   };
+
+   // keep track if user upload games images, like preview images
+   // or games slides images.
+   if (req.files) {
+      let gameMainImage = req.files.find(
+         (el) => el.fieldname === 'gameMainImage'
+      );
+
+      // find game main image is exists or not in req.
+      if (gameMainImage) {
+         const uploadData = await uploadToS3(gameMainImage.buffer);
+         uploadObject.gameImage = uploadData.Location;
+      }
+   }
+
+   // store all the data in database game collections.
+   const storeGame = await gameModel(uploadObject).save();
+
+   if (storeGame) {
+      return res.status(httpStatusCodes.CREATED).json({
+         success: true,
+         error: false,
+         message: 'Game upload',
+      });
+   }
+
+   return res.status(httpStatusCodes.INTERNAL_SERVER).json({
+      error: true,
+      message: 'Internal server error',
+   });
+});
+
+const getGames = catchAsync(async function (req, res, next) {
+   const { page } = req.query;
+
+   if (!page) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Game page number is required',
+      });
+   }
+
+   const DOCUMENT_LIMIT = 10;
+   const documentCount = await gameModel.countDocuments();
+   const findGamesLists = await gameModel.find(
+      {},
+      { name: 1, by: 1, description: 1, gameImage: 1, gameProvider: 1 }
+   );
+
+   if (findGamesLists) {
+      return res.status(httpStatusCodes.OK).json({
+         error: false,
+         success: true,
+         games: findGamesLists,
+         totalDocuments: documentCount,
+         totalPages: Math.ceil(documentCount / DOCUMENT_LIMIT - 1),
+         page: +page,
+      });
+   }
+
+   return res.status(httpStatusCodes.INTERNAL_SERVER).json({
+      error: true,
+      message: 'Internal server error',
+   });
+});
+
 module.exports = {
    insertGamesCurrency,
    deleteSingleGameCurrency,
@@ -342,4 +503,8 @@ module.exports = {
    deleteUserSingleRole,
    getSingleUserRole,
    updateSingleRole,
+   getGameProvidersList,
+   insertGamesProvider,
+   insertNewGame,
+   getGames,
 };

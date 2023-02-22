@@ -25,3 +25,17 @@ exports.userRoleValidator = [
       validateErrors(req, res, next);
    },
 ];
+
+exports.gameProviderDocValidation = [
+   body('providerName', 'Game provider name is required')
+      .isString()
+      .withMessage('Game provider name must be string'),
+   body('email', 'please enter valid email')
+      .isEmail()
+      .trim()
+      .isLength({ min: 5 })
+      .normalizeEmail(),
+   (req, res, next) => {
+      validateErrors(req, res, next);
+   },
+];

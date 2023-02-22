@@ -10,6 +10,9 @@ import {
    deleteSingleGameCurrency,
    getSingleGameCurrency,
    updateSingleGameCurrency,
+   getGameProvidersList,
+   insertNewGame,
+   getGamesLists,
 } from './adminActions';
 
 const INITAL_STATE = {
@@ -42,6 +45,15 @@ const INITAL_STATE = {
    updateGameCurrency: null,
    updateGameCurrencyLoading: false,
    updateGameCurrencyError: null,
+   gameProvidersList: null,
+   gameProvidersLoading: false,
+   gameProvidersError: null,
+   insertGameInfo: null,
+   insertGameLoading: false,
+   insertGameError: null,
+   gameListInfo: null,
+   gameListLoading: false,
+   gameListInfoError: null,
 };
 
 const adminSlice = createSlice({
@@ -56,6 +68,10 @@ const adminSlice = createSlice({
       removeCurrencyInfo: (state) => {
          state.updateGameCurrency = null;
          state.singleGameCurrency = null;
+      },
+      removeGameInfo: (state) => {
+         state.insertGameInfo = null;
+         state.insertGameError = null;
       },
    },
    extraReducers: (bulder) => {
@@ -240,9 +256,61 @@ const adminSlice = createSlice({
             state.updateGameCurrencyLoading = false;
             state.updateGameCurrencyError = null;
          });
+
+      bulder
+         .addCase(getGameProvidersList.pending, (state) => {
+            state.gameProvidersList = null;
+            state.gameProvidersLoading = true;
+            state.gameProvidersError = null;
+         })
+         .addCase(getGameProvidersList.rejected, (state, action) => {
+            state.gameProvidersList = null;
+            state.gameProvidersLoading = false;
+            state.gameProvidersError = action.error.message;
+         })
+         .addCase(getGameProvidersList.fulfilled, (state, action) => {
+            state.gameProvidersList = action.payload.data;
+            state.gameProvidersLoading = false;
+            state.gameProvidersError = null;
+         });
+
+      bulder
+         .addCase(insertNewGame.pending, (state) => {
+            state.insertGameInfo = null;
+            state.insertGameLoading = true;
+            state.insertGameError = null;
+         })
+         .addCase(insertNewGame.rejected, (state, action) => {
+            state.insertGameInfo = null;
+            state.insertGameLoading = false;
+            state.insertGameError = action.error.message;
+         })
+         .addCase(insertNewGame.fulfilled, (state, action) => {
+            state.insertGameInfo = action.payload.data;
+            state.insertGameLoading = false;
+            state.insertGameError = null;
+         });
+
+      bulder
+         .addCase(getGamesLists.pending, (state) => {
+            state.gameListInfo = null;
+            state.gameListLoading = true;
+            state.gameListInfoError = null;
+         })
+         .addCase(getGamesLists.rejected, (state, action) => {
+            state.gameListInfo = null;
+            state.gameListLoading = false;
+            state.gameListInfoError = action.error.message;
+         })
+         .addCase(getGamesLists.fulfilled, (state, action) => {
+            state.gameListInfo = action.payload.data;
+            state.gameListLoading = false;
+            state.gameListInfoError = null;
+         });
    },
 });
 
-export const { removeSingleRoleInfo, removeCurrencyInfo } = adminSlice.actions;
+export const { removeSingleRoleInfo, removeCurrencyInfo, removeGameInfo } =
+   adminSlice.actions;
 
 export default adminSlice.reducer;

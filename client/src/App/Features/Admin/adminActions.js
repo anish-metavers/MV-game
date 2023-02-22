@@ -192,3 +192,61 @@ export const updateSingleGameCurrency = createAsyncThunk(
       }
    }
 );
+
+export const getGameProvidersList = createAsyncThunk(
+   'admin/getGameProvidersList',
+   async () => {
+      try {
+         const providerResponse = await axiosInstance.get(
+            '/admin/get-games-providers-lists'
+         );
+
+         return providerResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+      }
+   }
+);
+
+export const insertNewGame = createAsyncThunk(
+   'admin/insertNewGame',
+   async ({ formData }, { rejectWithValue }) => {
+      try {
+         const insertNewGameResponse = await axiosInstance.post(
+            '/admin/insert-new-game',
+            formData,
+            {
+               headers: {
+                  'Content-type': 'multipart/form-data',
+               },
+            }
+         );
+
+         return insertNewGameResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const getGamesLists = createAsyncThunk(
+   'admin/getGamesLists',
+   async ({ page }, { rejectWithValue }) => {
+      try {
+         const gameListResponse = await axiosInstance.get(
+            `/admin/get-games?page=${page}`
+         );
+         return gameListResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
