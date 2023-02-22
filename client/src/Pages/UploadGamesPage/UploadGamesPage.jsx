@@ -17,6 +17,8 @@ import { MenuItem } from '@mui/material';
 import {
    getGameProvidersList,
    insertNewGame,
+   getSingleGameInfo,
+   updateSingleGame,
 } from '../../App/Features/Admin/adminActions';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
@@ -34,6 +36,7 @@ function UploadGamesPage() {
       register,
       handleSubmit,
       formState: { errors },
+      setValue,
    } = useForm({
       resolver: yupResolver(Schema),
    });
@@ -56,6 +59,9 @@ function UploadGamesPage() {
       insertGameInfo,
       insertGameLoading,
       insertGameError,
+      updateGameinfo,
+      updateGameLoading,
+      updateGameError,
    } = useSelector((state) => state.admin);
 
    const ImageHandler = function (event) {
@@ -80,17 +86,22 @@ function UploadGamesPage() {
    };
 
    const onSubmit = function (data) {
-      if (!GameImage) {
-         return setError('Game image is required');
-      }
+      if (isAdmin && !params?.id) {
+         if (!GameImage) {
+            return setError('Game image is required');
+         }
 
-      if (!Provider) {
-         return setError('Game provider is required');
+         if (!Provider) {
+            return setError('Game provider is required');
+         }
+         setError(null);
+         const formData = CreateFormData(data);
+         dispatch(insertNewGame({ formData }));
+      } else {
+         setError(null);
+         const formData = CreateFormData(data);
+         dispatch(updateSingleGame({ gameId: params?.id, formData }));
       }
-
-      setError(null);
-      const formData = CreateFormData(data);
-      dispatch(insertNewGame({ formData }));
    };
 
    useEffect(() => {
@@ -98,6 +109,31 @@ function UploadGamesPage() {
          dispatch(getGameProvidersList());
       }
    }, [isAdmin]);
+
+   const GetSingleGameInfo = async function () {
+      const gameResponse = await dispatch(
+         getSingleGameInfo({ gameId: params?.id })
+      );
+
+      if (gameResponse?.payload?.data && gameResponse?.payload?.data?.success) {
+         const data = gameResponse?.payload?.data;
+         setValue('name', data?.game?.name);
+         setValue('by', data?.game?.by);
+         setValue('url', data?.game?.url);
+         setValue('description', data?.game?.description);
+         setContent(data?.game?.aboutGame);
+         setGameImagePreview(data?.game?.gameImage);
+         setProvider(data?.game?.gameProvider);
+      } else {
+         console.log(gameResponse);
+      }
+   };
+
+   useEffect(() => {
+      if (isAdmin && params?.id) {
+         GetSingleGameInfo();
+      }
+   }, [isAdmin, params?.id]);
 
    useEffect(() => {
       return () => {
@@ -131,6 +167,9 @@ function UploadGamesPage() {
                               required
                               variant="outlined"
                               {...register('name')}
+                              InputLabelProps={{
+                                 shrink: true,
+                              }}
                            />
                            {!!errors?.name?.message ? (
                               <p className="text-sm error_cl">
@@ -145,6 +184,9 @@ function UploadGamesPage() {
                               required
                               variant="outlined"
                               {...register('by')}
+                              InputLabelProps={{
+                                 shrink: true,
+                              }}
                            />
                            {!!errors?.by?.message ? (
                               <p className="text-sm error_cl">
@@ -189,6 +231,9 @@ function UploadGamesPage() {
                         label="Game Description"
                         multiline
                         rows={7}
+                        InputLabelProps={{
+                           shrink: true,
+                        }}
                      />
                      <TextField
                         className="w-full"
@@ -196,6 +241,10 @@ function UploadGamesPage() {
                         required
                         variant="outlined"
                         {...register('url')}
+                        {...register('name')}
+                        InputLabelProps={{
+                           shrink: true,
+                        }}
                      />
                      {!!errors?.url?.message ? (
                         <p className="text-sm error_cl">
@@ -229,7 +278,9 @@ function UploadGamesPage() {
                         <CustomButtonComponent
                            type={'submit'}
                            btnCl={'Publish mt-5'}
-                           isLoading={insertGameLoading}
+                           isLoading={
+                              params?.id ? updateGameLoading : insertGameLoading
+                           }
                         >
                            <img src="/images/done.svg" />
                            {params?.id ? <p>Update</p> : <p>Publish</p>}
@@ -241,12 +292,21 @@ function UploadGamesPage() {
                   </Box>
                </form>
             </div>
+            {!!updateGameinfo && updateGameinfo?.success ? (
+               <p>{updateGameinfo?.message}</p>
+            ) : null}
+            {!!updateGameinfo && !updateGameinfo?.success ? (
+               <p className="text-sm error_cl">{updateGameinfo?.message}</p>
+            ) : null}
             {!!insertGameInfo ? <p>{insertGameInfo?.message}</p> : null}
             {!!gameProvidersError ? (
                <p className="text-sm error_cl">{gameProvidersError}</p>
             ) : null}
             {!!insertGameError ? (
                <p className="text-sm error_cl">{insertGameError}</p>
+            ) : null}
+            {!!updateGameError ? (
+               <p className="text-sm error_cl">{updateGameError}</p>
             ) : null}
          </div>
       </styled.div>

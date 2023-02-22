@@ -492,6 +492,91 @@ const getGames = catchAsync(async function (req, res, next) {
    });
 });
 
+const getSingleGameInfo = catchAsync(async function (req, res, next) {
+   const { gameId } = req.query;
+
+   if (!gameId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'game id is required!',
+      });
+   }
+
+   // find game in database
+   const findGame = await gameModel.findOne(
+      { _id: gameId },
+      { likes: 0, favorites: 0, comments: 0 }
+   );
+
+   if (findGame) {
+      return res.status(httpStatusCodes.OK).json({
+         error: false,
+         success: true,
+         game: findGame,
+      });
+   }
+
+   return res.status(httpStatusCodes.NOT_FOUND).json({
+      error: false,
+      success: false,
+      message: 'Not found',
+   });
+});
+
+const updateSingleGame = catchAsync(async function (req, res, next) {
+   const { gameId } = req.query;
+   if (!gameId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'game id is required!',
+      });
+   }
+
+   const uploadObject = {
+      name: req.body?.name,
+      by: req.body?.by,
+      description: req.body?.description,
+      aboutGame: req.body?.aboutGame,
+      gameProvider: req.body?.gameProvider,
+      url: req.body?.url,
+   };
+
+   // keep track if user upload games images, like preview images
+   // or games slides images.
+   if (req.files) {
+      let gameMainImage = req.files.find(
+         (el) => el.fieldname === 'gameMainImage'
+      );
+
+      // find game main image is exists or not in req.
+      if (gameMainImage) {
+         const uploadData = await uploadToS3(gameMainImage.buffer);
+         uploadObject.gameImage = uploadData.Location;
+      }
+   }
+
+   const updateDocument = await gameModel.updateOne(
+      { _id: gameId },
+      { $set: uploadObject }
+   );
+
+   if (!!updateDocument?.modifiedCount) {
+      return res.status(httpStatusCodes.OK).json({
+         error: false,
+         success: true,
+         message: 'Game information updated',
+      });
+   }
+
+   return res.status(httpStatusCodes.OK).json({
+      error: true,
+      success: false,
+      message: 'Old and new values are same',
+   });
+});
+
 module.exports = {
    insertGamesCurrency,
    deleteSingleGameCurrency,
@@ -507,4 +592,6 @@ module.exports = {
    insertGamesProvider,
    insertNewGame,
    getGames,
+   getSingleGameInfo,
+   updateSingleGame,
 };

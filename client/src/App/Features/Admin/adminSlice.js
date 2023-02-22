@@ -13,6 +13,7 @@ import {
    getGameProvidersList,
    insertNewGame,
    getGamesLists,
+   updateSingleGame,
 } from './adminActions';
 
 const INITAL_STATE = {
@@ -54,6 +55,9 @@ const INITAL_STATE = {
    gameListInfo: null,
    gameListLoading: false,
    gameListInfoError: null,
+   updateGameinfo: null,
+   updateGameLoading: false,
+   updateGameError: null,
 };
 
 const adminSlice = createSlice({
@@ -72,6 +76,8 @@ const adminSlice = createSlice({
       removeGameInfo: (state) => {
          state.insertGameInfo = null;
          state.insertGameError = null;
+         state.updateGameinfo = null;
+         state.updateGameError = null;
       },
    },
    extraReducers: (bulder) => {
@@ -306,6 +312,23 @@ const adminSlice = createSlice({
             state.gameListInfo = action.payload.data;
             state.gameListLoading = false;
             state.gameListInfoError = null;
+         });
+
+      bulder
+         .addCase(updateSingleGame.pending, (state) => {
+            state.updateGameinfo = null;
+            state.updateGameLoading = true;
+            state.updateGameError = null;
+         })
+         .addCase(updateSingleGame.rejected, (state, action) => {
+            state.updateGameinfo = null;
+            state.updateGameLoading = false;
+            state.updateGameError = action.error.message;
+         })
+         .addCase(updateSingleGame.fulfilled, (state, action) => {
+            state.updateGameinfo = action.payload.data;
+            state.updateGameLoading = false;
+            state.updateGameError = null;
          });
    },
 });

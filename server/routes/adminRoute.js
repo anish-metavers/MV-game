@@ -57,6 +57,11 @@ router.get(
    adminControllers.getGameProvidersList
 );
 router.get('/get-games', varifyJwtToken, adminControllers.getGames);
+router.get(
+   '/get-single-game',
+   varifyJwtToken,
+   adminControllers.getSingleGameInfo
+);
 
 // API => POST
 router.post(
@@ -97,6 +102,12 @@ router.patch(
    upload.single('file'),
    varifyJwtToken,
    adminControllers.updateSingleGameCurrency
+);
+router.patch(
+   '/update-single-game',
+   upload.any(),
+   varifyJwtToken,
+   adminControllers?.updateSingleGame
 );
 
 // API => DELETE

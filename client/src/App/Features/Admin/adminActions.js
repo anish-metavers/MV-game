@@ -250,3 +250,44 @@ export const getGamesLists = createAsyncThunk(
       }
    }
 );
+
+export const getSingleGameInfo = createAsyncThunk(
+   'admin/getSingleGameInfo',
+   async ({ gameId }, { rejectWithValue }) => {
+      try {
+         const gameResponse = await axiosInstance.get(
+            `/admin/get-single-game?gameId=${gameId}`
+         );
+         return gameResponse;
+      } catch (err) {
+         if (err) {
+            console.log(err);
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const updateSingleGame = createAsyncThunk(
+   'admin/updateSingleGame',
+   async ({ gameId, formData }, { rejectWithValue }) => {
+      try {
+         const updateGameInfo = await axiosInstance.patch(
+            `/admin/update-single-game?gameId=${gameId}`,
+            formData,
+            {
+               headers: {
+                  'Content-type': 'multipart/form-data',
+               },
+            }
+         );
+
+         return updateGameInfo;
+      } catch (err) {
+         if (err) {
+            console.log(err);
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
