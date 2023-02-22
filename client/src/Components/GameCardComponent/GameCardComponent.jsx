@@ -2,9 +2,18 @@ import React from 'react';
 import * as styled from './GameCardComponent.style';
 import { FiEdit2 } from '@react-icons/all-files/fi/FiEdit2';
 import { useNavigate } from 'react-router';
+import { TiDeleteOutline } from '@react-icons/all-files/ti/TiDeleteOutline';
+import { Popconfirm } from 'antd';
+import { deleteSingleGame } from '../../App/Features/Admin/adminActions';
+import { useDispatch } from 'react-redux';
 
 function GameCardComponent({ data }) {
    const navigation = useNavigate();
+   const dispatch = useDispatch();
+
+   const DeleteGameHandler = function () {
+      dispatch(deleteSingleGame({ gameId: data?._id }));
+   };
 
    return (
       <styled.div className="p-2">
@@ -49,6 +58,20 @@ function GameCardComponent({ data }) {
                         >
                            <FiEdit2 />
                         </button>
+                        <Popconfirm
+                           title="Delete the task"
+                           description="Are you sure to delete this task?"
+                           okText="Yes"
+                           cancelText="No"
+                           onConfirm={DeleteGameHandler}
+                        >
+                           <button
+                              className="game-card__button"
+                              aria-label="More"
+                           >
+                              <TiDeleteOutline />
+                           </button>
+                        </Popconfirm>
                      </div>
                   </div>
                </div>

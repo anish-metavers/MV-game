@@ -82,6 +82,7 @@ export const div = styled.div`
       background-size: cover;
       background-repeat: no-repeat;
    }
+
    .game-card__image-placeholder.two {
       background-image: linear-gradient(
             -60deg,
@@ -93,6 +94,7 @@ export const div = styled.div`
          linear-gradient(-35deg, rgba(0, 0, 0, 0.15) 15%, transparent 15%),
          linear-gradient(137.42deg, #aa00ff 0%, #7c4dff 50.43%, #304ffe 100%);
    }
+
    .game-card__image-placeholder.three {
       background-image: linear-gradient(
             -75deg,
@@ -192,6 +194,12 @@ export const div = styled.div`
       display: flex;
       gap: 0.25rem;
       margin-top: auto;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+         width: 100%;
+      }
    }
    * + .game-card__buttons {
       padding-top: 0.5rem;

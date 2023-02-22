@@ -117,6 +117,9 @@ function UploadGamesPage() {
 
       if (gameResponse?.payload?.data && gameResponse?.payload?.data?.success) {
          const data = gameResponse?.payload?.data;
+
+         console.log(data);
+
          setValue('name', data?.game?.name);
          setValue('by', data?.game?.by);
          setValue('url', data?.game?.url);
@@ -241,7 +244,6 @@ function UploadGamesPage() {
                         required
                         variant="outlined"
                         {...register('url')}
-                        {...register('name')}
                         InputLabelProps={{
                            shrink: true,
                         }}

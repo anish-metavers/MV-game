@@ -577,6 +577,35 @@ const updateSingleGame = catchAsync(async function (req, res, next) {
    });
 });
 
+const deleteSingleGame = catchAsync(async function (req, res, next) {
+   const { gameId } = req.query;
+
+   if (!gameId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'game id is required!',
+      });
+   }
+
+   const findAndDelete = await gameModel.deleteOne({ _id: gameId });
+
+   if (!!findAndDelete.deletedCount) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         message: 'Game Deleted',
+         gameId,
+      });
+   }
+
+   return res.status(httpStatusCodes.NOT_FOUND).json({
+      success: false,
+      error: true,
+      message: 'Not found',
+   });
+});
+
 module.exports = {
    insertGamesCurrency,
    deleteSingleGameCurrency,
@@ -594,4 +623,5 @@ module.exports = {
    getGames,
    getSingleGameInfo,
    updateSingleGame,
+   deleteSingleGame,
 };

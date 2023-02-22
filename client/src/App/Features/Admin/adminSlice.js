@@ -14,6 +14,7 @@ import {
    insertNewGame,
    getGamesLists,
    updateSingleGame,
+   deleteSingleGame,
 } from './adminActions';
 
 const INITAL_STATE = {
@@ -58,6 +59,8 @@ const INITAL_STATE = {
    updateGameinfo: null,
    updateGameLoading: false,
    updateGameError: null,
+   deleteGameLoading: false,
+   deleteGameError: null,
 };
 
 const adminSlice = createSlice({
@@ -329,6 +332,26 @@ const adminSlice = createSlice({
             state.updateGameinfo = action.payload.data;
             state.updateGameLoading = false;
             state.updateGameError = null;
+         });
+
+      bulder
+         .addCase(deleteSingleGame.pending, (state) => {
+            state.deleteGameLoading = true;
+            state.deleteGameError = null;
+         })
+         .addCase(deleteSingleGame.rejected, (state, action) => {
+            state.deleteGameLoading = false;
+            state.deleteGameError = action.error.message;
+         })
+         .addCase(deleteSingleGame.fulfilled, (state, action) => {
+            state.deleteGameLoading = false;
+            state.deleteGameError = null;
+            state.gameListInfo = {
+               ...state.gameListInfo,
+               games: state.gameListInfo?.games.filter(
+                  (el) => el?._id !== action.payload?.data?.gameId
+               ),
+            };
          });
    },
 });

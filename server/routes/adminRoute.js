@@ -121,5 +121,10 @@ router.delete(
    varifyJwtToken,
    adminControllers.deleteSingleGameCurrency
 );
+router.delete(
+   '/delete-single-game',
+   varifyJwtToken,
+   adminControllers.deleteSingleGame
+);
 
 module.exports = router;

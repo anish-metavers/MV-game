@@ -291,3 +291,20 @@ export const updateSingleGame = createAsyncThunk(
       }
    }
 );
+
+export const deleteSingleGame = createAsyncThunk(
+   'admin/deleteSingleGame',
+   async ({ gameId }, { rejectWithValue }) => {
+      try {
+         const deleteGameResponse = await axiosInstance.delete(
+            `/admin/delete-single-game?gameId=${gameId}`
+         );
+         return deleteGameResponse;
+      } catch (err) {
+         if (err) {
+            console.log(err);
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
