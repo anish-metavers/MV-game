@@ -62,6 +62,7 @@ router.get(
    varifyJwtToken,
    adminControllers.getSingleGameInfo
 );
+router.get('/get-avatars', varifyJwtToken, adminControllers.getUsersAvatars);
 
 // API => POST
 router.post(

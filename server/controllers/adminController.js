@@ -3,6 +3,7 @@ const currencyModel = require('../model/schema/currencySchema');
 const roleModel = require('../model/schema/roleSchema');
 const gameModel = require('../model/schema/gameSchema');
 const gameProviderModel = require('../model/schema/gameProvidersSchema');
+const avatarModel = require('../model/schema/avatarSchema');
 
 // insert game curencey.
 const insertGamesCurrency = catchAsync(async function (req, res, next) {
@@ -606,6 +607,24 @@ const deleteSingleGame = catchAsync(async function (req, res, next) {
    });
 });
 
+const getUsersAvatars = catchAsync(async function (req, res, next) {
+   const findAllAvatar = await avatarModel.find({});
+
+   if (findAllAvatar) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         avatars: findAllAvatar,
+      });
+   }
+
+   return res.status(httpStatusCodes.NOT_FOUND).json({
+      success: false,
+      error: true,
+      message: 'Not found',
+   });
+});
+
 module.exports = {
    insertGamesCurrency,
    deleteSingleGameCurrency,
@@ -624,4 +643,5 @@ module.exports = {
    getSingleGameInfo,
    updateSingleGame,
    deleteSingleGame,
+   getUsersAvatars,
 };
