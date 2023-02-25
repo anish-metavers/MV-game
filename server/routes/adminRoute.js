@@ -90,6 +90,12 @@ router.post(
    varifyJwtToken,
    adminControllers.insertNewGame
 );
+router.post(
+   '/insert-new-game-avatar',
+   upload.single('file'),
+   varifyJwtToken,
+   adminControllers.insertGameAvatar
+);
 
 // API => PATCH
 router.patch(
@@ -126,6 +132,11 @@ router.delete(
    '/delete-single-game',
    varifyJwtToken,
    adminControllers.deleteSingleGame
+);
+router.delete(
+   '/delete-single-avatar',
+   varifyJwtToken,
+   adminControllers.deleteSingleAvatar
 );
 
 module.exports = router;

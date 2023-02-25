@@ -15,6 +15,9 @@ import {
    getGamesLists,
    updateSingleGame,
    deleteSingleGame,
+   uploadGameAvatar,
+   getAllAvatars,
+   deleteSingleAvatar,
 } from './adminActions';
 
 const INITAL_STATE = {
@@ -61,6 +64,14 @@ const INITAL_STATE = {
    updateGameError: null,
    deleteGameLoading: false,
    deleteGameError: null,
+   gameAvatarUploadInfo: null,
+   gameAvatarUploadLoading: false,
+   gameAvatarUploadError: null,
+   gameAvatar: null,
+   gameAvatarLoading: false,
+   gameAvatarError: null,
+   deleteSingleAvatarLoading: false,
+   deleteSingleAvatarError: null,
 };
 
 const adminSlice = createSlice({
@@ -81,6 +92,10 @@ const adminSlice = createSlice({
          state.insertGameError = null;
          state.updateGameinfo = null;
          state.updateGameError = null;
+      },
+      removeAvatarInfo: (state) => {
+         state.gameAvatarUploadInfo = null;
+         state.gameAvatarUploadError = null;
       },
    },
    extraReducers: (bulder) => {
@@ -353,10 +368,75 @@ const adminSlice = createSlice({
                ),
             };
          });
+
+      bulder
+         .addCase(getAllAvatars.pending, (state) => {
+            state.gameAvatar = null;
+            state.gameAvatarLoading = true;
+            state.gameAvatarError = null;
+         })
+         .addCase(getAllAvatars.rejected, (state, action) => {
+            state.gameAvatar = null;
+            state.gameAvatarLoading = false;
+            state.gameAvatarError = action.error.message;
+         })
+         .addCase(getAllAvatars.fulfilled, (state, action) => {
+            state.gameAvatar = action.payload.data;
+            state.gameAvatarLoading = false;
+            state.gameAvatarError = null;
+         });
+
+      bulder
+         .addCase(uploadGameAvatar.pending, (state) => {
+            state.gameAvatarUploadInfo = null;
+            state.gameAvatarUploadLoading = true;
+            state.gameAvatarUploadError = null;
+         })
+         .addCase(uploadGameAvatar.rejected, (state, action) => {
+            state.gameAvatarUploadInfo = null;
+            state.gameAvatarUploadLoading = false;
+            state.gameAvatarUploadError = action.error.message;
+         })
+         .addCase(uploadGameAvatar.fulfilled, (state, action) => {
+            state.gameAvatarUploadInfo = action.payload.data;
+            state.gameAvatarUploadLoading = false;
+            state.gameAvatarUploadError = null;
+            state.gameAvatar = {
+               ...state.gameAvatar,
+               avatars: [
+                  action.payload?.data?.avatar,
+                  ...state.gameAvatar?.avatars,
+               ],
+            };
+         });
+
+      bulder
+         .addCase(deleteSingleAvatar.pending, (state) => {
+            state.deleteSingleAvatarLoading = true;
+            state.deleteSingleAvatarError = null;
+         })
+         .addCase(deleteSingleAvatar.rejected, (state, action) => {
+            state.deleteSingleAvatarLoading = false;
+            state.deleteSingleAvatarError = null;
+         })
+         .addCase(deleteSingleAvatar.fulfilled, (state, action) => {
+            state.deleteSingleAvatarLoading = false;
+            state.deleteSingleAvatarError = null;
+            state.gameAvatar = {
+               ...state.gameAvatar,
+               avatars: state.gameAvatar?.avatars.filter(
+                  (el) => el._id !== action.payload?.data?.id
+               ),
+            };
+         });
    },
 });
 
-export const { removeSingleRoleInfo, removeCurrencyInfo, removeGameInfo } =
-   adminSlice.actions;
+export const {
+   removeSingleRoleInfo,
+   removeCurrencyInfo,
+   removeGameInfo,
+   removeAvatarInfo,
+} = adminSlice.actions;
 
 export default adminSlice.reducer;

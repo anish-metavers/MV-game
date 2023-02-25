@@ -608,7 +608,7 @@ const deleteSingleGame = catchAsync(async function (req, res, next) {
 });
 
 const getUsersAvatars = catchAsync(async function (req, res, next) {
-   const findAllAvatar = await avatarModel.find({});
+   const findAllAvatar = await avatarModel.find({}).sort({ createdAt: -1 });
 
    if (findAllAvatar) {
       return res.status(httpStatusCodes.OK).json({
@@ -622,6 +622,65 @@ const getUsersAvatars = catchAsync(async function (req, res, next) {
       success: false,
       error: true,
       message: 'Not found',
+   });
+});
+
+const insertGameAvatar = catchAsync(async function (req, res, next) {
+   const { description } = req.body;
+
+   const uploadObject = {
+      description,
+   };
+
+   // if user send the file then wait for the s3 upload.
+   if (req.file) {
+      const uploadData = await uploadToS3(req.file.buffer);
+      // file url.
+      uploadObject.url = uploadData.Location;
+   }
+
+   const uploadAvatar = await avatarModel(uploadObject).save();
+
+   if (uploadAvatar) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         message: 'Avatar uploded',
+         avatar: uploadAvatar,
+      });
+   }
+
+   return res.status(httpStatusCodes.INTERNAL_SERVER).json({
+      error: true,
+      message: 'Internal server error',
+   });
+});
+
+const deleteSingleAvatar = catchAsync(async function (req, res, next) {
+   const { avatarId } = req.query;
+
+   if (!avatarId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         error: true,
+         message: 'Avatar id is reuqired',
+      });
+   }
+
+   const findAndDelete = await avatarModel.deleteOne({ _id: avatarId });
+
+   if (!!findAndDelete.deletedCount) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         id: avatarId,
+         message: 'Avatar deleted',
+      });
+   }
+
+   return res.status(httpStatusCodes.INTERNAL_SERVER).json({
+      success: false,
+      error: true,
+      message: 'Internal server error',
    });
 });
 
@@ -644,4 +703,6 @@ module.exports = {
    updateSingleGame,
    deleteSingleGame,
    getUsersAvatars,
+   insertGameAvatar,
+   deleteSingleAvatar,
 };

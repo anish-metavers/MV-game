@@ -5,6 +5,7 @@ import IconListComponent from '../IconListComponent/IconListComponent';
 import { VscRepoForked } from '@react-icons/all-files/vsc/VscRepoForked';
 import { FcCurrencyExchange } from '@react-icons/all-files/fc/FcCurrencyExchange';
 import { GiGamepad } from '@react-icons/all-files/gi/GiGamepad';
+import { FiGitlab } from '@react-icons/all-files/fi/FiGitlab';
 
 function SidebarComponent() {
    return (
@@ -28,6 +29,11 @@ function SidebarComponent() {
                   icon={<GiGamepad />}
                   heading={'Games'}
                   link={'/games?page=0'}
+               />
+               <IconListComponent
+                  icon={<FiGitlab />}
+                  heading={'Avatar'}
+                  link={'/avatars'}
                />
             </DashboardSidebarTabComponent>
          </styled.sclDiv>

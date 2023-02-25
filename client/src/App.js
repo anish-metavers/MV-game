@@ -17,6 +17,7 @@ import GameCurrencyPage from './Pages/GameCurrencyPage/GameCurrencyPage';
 import CreateGameCurrencyPage from './Pages/CreateGameCurrencyPage/CreateGameCurrencyPage';
 import GameListPage from './Pages/GameListPage/GameListPage';
 import UploadGamesPage from './Pages/UploadGamesPage/UploadGamesPage';
+import UserAvatarComponent from './Pages/UserAvatarComponent/UserAvatarComponent';
 
 function App() {
    const [cookie] = useCookies();
@@ -54,6 +55,7 @@ function App() {
                <Route path="/games" element={<GameListPage />} />
                <Route path="/games/create" element={<UploadGamesPage />} />
                <Route path="/games/:id" element={<UploadGamesPage />} />
+               <Route path="/avatars" element={<UserAvatarComponent />} />
             </Route>
             <Route path="/dashboard/auth/login" element={<LoginPage />} />
          </Routes>

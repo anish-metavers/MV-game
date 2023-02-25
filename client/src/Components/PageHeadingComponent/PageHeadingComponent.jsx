@@ -11,6 +11,7 @@ function PageHeadingComponent({
    para,
    innerProps,
    menu,
+   heading,
 }) {
    const [anchorEl, setAnchorEl] = useState(null);
    const open = Boolean(anchorEl);
@@ -30,7 +31,7 @@ function PageHeadingComponent({
             <span className=" text-gray-500 font-medium">{pageName}</span>
          </div>
          <h1 className="mt-2 text-3xl text-gray-700 font-semibold">
-            Welcome to Dashboard
+            {!!heading ? heading : 'Welcome to Dashboard'}
          </h1>
          <div className="flex items-center justify-between">
             {showSubHeadingCM ? (

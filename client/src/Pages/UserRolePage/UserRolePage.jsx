@@ -111,22 +111,28 @@ function UserRolePage() {
                                       )
                                     : '--- ---'}
                               </td>
-                              <td className="flex items-center space-x-2">
-                                 <Popconfirm
-                                    title="Delete the task"
-                                    description="Are you sure to delete this task?"
-                                    okText="Yes"
-                                    cancelText="No"
-                                    onConfirm={() => DeleteRolesHandler(el._id)}
-                                 >
-                                    <p className="text-red-500 font-medium">
-                                       Delete
+                              {el?.default ? (
+                                 <td>Admin default role</td>
+                              ) : (
+                                 <td className="flex items-center space-x-2">
+                                    <Popconfirm
+                                       title="Delete the task"
+                                       description="Are you sure to delete this task?"
+                                       okText="Yes"
+                                       cancelText="No"
+                                       onConfirm={() =>
+                                          DeleteRolesHandler(el._id)
+                                       }
+                                    >
+                                       <p className="text-red-500 font-medium">
+                                          Delete
+                                       </p>
+                                    </Popconfirm>
+                                    <p onClick={() => EditRoleHandler(el._id)}>
+                                       Edit
                                     </p>
-                                 </Popconfirm>
-                                 <p onClick={() => EditRoleHandler(el._id)}>
-                                    Edit
-                                 </p>
-                              </td>
+                                 </td>
+                              )}
                            </tr>
                         ))}
                      </TableComponent>

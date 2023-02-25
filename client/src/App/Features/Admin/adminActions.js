@@ -308,3 +308,59 @@ export const deleteSingleGame = createAsyncThunk(
       }
    }
 );
+
+export const uploadGameAvatar = createAsyncThunk(
+   'admin/uploadGameAvatar',
+   async ({ formData }, { rejectWithValue }) => {
+      try {
+         const avatarRespose = await axiosInstance.post(
+            '/admin/insert-new-game-avatar',
+            formData,
+            {
+               headers: {
+                  'Content-type': 'multipart/form-data',
+               },
+            }
+         );
+
+         return avatarRespose;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const getAllAvatars = createAsyncThunk(
+   'admin/getAllAvatars',
+   async (_, { rejectWithValue }) => {
+      try {
+         const avatarLists = await axiosInstance.get('/admin/get-avatars');
+         return avatarLists;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const deleteSingleAvatar = createAsyncThunk(
+   'admin/deleteSingleAvatar',
+   async ({ avatarId }, { rejectWithValue }) => {
+      try {
+         const deleteAvatarResponse = await axiosInstance.delete(
+            `/admin/delete-single-avatar?avatarId=${avatarId}`
+         );
+         return deleteAvatarResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
