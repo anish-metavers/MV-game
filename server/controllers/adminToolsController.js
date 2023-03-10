@@ -2,6 +2,7 @@ const { catchAsync, httpStatusCodes, S3 } = require('../helper/helper');
 const gameModel = require('../model/schema/gameSchema');
 const dns = require('dns').promises;
 const gameCategoriesModel = require('../model/schema/gameCategorySchema');
+const gameProvidersModel = require('../model/schema/gameProvidersSchema');
 
 /**
  *
@@ -226,7 +227,116 @@ const getCollectionDataWithCategoryList = catchAsync(async function (
       });
 });
 
-const getAllProvidersData = catchAsync(async function (req, res, next) {});
+const getAllProvidersData = catchAsync(async function (req, res, next) {
+   const findProviderData = await gameProvidersModel.aggregate([
+      {
+         $unwind: {
+            path: '$games',
+            preserveNullAndEmptyArrays: true,
+         },
+      },
+      {
+         $lookup: {
+            from: 'games',
+            localField: 'games.gameId',
+            foreignField: '_id',
+            as: 'games.game',
+         },
+      },
+      {
+         $lookup: {
+            from: 'gamecategories',
+            localField: 'games.game.gameCategory',
+            foreignField: '_id',
+            as: 'games.gameCategory',
+         },
+      },
+      {
+         $project: {
+            _id: 1,
+            providerName: 1,
+            email: 1,
+            phoneNumber: 1,
+            description: 1,
+            logo: 1,
+            __v: 1,
+            status: 1,
+            games: {
+               _id: 1,
+               createdAt: 1,
+               game: {
+                  _id: 1,
+                  name: 1,
+                  by: 1,
+                  description: 1,
+                  aboutGame: 1,
+                  url: 1,
+                  gameStatus: 1,
+                  createdAt: 1,
+                  gameImage: 1,
+                  __v: 1,
+               },
+               gameCategory: {
+                  _id: 1,
+                  name: 1,
+                  description: 1,
+                  status: 1,
+                  createdAt: 1,
+                  __v: 1,
+               },
+            },
+         },
+      },
+      {
+         $project: {
+            _id: 1,
+            providerName: 1,
+            email: 1,
+            phoneNumber: 1,
+            description: 1,
+            logo: 1,
+            __v: 1,
+            status: 1,
+            'games.game': {
+               $arrayElemAt: ['$games.game', 0],
+            },
+            'games.gameCategory': {
+               $arrayElemAt: ['$games.gameCategory', 0],
+            },
+         },
+      },
+      {
+         $group: {
+            _id: {
+               _id: '$_id',
+               providerName: '$providerName',
+               email: '$email',
+               phoneNumber: '$phoneNumber',
+               description: '$description',
+               logo: '$logo',
+               __v: '$__v',
+               status: '$status',
+            },
+            games: {
+               $push: '$games',
+            },
+         },
+      },
+   ]);
+
+   if (findProviderData) {
+      const fileName = `providers-games.json`;
+      res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
+      res.status(httpStatusCodes.OK);
+      res.send(findProviderData);
+   } else {
+      return res.status(httpStatusCodes.INTERNAL_SERVER).json({
+         success: false,
+         error: true,
+         message: 'Internal server error',
+      });
+   }
+});
 
 module.exports = {
    exportGameCollectionNoPopulateData,

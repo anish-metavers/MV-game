@@ -81,3 +81,24 @@ export const getCollectionDataWithCategoryList = createAsyncThunk(
       }
    }
 );
+
+export const getAllProvidersData = createAsyncThunk(
+   'tools/getAllProvidersData',
+   async (_, { rejectWithValue }) => {
+      try {
+         const gameDataResponse = await axiosInstance.get(
+            '/admin-tools/get-all-providers-data',
+            { responseType: 'arrayBuffer' }
+         );
+
+         const fileName = 'providers-games';
+         downloadFile(gameDataResponse?.data, fileName);
+         return gameDataResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);

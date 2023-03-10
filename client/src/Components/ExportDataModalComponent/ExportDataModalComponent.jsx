@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
    exportGameAllData,
    exportGameCollectionNoPopulateData,
+   getAllProvidersData,
    getCollectionDataWithCategoryList,
 } from '../../App/Features/Tools/adminToolsActions';
 import {
@@ -40,7 +41,11 @@ function ExportDataModalComponent({ close }) {
       }
 
       if (value === 'option3') {
-         dispatch(getCollectionDataWithCategoryList());
+         return dispatch(getCollectionDataWithCategoryList());
+      }
+
+      if (value === 'option4') {
+         return dispatch(getAllProvidersData());
       }
    };
 
@@ -92,6 +97,12 @@ function ExportDataModalComponent({ close }) {
                            value="option3"
                            control={<Radio />}
                            label="Export games category with games data"
+                           className="text-gray-200"
+                        />
+                        <FormControlLabel
+                           value="option4"
+                           control={<Radio />}
+                           label="Export providers with games"
                            className="text-gray-200"
                         />
                      </RadioGroup>
