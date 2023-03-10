@@ -3,6 +3,7 @@ import {
    exportGameCollectionNoPopulateData,
    exportGameAllData,
    getCollectionDataWithCategoryList,
+   getAllProvidersData,
 } from './adminToolsActions';
 
 const INITAL_STATE = {
@@ -67,6 +68,20 @@ const adminToolsSlice = createSlice({
                state.exportGameDataError = null;
             }
          );
+
+      bulder
+         .addCase(getAllProvidersData.pending, (state) => {
+            state.exportGameDataLoading = true;
+            state.exportGameDataError = null;
+         })
+         .addCase(getAllProvidersData.rejected, (state, action) => {
+            state.exportGameDataLoading = false;
+            state.exportGameDataError = action.error.message;
+         })
+         .addCase(getAllProvidersData.fulfilled, (state, action) => {
+            state.exportGameDataLoading = false;
+            state.exportGameDataError = null;
+         });
    },
 });
 

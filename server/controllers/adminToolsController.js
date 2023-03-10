@@ -142,7 +142,7 @@ const exportGameAllData = catchAsync(async function (req, res, next) {
       const fileName = `game-populate-data.json`;
       res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
       res.status(httpStatusCodes.OK);
-      res.send(findAllData);
+      res.send(gameData);
    } else {
       return res.status(httpStatusCodes.INTERNAL_SERVER).json({
          success: false,
@@ -192,7 +192,7 @@ const getCollectionDataWithCategoryList = catchAsync(async function (
       const fileName = `game-category-data.json`;
       res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
       res.status(httpStatusCodes.OK);
-      res.send(findAllData);
+      res.send(document);
    } else {
       return res.status(httpStatusCodes.INTERNAL_SERVER).json({
          success: false,
