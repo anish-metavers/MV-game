@@ -13,9 +13,9 @@ function DashboardSidebarTabComponent({ heading, children }) {
    return (
       <styled.div>
          <div className="content_div" onClick={ShowAndHideTabs}>
-            <p className=" text-md font-medium">{heading}</p>
+            <p className="text-gray-300 text-md font-medium">{heading}</p>
             <div className="arrow_icon">
-               <MdKeyboardArrowDown />
+               <MdKeyboardArrowDown className="text-gray-400" />
             </div>
          </div>
          <AnimatePresence>

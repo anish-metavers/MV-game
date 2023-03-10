@@ -4,13 +4,13 @@ import { BsSearch } from '@react-icons/all-files/bs/BsSearch';
 
 function SearchBarComponent() {
    return (
-      <styled.div className=" bg-gray-100">
+      <styled.div className="shadow">
          <input type="search" placeholder="Search" />
          <div className="icon_div">
-            <BsSearch className="text-gray-500" />
+            <BsSearch className="text-gray-200" />
          </div>
       </styled.div>
    );
 }
 
-export default SearchBarComponent;
+export default React.memo(SearchBarComponent);

@@ -11,6 +11,11 @@ import { MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import GameCardComponent from '../../Components/GameCardComponent/GameCardComponent';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
+import {
+   gameListInfoSelector,
+   gameListLoadingSelector,
+   gameListInfoErrorSelector,
+} from './GameList.Selector';
 
 function GameListPage() {
    const [cookie] = useCookies();
@@ -20,9 +25,9 @@ function GameListPage() {
    const dispatch = useDispatch();
    const navigation = useNavigate();
 
-   const { gameListInfo, gameListLoading, gameListInfoError } = useSelector(
-      (state) => state.admin
-   );
+   const gameListInfo = useSelector(gameListInfoSelector);
+   const gameListLoading = useSelector(gameListLoadingSelector);
+   const gameListInfoError = useSelector(gameListInfoErrorSelector);
 
    const CreateGameHandler = function () {
       navigation('/games/create');

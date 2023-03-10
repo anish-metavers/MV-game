@@ -28,7 +28,9 @@ function GameCardComponent({ data }) {
                               backgroundImage: `url(${data?.gameImage})`,
                            }}
                         ></div>
-                        <span className="game-card__cover-badge new">New</span>
+                        <span className="game-card__cover-badge new">
+                           {data?.gameStatus}
+                        </span>
                      </div>
                      <div className="game-card__title text-gray-500 font-medium">
                         {data?.name}

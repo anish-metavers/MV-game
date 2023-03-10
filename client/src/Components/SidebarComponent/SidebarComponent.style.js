@@ -5,6 +5,10 @@ export const div = styled.div`
    height: 100%;
 
    .nav_logo_div {
+      border-bottom: 1px solid var(--smooth-gray-sl-cl);
+   }
+
+   .nav_logo_div {
       width: 100%;
       height: 8%;
       padding: 1rem;

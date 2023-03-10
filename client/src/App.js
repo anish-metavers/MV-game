@@ -18,6 +18,19 @@ import CreateGameCurrencyPage from './Pages/CreateGameCurrencyPage/CreateGameCur
 import GameListPage from './Pages/GameListPage/GameListPage';
 import UploadGamesPage from './Pages/UploadGamesPage/UploadGamesPage';
 import UserAvatarComponent from './Pages/UserAvatarComponent/UserAvatarComponent';
+import UserPage from './Pages/UserPage/UserPage';
+import GameCategoryPage from './Pages/GameCategoryPage/GameCategoryPage';
+import ExportGameDataPage from './Pages/ExportGameDataPage/ExportGameDataPage';
+import GameProvidersPage from './Pages/GameProvidersPage/GameProvidersPage';
+import CreateNewGameProviderPage from './Pages/CreateNewGameProviderPage/CreateNewGameProviderPage';
+
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+const darkTheme = createTheme({
+   palette: {
+      mode: 'dark',
+   },
+});
 
 function App() {
    const [cookie] = useCookies();
@@ -25,7 +38,7 @@ function App() {
    const navigation = useNavigate();
 
    useEffect(() => {
-      if (cookie && cookie?._mv_games_auth) {
+      if (!!cookie && !!cookie?._mv_games_auth && cookie?._mv_games_auth?._id) {
          dispatch(setLoginUser({ auth: cookie?._mv_games_auth }));
       } else {
          navigation('/dashboard/auth/login');
@@ -34,31 +47,54 @@ function App() {
 
    return (
       <div className="App">
-         <Routes>
-            <Route path="/" element={<HomePage />}>
-               <Route path="/" element={<HomePageContainerComponent />} />
-               <Route path="/user-roles" element={<UserRolePage />} />
-               <Route
-                  path="/user-roles/create"
-                  element={<CreateUserRolePage />}
-               />
-               <Route path="/user-roles/:id" element={<CreateUserRolePage />} />
-               <Route path="/game-currency" element={<GameCurrencyPage />} />
-               <Route
-                  path="/game-currency/create"
-                  element={<CreateGameCurrencyPage />}
-               />
-               <Route
-                  path="/game-currency/:id"
-                  element={<CreateGameCurrencyPage />}
-               />
-               <Route path="/games" element={<GameListPage />} />
-               <Route path="/games/create" element={<UploadGamesPage />} />
-               <Route path="/games/:id" element={<UploadGamesPage />} />
-               <Route path="/avatars" element={<UserAvatarComponent />} />
-            </Route>
-            <Route path="/dashboard/auth/login" element={<LoginPage />} />
-         </Routes>
+         <ThemeProvider theme={darkTheme}>
+            <Routes>
+               <Route path="/" element={<HomePage />}>
+                  <Route path="/" element={<HomePageContainerComponent />} />
+                  <Route path="/user-roles" element={<UserRolePage />} />
+                  <Route
+                     path="/user-roles/create"
+                     element={<CreateUserRolePage />}
+                  />
+                  <Route
+                     path="/user-roles/:id"
+                     element={<CreateUserRolePage />}
+                  />
+                  <Route path="/game-currency" element={<GameCurrencyPage />} />
+                  <Route
+                     path="/game-currency/create"
+                     element={<CreateGameCurrencyPage />}
+                  />
+                  <Route
+                     path="/game-currency/:id"
+                     element={<CreateGameCurrencyPage />}
+                  />
+                  <Route path="/games" element={<GameListPage />} />
+                  <Route path="/games/create" element={<UploadGamesPage />} />
+                  <Route path="/games/:id" element={<UploadGamesPage />} />
+                  <Route path="/avatars" element={<UserAvatarComponent />} />
+                  <Route path="/users" element={<UserPage />} />
+                  <Route path="/game-category" element={<GameCategoryPage />} />
+                  <Route
+                     path="/export/game/data"
+                     element={<ExportGameDataPage />}
+                  />
+                  <Route
+                     path="/games/providers"
+                     element={<GameProvidersPage />}
+                  />
+                  <Route
+                     path="/games/providers/create"
+                     element={<CreateNewGameProviderPage />}
+                  />
+                  <Route
+                     path="/games/providers/:id"
+                     element={<CreateNewGameProviderPage />}
+                  />
+               </Route>
+               <Route path="/dashboard/auth/login" element={<LoginPage />} />
+            </Routes>
+         </ThemeProvider>
       </div>
    );
 }

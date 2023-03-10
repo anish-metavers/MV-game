@@ -16,6 +16,14 @@ import {
 import { removeAvatarInfo } from '../../App/Features/Admin/adminSlice';
 import ImagePrevComponent from '../../Components/ImagePrevComponent/ImagePrevComponent';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
+import {
+   gameAvatarUploadInfoSelector,
+   gameAvatarUploadLoadingSelector,
+   gameAvatarUploadErrorSelector,
+   gameAvatarSelector,
+   gameAvatarLoadingSelector,
+   gameAvatarErrorSelector,
+} from './UserAvatar.Selector';
 
 function UserAvatarComponent() {
    const [AvatarPreview, setAvatarPreview] = useState(null);
@@ -24,14 +32,12 @@ function UserAvatarComponent() {
    const { register, handleSubmit } = useForm();
    const dispatch = useDispatch();
 
-   const {
-      gameAvatarUploadInfo,
-      gameAvatarUploadLoading,
-      gameAvatarUploadError,
-      gameAvatar,
-      gameAvatarLoading,
-      gameAvatarError,
-   } = useSelector((state) => state.admin);
+   const gameAvatarUploadInfo = useSelector(gameAvatarUploadInfoSelector);
+   const gameAvatarUploadLoading = useSelector(gameAvatarUploadLoadingSelector);
+   const gameAvatarUploadError = useSelector(gameAvatarUploadErrorSelector);
+   const gameAvatar = useSelector(gameAvatarSelector);
+   const gameAvatarLoading = useSelector(gameAvatarLoadingSelector);
+   const gameAvatarError = useSelector(gameAvatarErrorSelector);
 
    const ImageHandler = function (event) {
       const imageFile = event.target.files[0];
@@ -84,7 +90,7 @@ function UserAvatarComponent() {
                      />
                   </div>
                   <div className="content_div mx-4">
-                     <p className="text-gray-600">
+                     <p className="text-gray-400">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.
                         Voluptas eum sit sequi nihil necessitatibus doloribus
                         sed odit! Nisi, atque obcaecati!
@@ -114,9 +120,9 @@ function UserAvatarComponent() {
                                     type={'submit'}
                                     isLoading={gameAvatarUploadLoading}
                                  />
-                                 <p className="mx-4 cursor-pointer hover:text-sky-800">
+                                 {/* <p className="mx-4 text-gray-400 cursor-pointer hover:text-sky-800">
                                     Cancel
-                                 </p>
+                                 </p> */}
                               </div>
                               <div className="image_prev_div mt-4 rounded shadow">
                                  {!!gameAvatarError ? (

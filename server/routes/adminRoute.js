@@ -4,6 +4,7 @@ const adminControllers = require('../controllers/adminController');
 const {
    userRoleValidator,
    gameProviderDocValidation,
+   currencyValidator,
 } = require('../middlewares/DocumentValidator');
 const { varifyJwtToken } = require('../middlewares/jwtValidator');
 const multer = require('multer');
@@ -63,58 +64,116 @@ router.get(
    adminControllers.getSingleGameInfo
 );
 router.get('/get-avatars', varifyJwtToken, adminControllers.getUsersAvatars);
+router.get(
+   '/get-all-login-users',
+   varifyJwtToken,
+   adminControllers.getAllUsers
+);
+router.get(
+   '/get-all-games-category',
+   varifyJwtToken,
+   adminControllers.getAllGameCategory
+);
+router.get(
+   '/get-single-game-category',
+   varifyJwtToken,
+   adminControllers.getSinglegameCategory
+);
+router.get(
+   '/get-games-all-category',
+   varifyJwtToken,
+   adminControllers.getAllGamesCategroy
+);
+router.get(
+   '/get-games-providers',
+   varifyJwtToken,
+   adminControllers.getAllGameProviders
+);
+router.get(
+   '/get-single-game-provider',
+   varifyJwtToken,
+   adminControllers.getSingleGameProvider
+);
 
 // API => POST
 router.post(
    '/insert-currency',
+   varifyJwtToken,
    upload.single('file'),
    // currencyValidator,
-   varifyJwtToken,
    adminControllers.insertGamesCurrency
 );
 router.post(
    '/insert-new-user-role',
-   userRoleValidator,
    varifyJwtToken,
+   userRoleValidator,
    adminControllers.insertNewUsersRole
 );
 router.post(
-   '/insert-games-provider',
-   varifyJwtToken,
-   gameProviderDocValidation,
-   adminControllers.insertGamesProvider
-);
-router.post(
    '/insert-new-game',
-   upload.any(),
    varifyJwtToken,
+   upload.any(),
    adminControllers.insertNewGame
 );
 router.post(
    '/insert-new-game-avatar',
-   upload.single('file'),
    varifyJwtToken,
+   upload.single('file'),
    adminControllers.insertGameAvatar
+);
+router.post(
+   '/post-new-game-category',
+   varifyJwtToken,
+   adminControllers.postNewGameCategory
+);
+router.post(
+   '/create-new-game-provider',
+   varifyJwtToken,
+   upload.single('file'),
+   gameProviderDocValidation,
+   adminControllers.createNewGameProvider
 );
 
 // API => PATCH
 router.patch(
    '/update-single-role',
-   userRoleValidator,
    varifyJwtToken,
+   userRoleValidator,
    adminControllers.updateSingleRole
 );
 router.patch(
    '/update-single-currency',
-   upload.single('file'),
    varifyJwtToken,
+   upload.single('file'),
    adminControllers.updateSingleGameCurrency
 );
 router.patch(
    '/update-single-game',
-   upload.any(),
    varifyJwtToken,
+   upload.any(),
    adminControllers?.updateSingleGame
+);
+router.patch(
+   '/update-game-category',
+   varifyJwtToken,
+   adminControllers.updateGameCategory
+);
+router.patch(
+   '/update-game-provider',
+   varifyJwtToken,
+   upload.single('file'),
+   gameProviderDocValidation,
+   adminControllers.updateGameProvider
+);
+router.patch(
+   '/block-single-game-provider',
+   varifyJwtToken,
+   adminControllers.blockSingleGameProvider
+);
+router.patch(
+   '/unblock-single-game-provider',
+   varifyJwtToken,
+   adminControllers.unblockSingleGameProvider
 );
 
 // API => DELETE
@@ -137,6 +196,11 @@ router.delete(
    '/delete-single-avatar',
    varifyJwtToken,
    adminControllers.deleteSingleAvatar
+);
+router.delete(
+   '/delete-single-game-categroy',
+   varifyJwtToken,
+   adminControllers.deleteSingleGameCategory
 );
 
 module.exports = router;

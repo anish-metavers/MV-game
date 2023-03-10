@@ -51,8 +51,10 @@ if (process.env.NODE_ENV == 'production') {
 }
 
 const adminRoute = require('./routes/adminRoute');
+const adminToolsRoute = require('./routes/adminToolsRoute');
 
 app.use('/admin', adminRoute);
+app.use('/admin-tools', adminToolsRoute);
 
 // for build file
 app.get('*', (req, res) => {

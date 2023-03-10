@@ -19,17 +19,39 @@ import {
    insertNewGame,
    getSingleGameInfo,
    updateSingleGame,
+   getAllGamesCategroy,
 } from '../../App/Features/Admin/adminActions';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import { removeGameInfo } from '../../App/Features/Admin/adminSlice';
+import {
+   gameProvidersListSelector,
+   gameProvidersLoadingSelector,
+   gameProvidersErrorSelector,
+   insertGameInfoSelector,
+   insertGameLoadingSelector,
+   insertGameErrorSelector,
+   updateGameinfoSelector,
+   updateGameLoadingSelector,
+   updateGameErrorSelector,
+   allGamesCategorysSelector,
+   allGamesCategorysLoadingSelector,
+   allGamesCategorysErrorSelector,
+} from './UploadGame.Selector';
+import { message } from 'antd';
 
 const Schema = yup.object({
    name: yup.string().required('Game name is required'),
    by: yup.string().required('Author name is required'),
    url: yup.string().required('Game url is reuqired'),
 });
+
+const Status = [
+   { values: 'Publish', id: 1 },
+   { values: 'Comming soon', id: 2 },
+   { values: 'Draft', id: 3 },
+];
 
 function UploadGamesPage() {
    const {
@@ -47,22 +69,26 @@ function UploadGamesPage() {
    const [GameImage, setGameImage] = useState(null);
    const [GameImagePreview, setGameImagePreview] = useState(null);
    const [Provider, setProvider] = useState('');
-   const [Error, setError] = useState(null);
+   const [GameStatus, setGameStatus] = useState('Draft');
+   const [GameCategory, setGameCategory] = useState(null);
    const params = useParams();
    const [isAdmin] = useAdmin(cookie);
-
    const dispatch = useDispatch();
-   const {
-      gameProvidersList,
-      gameProvidersLoading,
-      gameProvidersError,
-      insertGameInfo,
-      insertGameLoading,
-      insertGameError,
-      updateGameinfo,
-      updateGameLoading,
-      updateGameError,
-   } = useSelector((state) => state.admin);
+
+   const gameProvidersList = useSelector(gameProvidersListSelector);
+   const gameProvidersLoading = useSelector(gameProvidersLoadingSelector);
+   const gameProvidersError = useSelector(gameProvidersErrorSelector);
+   const insertGameInfo = useSelector(insertGameInfoSelector);
+   const insertGameLoading = useSelector(insertGameLoadingSelector);
+   const insertGameError = useSelector(insertGameErrorSelector);
+   const updateGameinfo = useSelector(updateGameinfoSelector);
+   const updateGameLoading = useSelector(updateGameLoadingSelector);
+   const updateGameError = useSelector(updateGameErrorSelector);
+   const allGamesCategorys = useSelector(allGamesCategorysSelector);
+   const allGamesCategorysLoading = useSelector(
+      allGamesCategorysLoadingSelector
+   );
+   const allGamesCategorysError = useSelector(allGamesCategorysErrorSelector);
 
    const ImageHandler = function (event) {
       const imageFile = event.target.files[0];
@@ -82,23 +108,23 @@ function UploadGamesPage() {
       formData.append('gameMainImage', GameImage);
       formData.append('gameProvider', Provider);
       formData.append('url', data?.url);
+      formData.append('gameStatus', GameStatus);
+      formData.append('gameCategory', GameCategory);
       return formData;
    };
 
    const onSubmit = function (data) {
       if (isAdmin && !params?.id) {
          if (!GameImage) {
-            return setError('Game image is required');
+            return message.error('Game image is required');
          }
 
          if (!Provider) {
-            return setError('Game provider is required');
+            return message.error('Game provider is required');
          }
-         setError(null);
          const formData = CreateFormData(data);
          dispatch(insertNewGame({ formData }));
       } else {
-         setError(null);
          const formData = CreateFormData(data);
          dispatch(updateSingleGame({ gameId: params?.id, formData }));
       }
@@ -107,6 +133,7 @@ function UploadGamesPage() {
    useEffect(() => {
       if (isAdmin) {
          dispatch(getGameProvidersList());
+         dispatch(getAllGamesCategroy());
       }
    }, [isAdmin]);
 
@@ -117,16 +144,15 @@ function UploadGamesPage() {
 
       if (gameResponse?.payload?.data && gameResponse?.payload?.data?.success) {
          const data = gameResponse?.payload?.data;
-
-         console.log(data);
-
          setValue('name', data?.game?.name);
          setValue('by', data?.game?.by);
          setValue('url', data?.game?.url);
          setValue('description', data?.game?.description);
          setContent(data?.game?.aboutGame);
          setGameImagePreview(data?.game?.gameImage);
+         setGameStatus(data?.game?.gameStatus);
          setProvider(data?.game?.gameProvider);
+         setGameCategory(data?.game?.gameCategory);
       } else {
          console.log(gameResponse);
       }
@@ -197,6 +223,64 @@ function UploadGamesPage() {
                               </p>
                            ) : null}
                         </div>
+                        <div className="w-full">
+                           {!!allGamesCategorysError ? (
+                              <p className="text-sm error_cl">
+                                 {allGamesCategorysError}
+                              </p>
+                           ) : null}
+                           {!!allGamesCategorysLoading ? (
+                              <SpinnerComponent />
+                           ) : null}
+                           {!!allGamesCategorys &&
+                           !!allGamesCategorys?.categorys &&
+                           allGamesCategorys?.categorys.length ? (
+                              <TextField
+                                 select
+                                 label="Game Category"
+                                 className="w-full"
+                                 value={GameCategory}
+                                 onChange={(e) =>
+                                    setGameCategory(e.target.value)
+                                 }
+                                 required
+                                 InputLabelProps={{
+                                    shrink: true,
+                                 }}
+                              >
+                                 {allGamesCategorys?.categorys.map((option) => (
+                                    <MenuItem
+                                       key={option._id}
+                                       value={option._id}
+                                    >
+                                       {option.name}
+                                    </MenuItem>
+                                 ))}
+                              </TextField>
+                           ) : null}
+                        </div>
+                        <div className="w-full">
+                           <TextField
+                              select
+                              label="Game Status"
+                              className="w-full"
+                              value={GameStatus}
+                              onChange={(e) => setGameStatus(e.target.value)}
+                              required
+                              InputLabelProps={{
+                                 shrink: true,
+                              }}
+                           >
+                              {Status.map((option) => (
+                                 <MenuItem
+                                    key={option.values}
+                                    value={option.values}
+                                 >
+                                    {option.values}
+                                 </MenuItem>
+                              ))}
+                           </TextField>
+                        </div>
                         {!!gameProvidersLoading ? (
                            <div className="w-full">
                               <SpinnerComponent />
@@ -254,14 +338,16 @@ function UploadGamesPage() {
                         </p>
                      ) : null}
                      <div>
-                        <label className="text-gray-600">About this game</label>
-                        <JoditEditor
-                           className="mt-3"
-                           ref={editor}
-                           value={Content}
-                           tabIndex={1}
-                           onChange={(newContent) => setContent(newContent)}
-                        />
+                        <label className="text-gray-400">About this game</label>
+                        <div className="mt-2">
+                           <JoditEditor
+                              ref={editor}
+                              value={Content}
+                              tabIndex={1}
+                              onChange={(newContent) => setContent(newContent)}
+                              config={{ theme: 'dark' }}
+                           />
+                        </div>
                      </div>
                      <div className="flex space_div">
                         <div>
@@ -288,19 +374,18 @@ function UploadGamesPage() {
                            {params?.id ? <p>Update</p> : <p>Publish</p>}
                         </CustomButtonComponent>
                      </div>
-                     {!!Error ? (
-                        <p className="text-sm error_cl">{Error}</p>
-                     ) : null}
                   </Box>
                </form>
             </div>
             {!!updateGameinfo && updateGameinfo?.success ? (
-               <p>{updateGameinfo?.message}</p>
+               <p className="text-gray-400">{updateGameinfo?.message}</p>
             ) : null}
             {!!updateGameinfo && !updateGameinfo?.success ? (
                <p className="text-sm error_cl">{updateGameinfo?.message}</p>
             ) : null}
-            {!!insertGameInfo ? <p>{insertGameInfo?.message}</p> : null}
+            {!!insertGameInfo ? (
+               <p className="text-gray-400">{insertGameInfo?.message}</p>
+            ) : null}
             {!!gameProvidersError ? (
                <p className="text-sm error_cl">{gameProvidersError}</p>
             ) : null}

@@ -9,6 +9,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../App/Features/Auth/authActions';
 import { useNavigate } from 'react-router';
+import {
+   authSelector,
+   authLoadingSelector,
+   authErrorSelector,
+} from './Login.Selector';
 
 const schema = yup.object({
    email: yup.string().email().required('Please enter your email'),
@@ -30,7 +35,9 @@ function LoginPage() {
 
    const navigation = useNavigate();
 
-   const { auth, authLoading, authError } = useSelector((state) => state.auth);
+   const auth = useSelector(authSelector);
+   const authLoading = useSelector(authLoadingSelector);
+   const authError = useSelector(authErrorSelector);
 
    const dispatch = useDispatch();
 
@@ -51,10 +58,10 @@ function LoginPage() {
                <img src="/images/logo_blc.png" alt="logo" />
                <div className="login_div">
                   <div className="form_group">
-                     <h1 className="text-5xl text-gray-900 font-bold">
+                     <h1 className="text-5xl text-gray-100 font-bold">
                         Welcome back,
                      </h1>
-                     <p className="text-gray-500  mt-2">
+                     <p className="text-gray-200  mt-2">
                         Welcome back! Please enter your details
                      </p>
                      <form className="mt-4" onSubmit={handleSubmit(onSubmit)}>

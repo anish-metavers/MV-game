@@ -17,6 +17,11 @@ import { useNavigate } from 'react-router-dom';
 import { ROW } from './TableCl';
 import dayjs from 'dayjs';
 import { Popconfirm } from 'antd';
+import {
+   gameCurrencyListInfoSelector,
+   gameCurrencyListLoadingSelector,
+   gameCurrencyListErrorSelector,
+} from './Game.Selector';
 
 function GameCurrencyPage() {
    const [cookie] = useCookies();
@@ -26,11 +31,9 @@ function GameCurrencyPage() {
    const page = params.get('page');
    const navigation = useNavigate();
 
-   const {
-      gameCurrencyListInfo,
-      gameCurrencyListLoading,
-      gameCurrencyListError,
-   } = useSelector((state) => state.admin);
+   const gameCurrencyListInfo = useSelector(gameCurrencyListInfoSelector);
+   const gameCurrencyListLoading = useSelector(gameCurrencyListLoadingSelector);
+   const gameCurrencyListError = useSelector(gameCurrencyListErrorSelector);
 
    const DeleteGameCurrencyHandler = function (id) {
       if (isAdmin) {

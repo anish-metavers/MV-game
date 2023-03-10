@@ -3,9 +3,10 @@ import styled from 'styled-components';
 export const div = styled.div`
    border: 1px solid red;
    padding: 1rem;
-   border-radius: 5px;
+   border-radius: 9px;
    border: 1px dashed var(--smooth-gray-cl);
    position: relative;
+   overflow: hidden;
 
    input {
       width: 100%;
@@ -19,7 +20,8 @@ export const div = styled.div`
 
    .icon_div {
       svg {
-         font-size: 20px;
+         font-size: 30px;
+         color: var(--smooth-gray-cl);
       }
    }
 

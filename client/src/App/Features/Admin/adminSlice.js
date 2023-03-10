@@ -18,6 +18,17 @@ import {
    uploadGameAvatar,
    getAllAvatars,
    deleteSingleAvatar,
+   getAllUsers,
+   postNewGameCategory,
+   getAllProductsCategory,
+   getSinglegameCategory,
+   updateGameCategory,
+   deleteSingleGameCategory,
+   getAllGamesCategroy,
+   createNewGameProvider,
+   getAllGameProviders,
+   updateGameProvider,
+   blockSingleGameProvider,
 } from './adminActions';
 
 const INITAL_STATE = {
@@ -72,6 +83,32 @@ const INITAL_STATE = {
    gameAvatarError: null,
    deleteSingleAvatarLoading: false,
    deleteSingleAvatarError: null,
+   users: null,
+   userLoading: false,
+   userErrors: null,
+   newGameCategory: null,
+   newGameCategoryLoading: false,
+   newGameCategoryError: null,
+   allCategoryInfo: null,
+   getAllCategoryInfoLoading: false,
+   getAllCategoryInfoError: null,
+   singleGameCategory: null,
+   singleGameCategoryLoading: false,
+   singleGameCategoryError: null,
+   updateGameCategoryLoading: false,
+   updateGameCategoryError: null,
+   deleteSingelGameCategoryError: null,
+   deleteSingleGameCategoryLoading: false,
+   allGamesCategorys: null,
+   allGamesCategorysLoading: false,
+   allGamesCategorysError: null,
+   postNewGameProviderInfo: null,
+   postNewGameProviderLoading: false,
+   postNewGameProviderError: null,
+   postNewGameProviderInvalidErrors: [],
+   gameProviders: null,
+   gameProvidersLoading: false,
+   gameProvidersError: null,
 };
 
 const adminSlice = createSlice({
@@ -86,6 +123,7 @@ const adminSlice = createSlice({
       removeCurrencyInfo: (state) => {
          state.updateGameCurrency = null;
          state.singleGameCurrency = null;
+         state.uploadCurrencyInfo = null;
       },
       removeGameInfo: (state) => {
          state.insertGameInfo = null;
@@ -96,6 +134,11 @@ const adminSlice = createSlice({
       removeAvatarInfo: (state) => {
          state.gameAvatarUploadInfo = null;
          state.gameAvatarUploadError = null;
+      },
+      removeProviderErros: (state) => {
+         state.postNewGameProviderInfo = null;
+         state.postNewGameProviderError = null;
+         state.postNewGameProviderInvalidErrors = [];
       },
    },
    extraReducers: (bulder) => {
@@ -429,6 +472,261 @@ const adminSlice = createSlice({
                ),
             };
          });
+
+      bulder
+         .addCase(getAllUsers.pending, (state) => {
+            state.users = null;
+            state.userLoading = true;
+            state.userErrors = null;
+         })
+         .addCase(getAllUsers.rejected, (state, action) => {
+            state.users = action.error.message;
+            state.userLoading = false;
+            state.userErrors = null;
+         })
+         .addCase(getAllUsers.fulfilled, (state, action) => {
+            state.users = action.payload?.data;
+            state.userLoading = false;
+            state.userErrors = null;
+         });
+
+      bulder
+         .addCase(postNewGameCategory.pending, (state) => {
+            state.newGameCategory = null;
+            state.newGameCategoryLoading = true;
+            state.newGameCategoryError = null;
+         })
+         .addCase(postNewGameCategory.rejected, (state, action) => {
+            state.newGameCategory = null;
+            state.newGameCategoryLoading = false;
+            state.newGameCategoryError = action.error.message;
+         })
+         .addCase(postNewGameCategory.fulfilled, (state, action) => {
+            state.allCategoryInfo = action.payload?.data?.category?._id
+               ? {
+                    ...state.allCategoryInfo,
+                    categorys: [
+                       ...state.allCategoryInfo?.categorys,
+                       {
+                          _id: action.payload?.data?.category?._id,
+                          name: action.payload?.data?.category?.name,
+                          status: action.payload?.data?.category?.status,
+                       },
+                    ],
+                 }
+               : state.allCategoryInfo;
+            state.newGameCategory = action.payload?.data?.message;
+            state.newGameCategoryLoading = false;
+            state.newGameCategoryError = null;
+         });
+
+      bulder
+         .addCase(getAllProductsCategory.pending, (state) => {
+            state.allCategoryInfo = null;
+            state.getAllCategoryInfoLoading = true;
+            state.getAllCategoryInfoError = null;
+         })
+         .addCase(getAllProductsCategory.rejected, (state, action) => {
+            state.allCategoryInfo = null;
+            state.getAllCategoryInfoLoading = false;
+            state.getAllCategoryInfoError = action.error.message;
+         })
+         .addCase(getAllProductsCategory.fulfilled, (state, action) => {
+            state.allCategoryInfo = action.payload?.data;
+            state.getAllCategoryInfoLoading = false;
+            state.getAllCategoryInfoError = null;
+         });
+
+      bulder
+         .addCase(getSinglegameCategory.pending, (state) => {
+            state.singleGameCategory = null;
+            state.singleGameCategoryLoading = true;
+            state.singleGameCategoryError = null;
+         })
+         .addCase(getSinglegameCategory.rejected, (state, action) => {
+            state.singleGameCategory = null;
+            state.singleGameCategoryLoading = false;
+            state.singleGameCategoryError = action.error.message;
+         })
+         .addCase(getSinglegameCategory.fulfilled, (state, action) => {
+            state.singleGameCategory = action.payload?.data;
+            state.singleGameCategoryLoading = false;
+            state.singleGameCategoryError = null;
+         });
+
+      bulder
+         .addCase(updateGameCategory.pending, (state) => {
+            state.newGameCategory = null;
+            state.updateGameCategoryLoading = true;
+            state.updateGameCategoryError = null;
+         })
+         .addCase(updateGameCategory.rejected, (state, action) => {
+            state.newGameCategory = null;
+            state.updateGameCategoryLoading = false;
+            state.updateGameCategoryError = action.error.message;
+         })
+         .addCase(updateGameCategory.fulfilled, (state, action) => {
+            if (action.payload?.data?._id) {
+               const updateObject = action.payload?.data;
+
+               state.allCategoryInfo = {
+                  ...state.allCategoryInfo,
+                  categorys: state.allCategoryInfo?.categorys.map((el) =>
+                     el?._id?._id === updateObject?._id
+                        ? {
+                             ...el,
+                             _id: {
+                                ...el?._id,
+                                name: updateObject?.name,
+                                status: updateObject?.status,
+                             },
+                          }
+                        : el
+                  ),
+               };
+            }
+
+            state.newGameCategory = action.payload?.data?.message;
+            state.updateGameCategoryLoading = false;
+            state.updateGameCategoryError = null;
+         });
+
+      bulder
+         .addCase(deleteSingleGameCategory.pending, (state) => {
+            state.deleteSingelGameCategoryError = null;
+            state.deleteSingleGameCategoryLoading = true;
+         })
+         .addCase(deleteSingleGameCategory.rejected, (state, action) => {
+            state.deleteSingelGameCategoryError = null;
+            state.deleteSingleGameCategoryLoading = false;
+         })
+         .addCase(deleteSingleGameCategory.fulfilled, (state, action) => {
+            if (!!action.payload?.data?.categoryId) {
+               state.allCategoryInfo = {
+                  ...state.allCategoryInfo,
+                  categorys: state.allCategoryInfo?.categorys.filter(
+                     (el) => el?._id !== action.payload?.data?.categoryId
+                  ),
+               };
+            }
+            state.deleteSingelGameCategoryError = null;
+            state.deleteSingleGameCategoryLoading = false;
+         });
+
+      bulder
+         .addCase(getAllGamesCategroy.pending, (state) => {
+            state.allGamesCategorys = null;
+            state.allGamesCategorysLoading = true;
+            state.allGamesCategorysError = null;
+         })
+         .addCase(getAllGamesCategroy.rejected, (state, action) => {
+            state.allGamesCategorys = null;
+            state.allGamesCategorysLoading = false;
+            state.allGamesCategorysError = action.error.message;
+         })
+         .addCase(getAllGamesCategroy.fulfilled, (state, action) => {
+            state.allGamesCategorys = action.payload?.data;
+            state.allGamesCategorysLoading = false;
+            state.allGamesCategorysError = null;
+         });
+
+      bulder
+         .addCase(createNewGameProvider.pending, (state) => {
+            state.postNewGameProviderInfo = null;
+            state.postNewGameProviderLoading = true;
+            state.postNewGameProviderError = null;
+            state.postNewGameProviderInvalidErrors = [];
+         })
+         .addCase(createNewGameProvider.rejected, (state, action) => {
+            state.postNewGameProviderInfo = null;
+            state.postNewGameProviderLoading = false;
+            state.postNewGameProviderError = action.error.message;
+            state.postNewGameProviderInvalidErrors = [];
+         })
+         .addCase(createNewGameProvider.fulfilled, (state, action) => {
+            if (action.payload?.data?.status === 422) {
+               state.postNewGameProviderInfo = null;
+               state.postNewGameProviderLoading = false;
+               state.postNewGameProviderError = null;
+               state.postNewGameProviderInvalidErrors = action.payload?.data;
+            } else {
+               state.postNewGameProviderInfo = action.payload?.data;
+               state.postNewGameProviderLoading = false;
+               state.postNewGameProviderError = null;
+               state.postNewGameProviderInvalidErrors = [];
+            }
+         });
+
+      bulder
+         .addCase(getAllGameProviders.pending, (state) => {
+            state.gameProviders = null;
+            state.gameProvidersLoading = true;
+            state.gameProvidersError = null;
+         })
+         .addCase(getAllGameProviders.rejected, (state, action) => {
+            state.gameProviders = null;
+            state.gameProvidersLoading = false;
+            state.gameProvidersError = action.error.message;
+         })
+         .addCase(getAllGameProviders.fulfilled, (state, action) => {
+            state.gameProviders = action.payload?.data;
+            state.gameProvidersLoading = false;
+            state.gameProvidersError = null;
+         });
+
+      bulder
+         .addCase(updateGameProvider.pending, (state) => {
+            state.postNewGameProviderInfo = null;
+            state.postNewGameProviderLoading = true;
+            state.postNewGameProviderError = null;
+            state.postNewGameProviderInvalidErrors = [];
+         })
+         .addCase(updateGameProvider.rejected, (state, action) => {
+            state.postNewGameProviderInfo = null;
+            state.postNewGameProviderLoading = false;
+            state.postNewGameProviderError = action.error.message;
+            state.postNewGameProviderInvalidErrors = [];
+         })
+         .addCase(updateGameProvider.fulfilled, (state, action) => {
+            if (action.payload?.data?.status === 422) {
+               state.postNewGameProviderInfo = null;
+               state.postNewGameProviderLoading = false;
+               state.postNewGameProviderError = null;
+               state.postNewGameProviderInvalidErrors = action.payload?.data;
+            } else {
+               state.postNewGameProviderInfo = action.payload?.data;
+               state.postNewGameProviderLoading = false;
+               state.postNewGameProviderError = null;
+               state.postNewGameProviderInvalidErrors = [];
+            }
+         });
+
+      bulder
+         .addCase(blockSingleGameProvider.pending, (state) => {
+            state.gameProvidersLoading = true;
+            state.gameProvidersError = null;
+         })
+         .addCase(blockSingleGameProvider.rejected, (state, action) => {
+            state.gameProvidersLoading = false;
+            state.gameProvidersError = action.error.message;
+         })
+         .addCase(blockSingleGameProvider.fulfilled, (state, action) => {
+            const data = action.payload?.data;
+
+            state.gameProviders = {
+               ...state.gameProviders,
+               providers:
+                  data?.providerId && !!data?.providerId
+                     ? state.gameProviders?.providers.map((el) =>
+                          el?._id === data?.providerId
+                             ? { ...el, status: data?.gameStatus }
+                             : el
+                       )
+                     : state.gameProviders?.providers,
+            };
+            state.gameProvidersLoading = false;
+            state.gameProvidersError = null;
+         });
    },
 });
 
@@ -437,6 +735,7 @@ export const {
    removeCurrencyInfo,
    removeGameInfo,
    removeAvatarInfo,
+   removeProviderErros,
 } = adminSlice.actions;
 
 export default adminSlice.reducer;

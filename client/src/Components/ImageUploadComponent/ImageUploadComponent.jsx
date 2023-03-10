@@ -12,7 +12,7 @@ function ImageUploadComponent({
 }) {
    return (
       <Fragment>
-         <label className="text-gray-600 font-medium">{label}</label>
+         <label className="text-gray-300 font-medium">{label}</label>
          <styled.div
             className={`flex items-center justify-center ${
                label ? 'mt-2' : ''

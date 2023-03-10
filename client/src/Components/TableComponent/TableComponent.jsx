@@ -13,11 +13,22 @@ function TableComponent({
    disablePrevbtn,
    disableNextbtn,
    children,
+   tableWidth,
 }) {
    return (
       <styled.div className={cl}>
          <div className="table_cm shadow-lg">
-            <table>
+            <table
+               style={
+                  !!tableWidth
+                     ? {
+                          width: `${tableWidth}px`,
+                       }
+                     : {
+                          width: '100%',
+                       }
+               }
+            >
                <thead>
                   <tr>
                      {row.map((el) => (
@@ -36,7 +47,7 @@ function TableComponent({
                   }`}
                   onClick={disablePrevbtn ? null : () => prevHandler()}
                >
-                  <IoIosArrowRoundBack className="text-gray-500" />
+                  <IoIosArrowRoundBack className="text-gray-200" />
                   <p>Prev</p>
                </CustomButtonComponent>
                <CustomButtonComponent
@@ -46,7 +57,7 @@ function TableComponent({
                   onClick={disableNextbtn ? null : () => nextHandler()}
                >
                   <p>Next</p>
-                  <IoIosArrowRoundForward className="text-gray-500" />
+                  <IoIosArrowRoundForward className="text-gray-200" />
                </CustomButtonComponent>
             </div>
          ) : null}

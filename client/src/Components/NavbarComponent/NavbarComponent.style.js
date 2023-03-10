@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 export const div = styled.div`
-   padding: 1rem 2rem;
+   padding: 1% 2rem;
+   /* border-bottom: 1px solid var(--smooth-gray-sl-cl); */
 
    .icon_box_div {
       width: 50px;

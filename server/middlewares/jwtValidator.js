@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { httpStatusCodes } = require('../helper/helper');
 const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET;
+const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY;
 
 const getUserTokenInfromation = function (req) {
    /**
@@ -38,6 +39,22 @@ const getUserTokenInfromation = function (req) {
 // varify jwt token.
 const varifyJwtToken = function (req, res, next) {
    const headersVarifyData = getUserTokenInfromation(req, res);
+
+   const adminKey = req.headers['x-admin-api-key'];
+
+   if (!adminKey) {
+      return res.status(401).json({
+         error: true,
+         message: 'Invalid admin key',
+      });
+   }
+
+   if (adminKey !== ADMIN_SECRET_KEY) {
+      return res.status(401).json({
+         error: true,
+         message: 'Invalid admin key',
+      });
+   }
 
    if (!!headersVarifyData?.error && !headersVarifyData?.success) {
       return res.status(headersVarifyData?.status).json(headersVarifyData);

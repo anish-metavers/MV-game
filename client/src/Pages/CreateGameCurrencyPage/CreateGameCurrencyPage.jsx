@@ -22,6 +22,16 @@ import {
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import { removeCurrencyInfo } from '../../App/Features/Admin/adminSlice';
+import {
+   uploadCurrencyInfoSelector,
+   uploadCurrencyLoadingSelector,
+   uploadCurrencyErrorSelector,
+   singleGameCurrencySelector,
+   singleGameCurrencyErrorSelector,
+   updateGameCurrencySelector,
+   updateGameCurrencyLoadingSelector,
+   updateGameCurrencyErrorSelector,
+} from './CreateGame.Selector';
 
 const currencies = [
    { value: true, label: 'yes' },
@@ -52,16 +62,16 @@ function CreateGameCurrencyPage() {
    const params = useParams();
    const dispatch = useDispatch();
 
-   const {
-      uploadCurrencyInfo,
-      uploadCurrencyLoading,
-      uploadCurrencyError,
-      singleGameCurrency,
-      singleGameCurrencyError,
-      updateGameCurrency,
-      updateGameCurrencyLoading,
-      updateGameCurrencyError,
-   } = useSelector((state) => state.admin);
+   const uploadCurrencyInfo = useSelector(uploadCurrencyInfoSelector);
+   const uploadCurrencyLoading = useSelector(uploadCurrencyLoadingSelector);
+   const uploadCurrencyError = useSelector(uploadCurrencyErrorSelector);
+   const singleGameCurrency = useSelector(singleGameCurrencySelector);
+   const singleGameCurrencyError = useSelector(singleGameCurrencyErrorSelector);
+   const updateGameCurrency = useSelector(updateGameCurrencySelector);
+   const updateGameCurrencyLoading = useSelector(
+      updateGameCurrencyLoadingSelector
+   );
+   const updateGameCurrencyError = useSelector(updateGameCurrencyErrorSelector);
 
    const ImageHandler = function (event) {
       const imageFiles = event.target.files;
@@ -204,21 +214,26 @@ function CreateGameCurrencyPage() {
                            }}
                         />
                         <div className="space_div">
-                           <label className="text-gray-600 font-medium">
+                           <label className="text-gray-400 font-medium">
                               Meta Description
                            </label>
-                           <p className="mt-2 text-gray-500">
+                           <p className="mt-2 text-gray-400">
                               A meta description tag generally informs and
                               interests users with a short, relevant summary of
                               what a particular page is about.
                            </p>
-                           <JoditEditor
-                              className="mt-3"
-                              ref={editor}
-                              value={content}
-                              tabIndex={1}
-                              onChange={(newContent) => setContent(newContent)}
-                           />
+                           <div>
+                              <JoditEditor
+                                 className="mt-3"
+                                 ref={editor}
+                                 value={content}
+                                 tabIndex={1}
+                                 onChange={(newContent) =>
+                                    setContent(newContent)
+                                 }
+                                 config={{ theme: 'dark' }}
+                              />
+                           </div>
                         </div>
                      </div>
                      <ImageUploadComponent
@@ -230,22 +245,26 @@ function CreateGameCurrencyPage() {
                         label={'Currency Icon'}
                         icon={<AiFillFileImage className="text-gray-500" />}
                      />
-                     <CustomButtonComponent
-                        type={'submit'}
-                        btnCl={'Publish mt-5'}
-                        isLoading={
-                           params?.id
-                              ? updateGameCurrencyLoading
-                              : uploadCurrencyLoading
-                        }
-                     >
-                        <img src="/images/done.svg" />
-                        {params?.id ? <p>Update</p> : <p>Publish</p>}
-                     </CustomButtonComponent>
+                     <div className="flex">
+                        <CustomButtonComponent
+                           type={'submit'}
+                           btnCl={'Publish mt-5'}
+                           isLoading={
+                              params?.id
+                                 ? updateGameCurrencyLoading
+                                 : uploadCurrencyLoading
+                           }
+                        >
+                           <img src="/images/done.svg" />
+                           {params?.id ? <p>Update</p> : <p>Publish</p>}
+                        </CustomButtonComponent>
+                     </div>
                   </Box>
                   <div className="mt-4">
                      {!!updateGameCurrency ? (
-                        <p>{updateGameCurrency?.message}</p>
+                        <p className="text-gray-300">
+                           {updateGameCurrency?.message}
+                        </p>
                      ) : null}
                      {!!uploadCurrencyError ? (
                         <p className="text-sm error_cl">
@@ -253,7 +272,9 @@ function CreateGameCurrencyPage() {
                         </p>
                      ) : null}
                      {!!uploadCurrencyInfo ? (
-                        <p>{uploadCurrencyInfo?.message}</p>
+                        <p className="text-gray-300">
+                           {uploadCurrencyInfo?.message}
+                        </p>
                      ) : null}
                      {!!singleGameCurrencyError ? (
                         <p className="text-sm error_cl">

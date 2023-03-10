@@ -364,3 +364,234 @@ export const deleteSingleAvatar = createAsyncThunk(
       }
    }
 );
+
+export const getAllUsers = createAsyncThunk(
+   'admin/getAllUsers',
+   async ({ page }, { rejectWithValue }) => {
+      try {
+         const usersResponse = await axiosInstance.get(
+            `/admin/get-all-login-users?page=${page}`
+         );
+         return usersResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const postNewGameCategory = createAsyncThunk(
+   'admin/postNewGameCategory',
+   async (data, { rejectWithValue }) => {
+      try {
+         const categoryRespose = await axiosInstance.post(
+            '/admin/post-new-game-category',
+            data
+         );
+         return categoryRespose;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const updateGameCategory = createAsyncThunk(
+   'admin/updateGameCategory',
+   async (data, { rejectWithValue }) => {
+      try {
+         const gameResponse = await axiosInstance.patch(
+            '/admin/update-game-category',
+            data
+         );
+         return gameResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const getAllProductsCategory = createAsyncThunk(
+   'admin/getAllProductsCategory',
+   async ({ page }, { rejectWithValue }) => {
+      try {
+         const allGamesCategory = await axiosInstance.get(
+            `/admin/get-all-games-category?page=${page}`
+         );
+         return allGamesCategory;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const getSinglegameCategory = createAsyncThunk(
+   'admin/getSinglegameCategor',
+   async ({ gameCategoryId }, { rejectWithValue }) => {
+      try {
+         const singleCategoryRespose = await axiosInstance.get(
+            `/admin/get-single-game-category?categoryId=${gameCategoryId}`
+         );
+         return singleCategoryRespose;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const deleteSingleGameCategory = createAsyncThunk(
+   'admin/deleteSinglegameCategory',
+   async ({ gameCategoryId }, { rejectWithValue }) => {
+      try {
+         const deleteCategory = await axiosInstance.delete(
+            `/admin/delete-single-game-categroy?gameCategoryId=${gameCategoryId}`
+         );
+         return deleteCategory;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const getAllGamesCategroy = createAsyncThunk(
+   'admin/getAllGamesCategroy',
+   async (_, { rejectWithValue }) => {
+      try {
+         const categoryRespose = await axiosInstance.get(
+            '/admin/get-games-all-category'
+         );
+         return categoryRespose;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const createNewGameProvider = createAsyncThunk(
+   'admin/CreateNewGameProvider',
+   async ({ formData }, { rejectWithValue }) => {
+      try {
+         const providerResponse = await axiosInstance.post(
+            '/admin/create-new-game-provider',
+            formData,
+            { validateStatus: false }
+         );
+         return providerResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const getAllGameProviders = createAsyncThunk(
+   'admin/getAllGameProviders',
+   async ({ page }, { rejectWithValue }) => {
+      try {
+         const gameProvidersResponse = await axiosInstance.get(
+            `/admin/get-games-providers?page=${page}`
+         );
+         return gameProvidersResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const getSingleGameProvider = createAsyncThunk(
+   'admin/editGameProvider',
+   async ({ _id }, { rejectWithValue }) => {
+      try {
+         const gameProviderResponse = await axiosInstance.get(
+            `/admin/get-single-game-provider?gameProviderId=${_id}`
+         );
+         return gameProviderResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const updateGameProvider = createAsyncThunk(
+   'admin/udpateGameProvider',
+   async ({ formData }, { rejectWithValue }) => {
+      try {
+         const updateProviderRespose = await axiosInstance.patch(
+            '/admin/update-game-provider',
+            formData,
+            { validateStatus: false }
+         );
+         return updateProviderRespose;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const blockSingleGameProvider = createAsyncThunk(
+   'admin/deleteSingleGameProvider',
+   async ({ _id }, rejectWithValue) => {
+      try {
+         const blockSingleGameProviderRespose = await axiosInstance.patch(
+            `/admin/block-single-game-provider`,
+            { providerId: _id }
+         );
+
+         return blockSingleGameProviderRespose;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const unblockSingleGameProvider = createAsyncThunk(
+   'admin/deleteSingleGameProvider',
+   async ({ _id }, rejectWithValue) => {
+      try {
+         const unblockSingleGameProviderrRespose = await axiosInstance.patch(
+            `/admin/unblock-single-game-provider`,
+            { providerId: _id }
+         );
+
+         return unblockSingleGameProviderrRespose;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);

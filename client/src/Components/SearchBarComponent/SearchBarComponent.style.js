@@ -8,6 +8,7 @@ export const div = styled.div`
    overflow: hidden;
    display: flex;
    align-items: center;
+   border: 1px solid var(--smooth-gray-sl-cl);
 
    input {
       width: 100%;
@@ -16,6 +17,7 @@ export const div = styled.div`
       outline: none;
       padding: 1rem;
       background-color: transparent;
+      color: var(--main-cl);
    }
 
    .icon_div {

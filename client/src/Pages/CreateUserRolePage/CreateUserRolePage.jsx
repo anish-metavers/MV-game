@@ -19,6 +19,17 @@ import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router';
 import { removeSingleRoleInfo } from '../../App/Features/Admin/adminSlice';
+import {
+   newRoleInsertInfoSelector,
+   newRoleInsertLoadingSelector,
+   newRoleInsertErrorSelector,
+   newRoleInsertInvalidErrorsSelector,
+   singleRoleSelector,
+   singleRoleErrorSelector,
+   updateSingleRoleInfoSelector,
+   updateSinglRoleLoadingSelector,
+   updateSingleRoleErrorSelector,
+} from './CreateUser.Selector';
 
 const Schema = yup.object({
    roleName: yup.string().required('Role name is required'),
@@ -44,17 +55,17 @@ function CreateUserRolePage() {
    const [isAdmin] = useAdmin(cookie);
    const dispatch = useDispatch();
 
-   const {
-      newRoleInsertInfo,
-      newRoleInsertLoading,
-      newRoleInsertError,
-      newRoleInsertInvalidErrors,
-      singleRole,
-      singleRoleError,
-      updateSingleRoleInfo,
-      updateSinglRoleLoading,
-      updateSingleRoleError,
-   } = useSelector((state) => state.admin);
+   const newRoleInsertInfo = useSelector(newRoleInsertInfoSelector);
+   const newRoleInsertLoading = useSelector(newRoleInsertLoadingSelector);
+   const newRoleInsertError = useSelector(newRoleInsertErrorSelector);
+   const newRoleInsertInvalidErrors = useSelector(
+      newRoleInsertInvalidErrorsSelector
+   );
+   const singleRole = useSelector(singleRoleSelector);
+   const singleRoleError = useSelector(singleRoleErrorSelector);
+   const updateSingleRoleInfo = useSelector(updateSingleRoleInfoSelector);
+   const updateSinglRoleLoading = useSelector(updateSinglRoleLoadingSelector);
+   const updateSingleRoleError = useSelector(updateSingleRoleErrorSelector);
 
    const onSubmit = function (data) {
       if (isAdmin && !params?.id) {
@@ -102,7 +113,7 @@ function CreateUserRolePage() {
             />
             <div className="heading_div mt-5 flex items-center justify-between">
                <div>
-                  <h1 className="text-xl font-medium text-gray-700">
+                  <h1 className="text-xl font-medium text-gray-400">
                      {params?.id ? 'Edit role' : 'New Role'}
                   </h1>
                   <p className="mt-3 text-gray-500 mb-4">
@@ -136,7 +147,7 @@ function CreateUserRolePage() {
                            {errors?.roleName?.message}
                         </p>
                      ) : null}
-                     <p className="mt-4 text-gray-700 font-medium">
+                     <p className="mt-4 text-gray-300 font-medium">
                         Description
                      </p>
                      <JoditEditor
@@ -144,6 +155,7 @@ function CreateUserRolePage() {
                         value={content}
                         tabIndex={1}
                         onChange={(newContent) => setContent(newContent)}
+                        config={{ theme: 'dark' }}
                      />
                   </Box>
                   <div className="mb-3">
@@ -164,7 +176,9 @@ function CreateUserRolePage() {
                      <p className="text-sm error_cl">{newRoleInsertError}</p>
                   ) : null}
                   {!!updateSingleRoleInfo && updateSingleRoleInfo?.success ? (
-                     <p>{updateSingleRoleInfo?.message}</p>
+                     <p className="text-gray-300">
+                        {updateSingleRoleInfo?.message}
+                     </p>
                   ) : null}
                   {!!newRoleInsertInvalidErrors &&
                   newRoleInsertInvalidErrors?.error ? (

@@ -3,10 +3,14 @@ import styled from 'styled-components';
 export const div = styled.div`
    .game_cards {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(6, 1fr);
+
+      @media (max-width: 1200px) {
+         grid-template-columns: repeat(5, 1fr);
+      }
 
       @media (max-width: 900px) {
-         grid-template-columns: repeat(3, 1fr);
+         grid-template-columns: repeat(4, 1fr);
       }
 
       @media (max-width: 700px) {

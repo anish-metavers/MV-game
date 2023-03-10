@@ -7,20 +7,16 @@ export const div = styled.div`
    border-radius: 5px;
 
    &:hover {
-      background-color: var(--light-blue-cl);
+      background-color: var(--smooth-gray-sl-cl);
    }
 
    .active_tab {
       color: var(--primary-color);
       font-weight: 500;
-
-      svg {
-         color: var(--primary-color);
-      }
    }
 
    svg {
-      font-size: 22px;
+      font-size: 17px;
    }
 
    .icon_div {

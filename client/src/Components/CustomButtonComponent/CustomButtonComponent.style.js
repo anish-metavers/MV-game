@@ -164,14 +164,14 @@ export const div = styled.div`
    }
 
    .login_btn {
-      background-color: var(--dark-cl);
+      background-color: var(--primary-color);
       width: 100%;
       border-radius: 5px;
    }
 
    .Publish {
       background-color: var(--primary-color);
-      border-radius: 20px;
+      border-radius: 8px;
       padding: 0.5rem 2rem;
 
       img {
@@ -186,7 +186,7 @@ export const div = styled.div`
       cursor: pointer;
 
       p {
-         color: var(--dark-cl);
+         /* color: var(--dark-cl); */
          font-size: 14px;
          margin-right: 0.2rem;
       }

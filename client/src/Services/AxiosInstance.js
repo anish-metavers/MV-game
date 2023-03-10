@@ -2,6 +2,7 @@ import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 const USER_API_ROUTE_URL = process.env.REACT_APP_BACKEND_BASE_USER_URL;
 const ADMIN_DASHBOARD_URL = process.env.REACT_APP_BACKEND_BASE_ADMIN_URL;
+const ADMIN_KEY = process.env.REACT_APP_ADMIN_SECRET_KEY;
 
 const getCookieValues = function () {
    const cookieObj = new URLSearchParams(
@@ -24,6 +25,8 @@ axiosInstance.interceptors.request.use(async (req) => {
       if (!refreshToken) {
          console.log('login again');
       }
+
+      req.headers['x-admin-api-key'] = ADMIN_KEY;
 
       /**
        * get user refresh token.

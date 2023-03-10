@@ -2,6 +2,8 @@ const { validationResult } = require('express-validator');
 
 const AWS = require('aws-sdk');
 
+require('aws-sdk/lib/maintenance_mode_message').suppress = true;
+
 const catchAsync = function (fn) {
    /**
     * @fn function which is wrapperd by the catchAsync function to use the DRY method.
@@ -80,4 +82,5 @@ module.exports = {
    httpStatusCodes,
    validateErrors,
    uploadToS3,
+   S3,
 };

@@ -17,6 +17,11 @@ import { useSearchParams } from 'react-router-dom';
 import { MenuItem } from '@mui/material';
 import dayjs from 'dayjs';
 import { Popconfirm } from 'antd';
+import {
+   rolesSelector,
+   getRolesLoadingSelector,
+   getRolesErrorSelector,
+} from './UserRole.Selector';
 
 function UserRolePage() {
    const [cookie] = useCookies();
@@ -26,9 +31,9 @@ function UserRolePage() {
    const [params] = useSearchParams();
    const page = params.get('page');
 
-   const { roles, getRolesLoading, getRolesError } = useSelector(
-      (state) => state.admin
-   );
+   const roles = useSelector(rolesSelector);
+   const getRolesLoading = useSelector(getRolesLoadingSelector);
+   const getRolesError = useSelector(getRolesErrorSelector);
 
    const CreateUserRoleHandler = function () {
       navigation('/user-roles/create');
@@ -112,7 +117,7 @@ function UserRolePage() {
                                     : '--- ---'}
                               </td>
                               {el?.default ? (
-                                 <td>Admin default role</td>
+                                 <td>Default roles</td>
                               ) : (
                                  <td className="flex items-center space-x-2">
                                     <Popconfirm

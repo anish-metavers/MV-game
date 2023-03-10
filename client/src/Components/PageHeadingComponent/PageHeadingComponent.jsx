@@ -27,19 +27,21 @@ function PageHeadingComponent({
       <styled.div>
          <div className="flex items-center">
             <p className="text-blue-500 font-medium">Dashboard</p>
-            <span className="mx-3 text-gray-500">/</span>
-            <span className=" text-gray-500 font-medium">{pageName}</span>
+            <span className="mx-3 text-gray-300">/</span>
+            <span className=" text-gray-300 font-medium">{pageName}</span>
          </div>
-         <h1 className="mt-2 text-3xl text-gray-700 font-semibold">
+         <h1 className="mt-2 text-3xl text-gray-300 font-semibold">
             {!!heading ? heading : 'Welcome to Dashboard'}
          </h1>
          <div className="flex items-center justify-between">
             {showSubHeadingCM ? (
                <div className="mt-5">
-                  <h1 className="text-xl font-medium text-gray-700">
-                     {subHeading}
-                  </h1>
-                  <p className="mt-3 text-gray-500">{para}</p>
+                  {!!subHeading ? (
+                     <h1 className="text-xl font-medium text-gray-400">
+                        {subHeading}
+                     </h1>
+                  ) : null}
+                  <p className="mt-3 text-gray-400">{para}</p>
                </div>
             ) : null}
             {menu ? (

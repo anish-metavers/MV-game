@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const div = styled.div`
    width: 100%;
-   border-bottom: 1px solid var(--smooth-gray-lg-cl);
+   border-bottom: 1px solid var(--smooth-gray-sl-cl);
 
    .content_div {
       display: flex;

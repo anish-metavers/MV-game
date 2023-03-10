@@ -17,6 +17,7 @@ export const loginFormDiv = styled.div`
    display: flex;
    border-radius: 10px;
    overflow: hidden;
+   background-color: var(--dark-cl);
 
    @media (max-width: 1000px) {
       width: 90%;

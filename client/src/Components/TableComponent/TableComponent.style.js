@@ -3,30 +3,22 @@ import styled from 'styled-components';
 export const div = styled.div`
    width: 100%;
 
+   padding: 1rem;
+
    .table_cm {
       width: 100%;
       overflow: hidden;
       border-radius: 10px;
-      border: 1px solid var(--smooth-gray-lg-cl);
+      border: 1px solid var(--smooth-gray-cl);
+      overflow: scroll;
 
       table {
-         width: 100%;
-
          p {
             cursor: pointer;
          }
 
          thead {
-            border-bottom: 1px solid var(--smooth-gray-lg-cl);
-         }
-
-         tbody {
-            border-right: 1px solid var(--smooth-gray-lg-cl);
-            border-left: 1px solid var(--smooth-gray-lg-cl);
-
-            tr {
-               border-bottom: 1px solid var(--smooth-gray-lg-cl);
-            }
+            border-bottom: 1px solid var(--smooth-gray-cl);
          }
 
          tr {
@@ -34,16 +26,15 @@ export const div = styled.div`
                font-size: 14px;
                text-align: start;
                font-weight: 500;
-               color: var(--smooth-lg-sl-cl);
+               color: var(--smooth-gray-lg-cl);
                padding: 1rem;
-               background-color: var(--light-blue-cl);
             }
 
             td {
                padding: 1rem;
                font-size: 14px;
                font-weight: 400;
-               color: var(--light-gray-cl);
+               color: var(--smooth-gray-lg-cl);
             }
          }
       }

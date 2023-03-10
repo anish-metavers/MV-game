@@ -50,7 +50,7 @@ code {
    --side-bar-cl: #1a1d27;
    --sm-border-cl: #2e313a;
    --dark-bl-cl: #1b1d29;
-   --smooth-gray-lg-cl: #e4e9eb;
+   --smooth-gray-lg-cl: #cccdcd;
    --light-blue-cl: #f8f8fc;
 }
 
@@ -84,6 +84,51 @@ code {
    padding: 1rem 0;
 }
 
+/* 
 .jodit-workplace {
    min-height: 300px !important;
+} */
+
+.Publish {
+   background-color: var(--light-green-cl);
+   color: var(--main-cl);
+   border-radius: 5px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.Publish p {
+   font-size: 13px;
+}
+
+.Draft {
+   background-color: var(--dark-red-cl);
+   color: var(--main-cl);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 5px;
+}
+
+.Draft p {
+   font-size: 13px;
+}
+
+.Blocked {
+   background-color: var(--error);
+   color: var(--main-cl);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 5px;
+}
+
+.Show_drop_down {
+   max-height: 500px !important;
+}
+
+:where(.css-dev-only-do-not-override-diro6f)[class^='ant-popover'],
+:where(.css-dev-only-do-not-override-diro6f)[class*=' ant-popover'] {
+   max-width: 300px !important;
 }
