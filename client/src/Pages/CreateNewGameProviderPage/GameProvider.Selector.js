@@ -1,23 +1,23 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-const adminReducerSelector = (state) => state.admin;
+const gameProviderReducerSelector = (state) => state.gameProviders;
 
 export const postNewGameProviderInfoSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.postNewGameProviderInfo
+   [gameProviderReducerSelector],
+   (gameProvidersSlice) => gameProvidersSlice.postNewGameProviderInfo
 );
 
 export const postNewGameProviderLoadingSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.postNewGameProviderLoading
+   [gameProviderReducerSelector],
+   (gameProvidersSlice) => gameProvidersSlice.postNewGameProviderLoading
 );
 
 export const postNewGameProviderErrorSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.postNewGameProviderError
+   [gameProviderReducerSelector],
+   (gameProvidersSlice) => gameProvidersSlice.postNewGameProviderError
 );
 
 export const postNewGameProviderInvalidErrorsSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.postNewGameProviderInvalidErrors
+   [gameProviderReducerSelector],
+   (gameProvidersSlice) => gameProvidersSlice.postNewGameProviderInvalidErrors
 );

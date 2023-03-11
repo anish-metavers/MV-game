@@ -52,8 +52,10 @@ if (process.env.NODE_ENV == 'production') {
 
 const adminRoute = require('./routes/adminRoute');
 const adminToolsRoute = require('./routes/adminToolsRoute');
+const gameProviderRoute = require('./routes/gameProviderRoute');
 
 app.use('/admin', adminRoute);
+app.use('/game-provider', gameProviderRoute);
 app.use('/admin-tools', adminToolsRoute);
 
 // for build file

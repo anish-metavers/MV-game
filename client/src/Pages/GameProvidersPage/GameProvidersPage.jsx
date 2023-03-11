@@ -12,7 +12,7 @@ import {
    blockSingleGameProvider,
    getAllGameProviders,
    unblockSingleGameProvider,
-} from '../../App/Features/Admin/adminActions';
+} from '../../App/Features/GameProviders/GameProvidersActions';
 import {
    gameProvidersSelector,
    gameProvidersLoadingSelector,
@@ -58,6 +58,10 @@ function GameProvidersPage() {
 
    const EditGameProviderHandler = function (_id) {
       navigation(`/games/providers/${_id}`);
+   };
+
+   const GameProviderPageHandler = function (_id) {
+      navigation(`/provider/games/${_id}?page=0`);
    };
 
    useEffect(() => {
@@ -114,7 +118,10 @@ function GameProvidersPage() {
                               : el?.description}
                         </td>
                         <td>
-                           <div className="logo_div shadow">
+                           <div
+                              className="logo_div shadow cursor-pointer"
+                              onClick={() => GameProviderPageHandler(el?._id)}
+                           >
                               <img src={el?.logo} alt="" />
                            </div>
                         </td>

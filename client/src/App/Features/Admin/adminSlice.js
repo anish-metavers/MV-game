@@ -25,10 +25,6 @@ import {
    updateGameCategory,
    deleteSingleGameCategory,
    getAllGamesCategroy,
-   createNewGameProvider,
-   getAllGameProviders,
-   updateGameProvider,
-   blockSingleGameProvider,
 } from './adminActions';
 
 const INITAL_STATE = {
@@ -102,13 +98,6 @@ const INITAL_STATE = {
    allGamesCategorys: null,
    allGamesCategorysLoading: false,
    allGamesCategorysError: null,
-   postNewGameProviderInfo: null,
-   postNewGameProviderLoading: false,
-   postNewGameProviderError: null,
-   postNewGameProviderInvalidErrors: [],
-   gameProviders: null,
-   gameProvidersLoading: false,
-   gameProvidersError: null,
 };
 
 const adminSlice = createSlice({
@@ -134,11 +123,6 @@ const adminSlice = createSlice({
       removeAvatarInfo: (state) => {
          state.gameAvatarUploadInfo = null;
          state.gameAvatarUploadError = null;
-      },
-      removeProviderErros: (state) => {
-         state.postNewGameProviderInfo = null;
-         state.postNewGameProviderError = null;
-         state.postNewGameProviderInvalidErrors = [];
       },
    },
    extraReducers: (bulder) => {
@@ -629,104 +613,6 @@ const adminSlice = createSlice({
             state.allGamesCategorysLoading = false;
             state.allGamesCategorysError = null;
          });
-
-      bulder
-         .addCase(createNewGameProvider.pending, (state) => {
-            state.postNewGameProviderInfo = null;
-            state.postNewGameProviderLoading = true;
-            state.postNewGameProviderError = null;
-            state.postNewGameProviderInvalidErrors = [];
-         })
-         .addCase(createNewGameProvider.rejected, (state, action) => {
-            state.postNewGameProviderInfo = null;
-            state.postNewGameProviderLoading = false;
-            state.postNewGameProviderError = action.error.message;
-            state.postNewGameProviderInvalidErrors = [];
-         })
-         .addCase(createNewGameProvider.fulfilled, (state, action) => {
-            if (action.payload?.data?.status === 422) {
-               state.postNewGameProviderInfo = null;
-               state.postNewGameProviderLoading = false;
-               state.postNewGameProviderError = null;
-               state.postNewGameProviderInvalidErrors = action.payload?.data;
-            } else {
-               state.postNewGameProviderInfo = action.payload?.data;
-               state.postNewGameProviderLoading = false;
-               state.postNewGameProviderError = null;
-               state.postNewGameProviderInvalidErrors = [];
-            }
-         });
-
-      bulder
-         .addCase(getAllGameProviders.pending, (state) => {
-            state.gameProviders = null;
-            state.gameProvidersLoading = true;
-            state.gameProvidersError = null;
-         })
-         .addCase(getAllGameProviders.rejected, (state, action) => {
-            state.gameProviders = null;
-            state.gameProvidersLoading = false;
-            state.gameProvidersError = action.error.message;
-         })
-         .addCase(getAllGameProviders.fulfilled, (state, action) => {
-            state.gameProviders = action.payload?.data;
-            state.gameProvidersLoading = false;
-            state.gameProvidersError = null;
-         });
-
-      bulder
-         .addCase(updateGameProvider.pending, (state) => {
-            state.postNewGameProviderInfo = null;
-            state.postNewGameProviderLoading = true;
-            state.postNewGameProviderError = null;
-            state.postNewGameProviderInvalidErrors = [];
-         })
-         .addCase(updateGameProvider.rejected, (state, action) => {
-            state.postNewGameProviderInfo = null;
-            state.postNewGameProviderLoading = false;
-            state.postNewGameProviderError = action.error.message;
-            state.postNewGameProviderInvalidErrors = [];
-         })
-         .addCase(updateGameProvider.fulfilled, (state, action) => {
-            if (action.payload?.data?.status === 422) {
-               state.postNewGameProviderInfo = null;
-               state.postNewGameProviderLoading = false;
-               state.postNewGameProviderError = null;
-               state.postNewGameProviderInvalidErrors = action.payload?.data;
-            } else {
-               state.postNewGameProviderInfo = action.payload?.data;
-               state.postNewGameProviderLoading = false;
-               state.postNewGameProviderError = null;
-               state.postNewGameProviderInvalidErrors = [];
-            }
-         });
-
-      bulder
-         .addCase(blockSingleGameProvider.pending, (state) => {
-            state.gameProvidersLoading = true;
-            state.gameProvidersError = null;
-         })
-         .addCase(blockSingleGameProvider.rejected, (state, action) => {
-            state.gameProvidersLoading = false;
-            state.gameProvidersError = action.error.message;
-         })
-         .addCase(blockSingleGameProvider.fulfilled, (state, action) => {
-            const data = action.payload?.data;
-
-            state.gameProviders = {
-               ...state.gameProviders,
-               providers:
-                  data?.providerId && !!data?.providerId
-                     ? state.gameProviders?.providers.map((el) =>
-                          el?._id === data?.providerId
-                             ? { ...el, status: data?.gameStatus }
-                             : el
-                       )
-                     : state.gameProviders?.providers,
-            };
-            state.gameProvidersLoading = false;
-            state.gameProvidersError = null;
-         });
    },
 });
 
@@ -735,7 +621,6 @@ export const {
    removeCurrencyInfo,
    removeGameInfo,
    removeAvatarInfo,
-   removeProviderErros,
 } = adminSlice.actions;
 
 export default adminSlice.reducer;

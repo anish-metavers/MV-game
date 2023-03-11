@@ -1,35 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const adminControllers = require('../controllers/adminController');
+const { upload } = require('../helper/helper');
 const {
    userRoleValidator,
-   gameProviderDocValidation,
    currencyValidator,
 } = require('../middlewares/DocumentValidator');
 const { varifyJwtToken } = require('../middlewares/jwtValidator');
-const multer = require('multer');
-
-//Specify the multer config
-let upload = multer({
-   limits: {
-      fileSize: 1024 * 1024 * 5,
-   },
-   fileFilter: function (req, file, done) {
-      if (
-         file.mimetype === 'image/jpeg' ||
-         file.mimetype === 'image/png' ||
-         file.mimetype === 'image/jpg' ||
-         file.mimetype === 'image/avif'
-      ) {
-         done(null, true);
-      } else {
-         //prevent the upload
-         var newError = new Error('File type is incorrect');
-         newError.name = 'MulterError';
-         done(newError, false);
-      }
-   },
-});
 
 // API => GET
 router.get(
@@ -84,16 +61,6 @@ router.get(
    varifyJwtToken,
    adminControllers.getAllGamesCategroy
 );
-router.get(
-   '/get-games-providers',
-   varifyJwtToken,
-   adminControllers.getAllGameProviders
-);
-router.get(
-   '/get-single-game-provider',
-   varifyJwtToken,
-   adminControllers.getSingleGameProvider
-);
 
 // API => POST
 router.post(
@@ -126,13 +93,6 @@ router.post(
    varifyJwtToken,
    adminControllers.postNewGameCategory
 );
-router.post(
-   '/create-new-game-provider',
-   varifyJwtToken,
-   upload.single('file'),
-   gameProviderDocValidation,
-   adminControllers.createNewGameProvider
-);
 
 // API => PATCH
 router.patch(
@@ -157,23 +117,6 @@ router.patch(
    '/update-game-category',
    varifyJwtToken,
    adminControllers.updateGameCategory
-);
-router.patch(
-   '/update-game-provider',
-   varifyJwtToken,
-   upload.single('file'),
-   gameProviderDocValidation,
-   adminControllers.updateGameProvider
-);
-router.patch(
-   '/block-single-game-provider',
-   varifyJwtToken,
-   adminControllers.blockSingleGameProvider
-);
-router.patch(
-   '/unblock-single-game-provider',
-   varifyJwtToken,
-   adminControllers.unblockSingleGameProvider
 );
 
 // API => DELETE

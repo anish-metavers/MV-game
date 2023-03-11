@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator');
-
+const multer = require('multer');
 const AWS = require('aws-sdk');
 
 require('aws-sdk/lib/maintenance_mode_message').suppress = true;
@@ -77,10 +77,33 @@ const uploadToS3 = (fileData) => {
    });
 };
 
+//Specify the multer config
+let upload = multer({
+   limits: {
+      fileSize: 1024 * 1024 * 5,
+   },
+   fileFilter: function (req, file, done) {
+      if (
+         file.mimetype === 'image/jpeg' ||
+         file.mimetype === 'image/png' ||
+         file.mimetype === 'image/jpg' ||
+         file.mimetype === 'image/avif'
+      ) {
+         done(null, true);
+      } else {
+         //prevent the upload
+         var newError = new Error('File type is incorrect');
+         newError.name = 'MulterError';
+         done(newError, false);
+      }
+   },
+});
+
 module.exports = {
    catchAsync,
    httpStatusCodes,
    validateErrors,
    uploadToS3,
    S3,
+   upload,
 };

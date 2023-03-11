@@ -23,6 +23,7 @@ import GameCategoryPage from './Pages/GameCategoryPage/GameCategoryPage';
 import ExportGameDataPage from './Pages/ExportGameDataPage/ExportGameDataPage';
 import GameProvidersPage from './Pages/GameProvidersPage/GameProvidersPage';
 import CreateNewGameProviderPage from './Pages/CreateNewGameProviderPage/CreateNewGameProviderPage';
+import ProvidersGamesPage from './Pages/ProvidersGamesPage/ProvidersGamesPage';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
@@ -90,6 +91,10 @@ function App() {
                   <Route
                      path="/games/providers/:id"
                      element={<CreateNewGameProviderPage />}
+                  />
+                  <Route
+                     path="/provider/games/:id"
+                     element={<ProvidersGamesPage />}
                   />
                </Route>
                <Route path="/dashboard/auth/login" element={<LoginPage />} />

@@ -16,16 +16,16 @@ import {
    createNewGameProvider,
    getSingleGameProvider,
    updateGameProvider,
-} from '../../App/Features/Admin/adminActions';
+} from '../../App/Features/GameProviders/GameProvidersActions';
 import {
    postNewGameProviderInfoSelector,
    postNewGameProviderLoadingSelector,
    postNewGameProviderErrorSelector,
    postNewGameProviderInvalidErrorsSelector,
 } from './GameProvider.Selector';
-import { removeProviderErros } from '../../App/Features/Admin/adminSlice';
 import { MenuItem } from '@mui/material';
 import { useParams } from 'react-router';
+import { removeProviderErros } from '../../App/Features/GameProviders/GameProvidersSlice';
 
 const Schema = yup.object({
    providerName: yup.string().required('Game provider name is required'),
