@@ -5,11 +5,6 @@ import {
    createUserRole,
    getSingleUserRole,
    updateSingleRole,
-   getGameCurrencysList,
-   inertNewGameCurrency,
-   deleteSingleGameCurrency,
-   getSingleGameCurrency,
-   updateSingleGameCurrency,
    getGameProvidersList,
    insertNewGame,
    getGamesLists,
@@ -45,20 +40,6 @@ const INITAL_STATE = {
    updateSingleRoleInfo: null,
    updateSinglRoleLoading: false,
    updateSingleRoleError: null,
-   gameCurrencyListInfo: null,
-   gameCurrencyListLoading: false,
-   gameCurrencyListError: null,
-   uploadCurrencyInfo: null,
-   uploadCurrencyLoading: false,
-   uploadCurrencyError: null,
-   deleteSingleGameCurrencyError: null,
-   deleteSingleGameCurrencyLoading: false,
-   singleGameCurrency: null,
-   singleGameCurrencyLoading: false,
-   singleGameCurrencyError: null,
-   updateGameCurrency: null,
-   updateGameCurrencyLoading: false,
-   updateGameCurrencyError: null,
    gameProvidersList: null,
    gameProvidersLoading: false,
    gameProvidersError: null,
@@ -225,94 +206,6 @@ const adminSlice = createSlice({
             state.updateSingleRoleInfo = action.payload.data;
             state.updateSinglRoleLoading = false;
             state.updateSingleRoleError = null;
-         });
-
-      bulder
-         .addCase(getGameCurrencysList.pending, (state) => {
-            state.gameCurrencyListInfo = null;
-            state.gameCurrencyListLoading = true;
-            state.gameCurrencyListError = null;
-         })
-         .addCase(getGameCurrencysList.rejected, (state, action) => {
-            state.gameCurrencyListInfo = null;
-            state.gameCurrencyListLoading = false;
-            state.gameCurrencyListError = action.error.message;
-         })
-         .addCase(getGameCurrencysList.fulfilled, (state, action) => {
-            state.gameCurrencyListInfo = action.payload.data;
-            state.gameCurrencyListLoading = false;
-            state.gameCurrencyListError = null;
-         });
-
-      bulder
-         .addCase(inertNewGameCurrency.pending, (state) => {
-            state.uploadCurrencyInfo = null;
-            state.uploadCurrencyLoading = true;
-            state.uploadCurrencyError = null;
-         })
-         .addCase(inertNewGameCurrency.rejected, (state, action) => {
-            state.uploadCurrencyInfo = null;
-            state.uploadCurrencyLoading = false;
-            state.uploadCurrencyError = action.error.message;
-         })
-         .addCase(inertNewGameCurrency.fulfilled, (state, action) => {
-            state.uploadCurrencyInfo = action.payload.data;
-            state.uploadCurrencyLoading = false;
-            state.uploadCurrencyError = null;
-         });
-
-      bulder
-         .addCase(deleteSingleGameCurrency.pending, (state) => {
-            state.deleteSingleGameCurrencyError = null;
-            state.deleteSingleGameCurrencyLoading = true;
-         })
-         .addCase(deleteSingleGameCurrency.rejected, (state, action) => {
-            state.deleteSingleGameCurrencyError = action.error.message;
-            state.deleteSingleGameCurrencyLoading = false;
-         })
-         .addCase(deleteSingleGameCurrency.fulfilled, (state, action) => {
-            state.deleteSingleGameCurrencyError = null;
-            state.deleteSingleGameCurrencyLoading = false;
-            state.gameCurrencyListInfo = {
-               ...state.gameCurrencyListInfo,
-               currency: state.gameCurrencyListInfo.currency.filter(
-                  (el) => el._id !== action.payload?.data?.id
-               ),
-            };
-         });
-
-      bulder
-         .addCase(getSingleGameCurrency.pending, (state) => {
-            state.singleGameCurrency = null;
-            state.singleGameCurrencyLoading = true;
-            state.singleGameCurrencyError = null;
-         })
-         .addCase(getSingleGameCurrency.rejected, (state, action) => {
-            state.singleGameCurrency = null;
-            state.singleGameCurrencyLoading = false;
-            state.singleGameCurrencyError = action.error.message;
-         })
-         .addCase(getSingleGameCurrency.fulfilled, (state, action) => {
-            state.singleGameCurrency = action.payload.data;
-            state.singleGameCurrencyLoading = false;
-            state.singleGameCurrencyError = null;
-         });
-
-      bulder
-         .addCase(updateSingleGameCurrency.pending, (state) => {
-            state.updateGameCurrency = null;
-            state.updateGameCurrencyLoading = true;
-            state.updateGameCurrencyError = null;
-         })
-         .addCase(updateSingleGameCurrency.rejected, (state, action) => {
-            state.updateGameCurrency = null;
-            state.updateGameCurrencyLoading = false;
-            state.updateGameCurrencyError = action.error.message;
-         })
-         .addCase(updateSingleGameCurrency.fulfilled, (state, action) => {
-            state.updateGameCurrency = action.payload.data;
-            state.updateGameCurrencyLoading = false;
-            state.updateGameCurrencyError = null;
          });
 
       bulder

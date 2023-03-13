@@ -1,43 +1,43 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-const adminReducerSelector = (state) => state.admin;
+const gamesReducerSelector = (state) => state.games;
 
 export const uploadCurrencyInfoSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.uploadCurrencyInfo
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.uploadCurrencyInfo
 );
 
 export const uploadCurrencyLoadingSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.uploadCurrencyLoading
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.uploadCurrencyLoading
 );
 
 export const uploadCurrencyErrorSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.uploadCurrencyError
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.uploadCurrencyError
 );
 
 export const singleGameCurrencySelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.singleGameCurrency
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.singleGameCurrency
 );
 
 export const singleGameCurrencyErrorSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.singleGameCurrencyError
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.singleGameCurrencyError
 );
 
 export const updateGameCurrencySelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.updateGameCurrency
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.updateGameCurrency
 );
 
 export const updateGameCurrencyLoadingSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.updateGameCurrencyLoading
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.updateGameCurrencyLoading
 );
 
 export const updateGameCurrencyErrorSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.updateGameCurrencyError
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.updateGameCurrencyError
 );

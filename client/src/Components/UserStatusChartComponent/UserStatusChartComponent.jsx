@@ -3,7 +3,6 @@ import * as styled from './UserStatusChartComponent.style';
 import {
    ComposedChart,
    Line,
-   Bar,
    XAxis,
    YAxis,
    Tooltip,

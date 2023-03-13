@@ -54,11 +54,15 @@ const adminRoute = require('./routes/adminRoute');
 const userRolesRoute = require('./routes/userRoleRoute');
 const adminToolsRoute = require('./routes/adminToolsRoute');
 const gameProviderRoute = require('./routes/gameProviderRoute');
+const gameCurrencyRoute = require('./routes/gameCurrencyRoute');
+const gameRoute = require('./routes/gameRoute');
 
 app.use('/admin', adminRoute);
 app.use('/user-role', userRolesRoute);
 app.use('/game-provider', gameProviderRoute);
+app.use('/game-currency', gameCurrencyRoute);
 app.use('/admin-tools', adminToolsRoute);
+app.use('/games', gameRoute);
 
 // for build file
 app.get('*', (req, res) => {

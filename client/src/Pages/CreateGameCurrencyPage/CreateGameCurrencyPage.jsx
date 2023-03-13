@@ -18,7 +18,7 @@ import {
    inertNewGameCurrency,
    updateSingleGameCurrency,
    getSingleGameCurrency,
-} from '../../App/Features/Admin/adminActions';
+} from '../../App/Features/Games/GameActions';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import { removeCurrencyInfo } from '../../App/Features/Admin/adminSlice';

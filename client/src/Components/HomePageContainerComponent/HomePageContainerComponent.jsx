@@ -13,9 +13,9 @@ function HomePageContainerComponent() {
             <div className="banner_grid_div">
                <ResultCartsContainerComponent />
             </div>
-            <div className="my-5 grid_div space-x-5">
+            <div className="my-5 grid_div">
                <GameUploadResultChartComponent />
-               <UserStatusChartComponent />
+               {/* <UserStatusChartComponent /> */}
             </div>
          </div>
       </styled.div>

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
    deleteSingleGameCurrency,
    getGameCurrencysList,
-} from '../../App/Features/Admin/adminActions';
+} from '../../App/Features/Games/GameActions';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import { useSearchParams } from 'react-router-dom';

@@ -69,9 +69,11 @@ function ProvidersGamesPage() {
                   <TabHeadingComponent
                      provider={providerGamesList?.provider[0]?._id}
                   />
-                  <UserProfileComponent
-                     user={providerGamesList?.provider[0]?._id}
-                  />
+                  <div>
+                     <UserProfileComponent
+                        user={providerGamesList?.provider[0]?._id}
+                     />
+                  </div>
                   <h5 className="mb-4 mx-2 font-medium text-gray-400 text-xl">
                      {providerGamesList?.provider[0]?._id?.providerName}
                   </h5>

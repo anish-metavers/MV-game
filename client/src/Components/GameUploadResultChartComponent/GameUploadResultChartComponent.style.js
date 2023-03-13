@@ -25,5 +25,5 @@ export const filterDiv = styled.div`
 
 export const mapDiv = styled.div`
    width: 100%;
-   height: 400px;
+   height: 300px;
 `;

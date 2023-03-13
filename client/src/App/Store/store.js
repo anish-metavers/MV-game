@@ -3,6 +3,7 @@ import authSlice from '../Features/Auth/authSlice';
 import adminSlice from '../Features/Admin/adminSlice';
 import adminToolsSlice from '../Features/Tools/adminToolsSlice';
 import gameProvidersSlice from '../Features/GameProviders/GameProvidersSlice';
+import GameSlice from '../Features/Games/GameSlice';
 
 const store = configureStore({
    reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
       admin: adminSlice,
       adminTools: adminToolsSlice,
       gameProviders: gameProvidersSlice,
+      games: GameSlice,
    },
    middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
