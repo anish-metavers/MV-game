@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import ImageUploadComponent from '../../Components/ImageUploadComponent/ImageUploadComponent';
 import { FaProjectDiagram } from '@react-icons/all-files/fa/FaProjectDiagram';
 import CustomButtonComponent from '../../Components/CustomButtonComponent/CustomButtonComponent';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { message } from 'antd';
@@ -26,6 +26,7 @@ import {
 import { MenuItem } from '@mui/material';
 import { useParams } from 'react-router';
 import { removeProviderErros } from '../../App/Features/GameProviders/GameProvidersSlice';
+import PhoneInput from 'react-phone-number-input';
 
 const Schema = yup.object({
    providerName: yup.string().required('Game provider name is required'),
@@ -43,6 +44,7 @@ function CreateNewGameProviderPage() {
       handleSubmit,
       formState: { errors },
       setValue,
+      control,
    } = useForm({
       resolver: yupResolver(Schema),
    });
@@ -113,7 +115,7 @@ function CreateNewGameProviderPage() {
 
                   setValue('providerName', data?.providerName);
                   setValue('email', data?.email);
-                  setValue('phoneNumber', data?.phoneNumber);
+                  setValue('phoneNumber', data?.phoneNumber.toString());
                   setValue('description', data?.description);
                   setPrevImage(data?.logo);
                   setProviderStatus(data?.status);
@@ -186,15 +188,19 @@ function CreateNewGameProviderPage() {
                            </p>
                         ) : null}
                      </div>
-                     <TextField
-                        className="w-full"
-                        label="Game Provider number"
-                        variant="outlined"
-                        type={'number'}
-                        {...register('phoneNumber')}
-                        InputLabelProps={{
-                           shrink: true,
-                        }}
+                     <Controller
+                        name="phoneNumber"
+                        rules={{ required: true }}
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                           <PhoneInput
+                              value={value}
+                              onChange={onChange}
+                              placeholder="Enter phone number"
+                              className="w-full"
+                              required
+                           />
+                        )}
                      />
                      <div className="w-full">
                         <TextField

@@ -25,6 +25,8 @@ import {
    updateGameCategory,
    deleteSingleGameCategory,
    getAllGamesCategroy,
+   getGamesUploadResult,
+   filterGameUploadDataResult,
 } from './adminActions';
 
 const INITAL_STATE = {
@@ -98,6 +100,11 @@ const INITAL_STATE = {
    allGamesCategorys: null,
    allGamesCategorysLoading: false,
    allGamesCategorysError: null,
+   gameStatus: null,
+   gameStatusLoading: false,
+   gameStatusError: null,
+   gameStatusFilterData: null,
+   gameStatusFilterDataError: null,
 };
 
 const adminSlice = createSlice({
@@ -612,6 +619,33 @@ const adminSlice = createSlice({
             state.allGamesCategorys = action.payload?.data;
             state.allGamesCategorysLoading = false;
             state.allGamesCategorysError = null;
+         });
+
+      bulder
+         .addCase(getGamesUploadResult.pending, (state) => {
+            state.gameStatus = null;
+            state.gameStatusLoading = true;
+            state.gameStatusError = null;
+         })
+         .addCase(getGamesUploadResult.rejected, (state, action) => {
+            state.gameStatus = null;
+            state.gameStatusLoading = false;
+            state.gameStatusError = action.error.message;
+         })
+         .addCase(getGamesUploadResult.fulfilled, (state, action) => {
+            state.gameStatus = action.payload?.data;
+            state.gameStatusLoading = false;
+            state.gameStatusError = null;
+         });
+
+      bulder
+         .addCase(filterGameUploadDataResult.rejected, (state, action) => {
+            state.gameStatusFilterData = null;
+            state.gameStatusFilterDataError = action.error.message;
+         })
+         .addCase(filterGameUploadDataResult.fulfilled, (state, action) => {
+            state.gameStatusFilterData = action.payload?.data;
+            state.gameStatusFilterDataError = null;
          });
    },
 });

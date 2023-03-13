@@ -6,7 +6,7 @@ export const getAllUserRoles = createAsyncThunk(
    async ({ page }, { rejectWithValue }) => {
       try {
          const userRolesInfo = await axiosInstance.get(
-            `/admin/get-all-user-rools?page=${page}`
+            `/user-role/get-all-user-rools?page=${page}`
          );
          return userRolesInfo;
       } catch (err) {
@@ -23,7 +23,7 @@ export const deleteUserRole = createAsyncThunk(
    async ({ roleId }, { rejectWithValue }) => {
       try {
          const deleteRoleResponse = await axiosInstance.delete(
-            `/admin/delete-single-role?roleId=${roleId}`
+            `/user-role/delete-single-role?roleId=${roleId}`
          );
          return deleteRoleResponse;
       } catch (err) {
@@ -40,7 +40,7 @@ export const createUserRole = createAsyncThunk(
    async ({ roleName, description }, { rejectWithValue }) => {
       try {
          const insertNewRoleRes = await axiosInstance.post(
-            '/admin/insert-new-user-role',
+            '/user-role/insert-new-user-role',
             { roleName, description },
             {
                validateStatus: false,
@@ -62,7 +62,7 @@ export const getSingleUserRole = createAsyncThunk(
    async ({ roleId }, { rejectWithValue }) => {
       try {
          const singleRoleResponse = await axiosInstance.get(
-            `/admin/get-single-user-role?roleId=${roleId}`
+            `/user-role/get-single-user-role?roleId=${roleId}`
          );
          return singleRoleResponse;
       } catch (err) {
@@ -79,7 +79,7 @@ export const updateSingleRole = createAsyncThunk(
    async (data, { rejectWithValue }) => {
       try {
          const updateRoleRespose = await axiosInstance.patch(
-            '/admin/update-single-role',
+            '/user-role/update-single-role',
             data
          );
          return updateRoleRespose;
@@ -477,6 +477,58 @@ export const getAllGamesCategroy = createAsyncThunk(
             '/admin/get-games-all-category'
          );
          return categoryRespose;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const getGamesUploadResult = createAsyncThunk(
+   'admin/getGamesUploadResult',
+   async (_, { rejectWithValue }) => {
+      try {
+         const gamesUploadResultRespose = await axiosInstance.get(
+            '/admin/get-games-upload-result'
+         );
+
+         return gamesUploadResultRespose;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const filterGameUploadDataResult = createAsyncThunk(
+   'admin/filterGameUploadDataResult',
+   async ({ filter }, { rejectWithValue }) => {
+      try {
+         const filterGameResultResponse = await axiosInstance.get(
+            `/admin/get-games-result-filter-data?filter=${filter}`
+         );
+         return filterGameResultResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);
+
+export const getUserLoginResults = createAsyncThunk(
+   'admin/getUserLoginResults',
+   async (_, { rejectWithValue }) => {
+      try {
+         const userInfoRespose = await axiosInstance.get(
+            '/admin/get-user-login-results'
+         );
+         return userInfoRespose;
       } catch (err) {
          if (err) {
             throw err;

@@ -2,23 +2,9 @@ const express = require('express');
 const router = express.Router();
 const adminControllers = require('../controllers/adminController');
 const { upload } = require('../helper/helper');
-const {
-   userRoleValidator,
-   currencyValidator,
-} = require('../middlewares/DocumentValidator');
+const { currencyValidator } = require('../middlewares/DocumentValidator');
 const { varifyJwtToken } = require('../middlewares/jwtValidator');
 
-// API => GET
-router.get(
-   '/get-all-user-rools',
-   varifyJwtToken,
-   adminControllers.getAllUserRoles
-);
-router.get(
-   '/get-single-user-role',
-   varifyJwtToken,
-   adminControllers.getSingleUserRole
-);
 router.get(
    '/get-game-currency',
    varifyJwtToken,
@@ -61,6 +47,21 @@ router.get(
    varifyJwtToken,
    adminControllers.getAllGamesCategroy
 );
+router.get(
+   '/get-games-upload-result',
+   varifyJwtToken,
+   adminControllers.getGamesUploadResult
+);
+router.get(
+   '/get-games-result-filter-data',
+   varifyJwtToken,
+   adminControllers.filterGameUploadDataResult
+);
+router.get(
+   '/get-user-login-results',
+   varifyJwtToken,
+   adminControllers.getUserLoginResults
+);
 
 // API => POST
 router.post(
@@ -69,12 +70,6 @@ router.post(
    upload.single('file'),
    // currencyValidator,
    adminControllers.insertGamesCurrency
-);
-router.post(
-   '/insert-new-user-role',
-   varifyJwtToken,
-   userRoleValidator,
-   adminControllers.insertNewUsersRole
 );
 router.post(
    '/insert-new-game',
@@ -96,12 +91,6 @@ router.post(
 
 // API => PATCH
 router.patch(
-   '/update-single-role',
-   varifyJwtToken,
-   userRoleValidator,
-   adminControllers.updateSingleRole
-);
-router.patch(
    '/update-single-currency',
    varifyJwtToken,
    upload.single('file'),
@@ -120,11 +109,6 @@ router.patch(
 );
 
 // API => DELETE
-router.delete(
-   '/delete-single-role',
-   varifyJwtToken,
-   adminControllers.deleteUserSingleRole
-);
 router.delete(
    '/delete-single-game-currency',
    varifyJwtToken,

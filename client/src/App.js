@@ -24,7 +24,6 @@ import ExportGameDataPage from './Pages/ExportGameDataPage/ExportGameDataPage';
 import GameProvidersPage from './Pages/GameProvidersPage/GameProvidersPage';
 import CreateNewGameProviderPage from './Pages/CreateNewGameProviderPage/CreateNewGameProviderPage';
 import ProvidersGamesPage from './Pages/ProvidersGamesPage/ProvidersGamesPage';
-
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const darkTheme = createTheme({

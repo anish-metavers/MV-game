@@ -8,6 +8,8 @@ import { CookiesProvider } from 'react-cookie';
 import store from './App/Store/store';
 import { Provider } from 'react-redux';
 
+import 'react-phone-number-input/style.css';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
    <BrowserRouter>

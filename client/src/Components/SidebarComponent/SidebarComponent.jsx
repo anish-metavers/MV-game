@@ -10,6 +10,7 @@ import { VscExtensions } from '@react-icons/all-files/vsc/VscExtensions';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { AiOutlineFileProtect } from '@react-icons/all-files/ai/AiOutlineFileProtect';
 import { SiNintendogamecube } from '@react-icons/all-files/si/SiNintendogamecube';
+import { MdDashboard } from '@react-icons/all-files/md/MdDashboard';
 
 function SidebarComponent() {
    return (
@@ -19,6 +20,11 @@ function SidebarComponent() {
          </div>
          <styled.sclDiv className="shadow">
             <DashboardSidebarTabComponent heading={'Dashboard'}>
+               <IconListComponent
+                  icon={<MdDashboard />}
+                  heading={'Dashboard'}
+                  link={'/'}
+               />
                <IconListComponent
                   icon={<FiLink />}
                   heading={'Users Role'}

@@ -57,6 +57,7 @@ function ProvidersGamesPage() {
       <styled.div>
          <NavbarComponent />
          <div className="container_div">
+            <div className="user_profile_bn_div"></div>
             {!!providerGamesLoading ? <SpinnerComponent /> : null}
             {!!providerGamesError ? (
                <p className="error_cl text-sm">{providerGamesError}</p>

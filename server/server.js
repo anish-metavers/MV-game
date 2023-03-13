@@ -51,10 +51,12 @@ if (process.env.NODE_ENV == 'production') {
 }
 
 const adminRoute = require('./routes/adminRoute');
+const userRolesRoute = require('./routes/userRoleRoute');
 const adminToolsRoute = require('./routes/adminToolsRoute');
 const gameProviderRoute = require('./routes/gameProviderRoute');
 
 app.use('/admin', adminRoute);
+app.use('/user-role', userRolesRoute);
 app.use('/game-provider', gameProviderRoute);
 app.use('/admin-tools', adminToolsRoute);
 
