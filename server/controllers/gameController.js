@@ -177,6 +177,7 @@ const getTopFavoriteGames = catchAsync(async function (req, res, next) {
 
 const updateSingleGame = catchAsync(async function (req, res, next) {
    const { gameId } = req.query;
+
    if (!gameId) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
@@ -323,6 +324,8 @@ const updateSingleGame = catchAsync(async function (req, res, next) {
                $push: {
                   games: {
                      gameId: gameId,
+                     gameCategoryId: gameCategoryId,
+                     gameCategoryName: req.body.gameCategoryName,
                   },
                },
             }

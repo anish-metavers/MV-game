@@ -110,6 +110,14 @@ function UploadGamesPage() {
       formData.append('url', data?.url);
       formData.append('gameStatus', GameStatus);
       formData.append('gameCategory', GameCategory);
+
+      if (GameCategory) {
+         const GameCategoryAr = allGamesCategorys?.categorys.find(
+            (el) => el._id === GameCategory
+         );
+         formData.append('gameCategoryName', GameCategoryAr?.name);
+      }
+
       return formData;
    };
 
@@ -240,6 +248,7 @@ function UploadGamesPage() {
                                  label="Game Category"
                                  className="w-full"
                                  value={GameCategory}
+                                 name="data"
                                  onChange={(e) =>
                                     setGameCategory(e.target.value)
                                  }
@@ -252,6 +261,7 @@ function UploadGamesPage() {
                                     <MenuItem
                                        key={option._id}
                                        value={option._id}
+                                       name={option.name}
                                     >
                                        {option.name}
                                     </MenuItem>
