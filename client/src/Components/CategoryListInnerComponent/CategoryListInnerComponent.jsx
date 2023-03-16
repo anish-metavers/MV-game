@@ -6,7 +6,7 @@ import { VscEdit } from '@react-icons/all-files/vsc/VscEdit';
 import {
    deleteSingleGameCategory,
    getSinglegameCategory,
-} from '../../App/Features/Admin/adminActions';
+} from '../../App/Features/Games/GameActions';
 import { useDispatch } from 'react-redux';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
@@ -29,7 +29,11 @@ function CategoryListInnerComponent({ data }) {
    };
 
    const Confirm = function () {
-      dispatch(deleteSingleGameCategory({ gameCategoryId: data?._id?._id }));
+      dispatch(
+         deleteSingleGameCategory({
+            gameCategoryId: data?._id?._id || data?._id,
+         })
+      );
    };
 
    const ShowHandler = function () {
@@ -62,9 +66,13 @@ function CategoryListInnerComponent({ data }) {
                      <MdDeleteForever className="text-red-600" />
                   </styled.iconBoxDiv>
                </Popconfirm>
-               <p className="text-gray-300">{data?._id?.name}</p>
-               <div className={`shadow status ${data?._id?.status}`}>
-                  {data?._id?.status}
+               <p className="text-gray-300">{data?._id?.name || data?.name}</p>
+               <div
+                  className={`shadow status ${
+                     data?._id?.status || data?.status
+                  }`}
+               >
+                  {data?._id?.status || data?.status}
                </div>
                <div>
                   <Badge badgeContent={data?._id?.totalsGames} color="primary">
@@ -76,7 +84,7 @@ function CategoryListInnerComponent({ data }) {
                <MdKeyboardArrowDown className="text-gray-300" />
             </div>
          </div>
-         {data?.games.length ? (
+         {data?.games && data?.games.length ? (
             <styled.subMenu>
                <div className="games_list">
                   {data?.games.map((el) =>

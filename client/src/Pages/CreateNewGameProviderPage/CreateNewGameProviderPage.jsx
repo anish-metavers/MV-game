@@ -82,6 +82,7 @@ function CreateNewGameProviderPage() {
       formData.append('phoneNumber', data?.phoneNumber);
       formData.append('description', data?.description);
       formData.append('status', ProviderStatus);
+      formData.append('profileTag', data?.profileTag);
       formData.append('file', Logo);
 
       if (!!param && param?.id) {
@@ -117,6 +118,7 @@ function CreateNewGameProviderPage() {
                   setValue('email', data?.email);
                   setValue('phoneNumber', data?.phoneNumber.toString());
                   setValue('description', data?.description);
+                  setValue('profileTag', data?.profileTag);
                   setPrevImage(data?.logo);
                   setProviderStatus(data?.status);
                }
@@ -218,6 +220,17 @@ function CreateNewGameProviderPage() {
                         </TextField>
                      </div>
                   </div>
+                  <TextField
+                     className="w-full"
+                     label="Profile Tag"
+                     variant="outlined"
+                     type={'text'}
+                     required
+                     {...register('profileTag')}
+                     InputLabelProps={{
+                        shrink: true,
+                     }}
+                  />
                   <TextField
                      label="Description"
                      {...register('description')}

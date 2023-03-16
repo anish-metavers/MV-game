@@ -4,7 +4,7 @@ import { FiEdit2 } from '@react-icons/all-files/fi/FiEdit2';
 import { useNavigate } from 'react-router';
 import { TiDeleteOutline } from '@react-icons/all-files/ti/TiDeleteOutline';
 import { Popconfirm } from 'antd';
-import { deleteSingleGame } from '../../App/Features/Admin/adminActions';
+import { deleteSingleGame } from '../../App/Features/Games/GameActions';
 import { useDispatch } from 'react-redux';
 
 function GameCardComponent({ data }) {

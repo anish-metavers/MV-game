@@ -6,6 +6,17 @@ import {
    deleteSingleGameCurrency,
    getSingleGameCurrency,
    updateSingleGameCurrency,
+   insertNewGame,
+   getGamesLists,
+   deleteSingleGame,
+   getGameProvidersList,
+   getAllGamesCategroy,
+   updateSingleGame,
+   postNewGameCategory,
+   updateGameCategory,
+   getAllProductsCategory,
+   getSinglegameCategory,
+   deleteSingleGameCategory,
 } from './GameActions';
 
 const INITAL_STATE = {
@@ -26,11 +37,49 @@ const INITAL_STATE = {
    gameCurrencyListInfo: null,
    gameCurrencyListLoading: false,
    gameCurrencyListError: null,
+   insertGameInfo: null,
+   insertGameLoading: false,
+   insertGameError: null,
+   gameListInfo: null,
+   gameListLoading: false,
+   gameListInfoError: null,
+   updateGameinfo: null,
+   updateGameLoading: false,
+   updateGameError: null,
+   deleteGameLoading: false,
+   deleteGameError: null,
+   gameProvidersList: null,
+   gameProvidersLoading: false,
+   gameProvidersError: null,
+   allGamesCategorys: null,
+   allGamesCategorysLoading: false,
+   allGamesCategorysError: null,
+   newGameCategory: null,
+   newGameCategoryLoading: false,
+   newGameCategoryError: null,
+   updateGameCategoryLoading: false,
+   updateGameCategoryError: null,
+   allCategoryInfo: null,
+   getAllCategoryInfoLoading: false,
+   getAllCategoryInfoError: null,
+   singleGameCategory: null,
+   singleGameCategoryLoading: false,
+   singleGameCategoryError: null,
+   deleteSingelGameCategoryError: null,
+   deleteSingleGameCategoryLoading: false,
 };
 
 const gameSlice = createSlice({
    name: 'games',
    initialState: INITAL_STATE,
+   reducers: {
+      removeGameInfo: (state) => {
+         state.insertGameInfo = null;
+         state.insertGameError = null;
+         state.updateGameinfo = null;
+         state.updateGameError = null;
+      },
+   },
    extraReducers: (bulder) => {
       bulder
          .addCase(getTopFavoriteGames.pending, (state) => {
@@ -136,7 +185,237 @@ const gameSlice = createSlice({
             state.gameCurrencyListLoading = false;
             state.gameCurrencyListError = null;
          });
+
+      bulder
+         .addCase(insertNewGame.pending, (state) => {
+            state.insertGameInfo = null;
+            state.insertGameLoading = true;
+            state.insertGameError = null;
+         })
+         .addCase(insertNewGame.rejected, (state, action) => {
+            state.insertGameInfo = null;
+            state.insertGameLoading = false;
+            state.insertGameError = action.error.message;
+         })
+         .addCase(insertNewGame.fulfilled, (state, action) => {
+            state.insertGameInfo = action.payload.data;
+            state.insertGameLoading = false;
+            state.insertGameError = null;
+         });
+
+      bulder
+         .addCase(getGamesLists.pending, (state) => {
+            state.gameListInfo = null;
+            state.gameListLoading = true;
+            state.gameListInfoError = null;
+         })
+         .addCase(getGamesLists.rejected, (state, action) => {
+            state.gameListInfo = null;
+            state.gameListLoading = false;
+            state.gameListInfoError = action.error.message;
+         })
+         .addCase(getGamesLists.fulfilled, (state, action) => {
+            state.gameListInfo = action.payload.data;
+            state.gameListLoading = false;
+            state.gameListInfoError = null;
+         });
+
+      bulder
+         .addCase(updateSingleGame.pending, (state) => {
+            state.updateGameinfo = null;
+            state.updateGameLoading = true;
+            state.updateGameError = null;
+         })
+         .addCase(updateSingleGame.rejected, (state, action) => {
+            state.updateGameinfo = null;
+            state.updateGameLoading = false;
+            state.updateGameError = action.error.message;
+         })
+         .addCase(updateSingleGame.fulfilled, (state, action) => {
+            state.updateGameinfo = action.payload.data;
+            state.updateGameLoading = false;
+            state.updateGameError = null;
+         });
+
+      bulder
+         .addCase(deleteSingleGame.pending, (state) => {
+            state.deleteGameLoading = true;
+            state.deleteGameError = null;
+         })
+         .addCase(deleteSingleGame.rejected, (state, action) => {
+            state.deleteGameLoading = false;
+            state.deleteGameError = action.error.message;
+         })
+         .addCase(deleteSingleGame.fulfilled, (state, action) => {
+            state.deleteGameLoading = false;
+            state.deleteGameError = null;
+            state.gameListInfo = {
+               ...state.gameListInfo,
+               games: state.gameListInfo?.games.filter(
+                  (el) => el?._id !== action.payload?.data?.gameId
+               ),
+            };
+         });
+
+      bulder
+         .addCase(getGameProvidersList.pending, (state) => {
+            state.gameProvidersList = null;
+            state.gameProvidersLoading = true;
+            state.gameProvidersError = null;
+         })
+         .addCase(getGameProvidersList.rejected, (state, action) => {
+            state.gameProvidersList = null;
+            state.gameProvidersLoading = false;
+            state.gameProvidersError = action.error.message;
+         })
+         .addCase(getGameProvidersList.fulfilled, (state, action) => {
+            state.gameProvidersList = action.payload.data;
+            state.gameProvidersLoading = false;
+            state.gameProvidersError = null;
+         });
+
+      bulder
+         .addCase(getAllGamesCategroy.pending, (state) => {
+            state.allGamesCategorys = null;
+            state.allGamesCategorysLoading = true;
+            state.allGamesCategorysError = null;
+         })
+         .addCase(getAllGamesCategroy.rejected, (state, action) => {
+            state.allGamesCategorys = null;
+            state.allGamesCategorysLoading = false;
+            state.allGamesCategorysError = action.error.message;
+         })
+         .addCase(getAllGamesCategroy.fulfilled, (state, action) => {
+            state.allGamesCategorys = action.payload?.data;
+            state.allGamesCategorysLoading = false;
+            state.allGamesCategorysError = null;
+         });
+
+      bulder
+         .addCase(postNewGameCategory.pending, (state) => {
+            state.newGameCategory = null;
+            state.newGameCategoryLoading = true;
+            state.newGameCategoryError = null;
+         })
+         .addCase(postNewGameCategory.rejected, (state, action) => {
+            state.newGameCategory = null;
+            state.newGameCategoryLoading = false;
+            state.newGameCategoryError = action.error.message;
+         })
+         .addCase(postNewGameCategory.fulfilled, (state, action) => {
+            state.allCategoryInfo = action.payload?.data?.category?._id
+               ? {
+                    ...state.allCategoryInfo,
+                    categorys: [
+                       ...state.allCategoryInfo?.categorys,
+                       {
+                          _id: action.payload?.data?.category?._id,
+                          name: action.payload?.data?.category?.name,
+                          status: action.payload?.data?.category?.status,
+                       },
+                    ],
+                 }
+               : state.allCategoryInfo;
+            state.newGameCategory = action.payload?.data?.message;
+            state.newGameCategoryLoading = false;
+            state.newGameCategoryError = null;
+         });
+
+      bulder
+         .addCase(updateGameCategory.pending, (state) => {
+            state.newGameCategory = null;
+            state.updateGameCategoryLoading = true;
+            state.updateGameCategoryError = null;
+         })
+         .addCase(updateGameCategory.rejected, (state, action) => {
+            state.newGameCategory = null;
+            state.updateGameCategoryLoading = false;
+            state.updateGameCategoryError = action.error.message;
+         })
+         .addCase(updateGameCategory.fulfilled, (state, action) => {
+            if (action.payload?.data?._id) {
+               const updateObject = action.payload?.data;
+
+               state.allCategoryInfo = {
+                  ...state.allCategoryInfo,
+                  categorys: state.allCategoryInfo?.categorys.map((el) =>
+                     el?._id?._id === updateObject?._id
+                        ? {
+                             ...el,
+                             _id: {
+                                ...el?._id,
+                                name: updateObject?.name,
+                                status: updateObject?.status,
+                             },
+                          }
+                        : el
+                  ),
+               };
+            }
+
+            state.newGameCategory = action.payload?.data?.message;
+            state.updateGameCategoryLoading = false;
+            state.updateGameCategoryError = null;
+         });
+
+      bulder
+         .addCase(getAllProductsCategory.pending, (state) => {
+            state.allCategoryInfo = null;
+            state.getAllCategoryInfoLoading = true;
+            state.getAllCategoryInfoError = null;
+         })
+         .addCase(getAllProductsCategory.rejected, (state, action) => {
+            state.allCategoryInfo = null;
+            state.getAllCategoryInfoLoading = false;
+            state.getAllCategoryInfoError = action.error.message;
+         })
+         .addCase(getAllProductsCategory.fulfilled, (state, action) => {
+            state.allCategoryInfo = action.payload?.data;
+            state.getAllCategoryInfoLoading = false;
+            state.getAllCategoryInfoError = null;
+         });
+
+      bulder
+         .addCase(getSinglegameCategory.pending, (state) => {
+            state.singleGameCategory = null;
+            state.singleGameCategoryLoading = true;
+            state.singleGameCategoryError = null;
+         })
+         .addCase(getSinglegameCategory.rejected, (state, action) => {
+            state.singleGameCategory = null;
+            state.singleGameCategoryLoading = false;
+            state.singleGameCategoryError = action.error.message;
+         })
+         .addCase(getSinglegameCategory.fulfilled, (state, action) => {
+            state.singleGameCategory = action.payload?.data;
+            state.singleGameCategoryLoading = false;
+            state.singleGameCategoryError = null;
+         });
+
+      bulder
+         .addCase(deleteSingleGameCategory.pending, (state) => {
+            state.deleteSingelGameCategoryError = null;
+            state.deleteSingleGameCategoryLoading = true;
+         })
+         .addCase(deleteSingleGameCategory.rejected, (state, action) => {
+            state.deleteSingelGameCategoryError = null;
+            state.deleteSingleGameCategoryLoading = false;
+         })
+         .addCase(deleteSingleGameCategory.fulfilled, (state, action) => {
+            if (!!action.payload?.data?.categoryId) {
+               state.allCategoryInfo = {
+                  ...state.allCategoryInfo,
+                  categorys: state.allCategoryInfo?.categorys.filter(
+                     (el) => el?._id?._id !== action.payload?.data?.categoryId
+                  ),
+               };
+            }
+            state.deleteSingelGameCategoryError = null;
+            state.deleteSingleGameCategoryLoading = false;
+         });
    },
 });
+
+export const { removeGameInfo } = gameSlice.actions;
 
 export default gameSlice.reducer;

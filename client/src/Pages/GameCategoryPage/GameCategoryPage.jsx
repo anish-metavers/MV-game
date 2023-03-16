@@ -7,7 +7,7 @@ import PostNewCategoryComponent from '../../Components/PostNewCategoryComponent/
 import { useDispatch } from 'react-redux';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
-import { getAllProductsCategory } from '../../App/Features/Admin/adminActions';
+import { getAllProductsCategory } from '../../App/Features/Games/GameActions';
 import { useSearchParams } from 'react-router-dom';
 
 function GameCategoryPage() {

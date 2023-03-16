@@ -9,6 +9,7 @@ import {
 } from './ResultCard.Selector';
 import { useSelector } from 'react-redux';
 import SpinnerComponent from '../SpinnerComponent/SpinnerComponent';
+import { MdTrendingUp } from '@react-icons/all-files/md/MdTrendingUp';
 
 function ResultCartsContainerComponent() {
    const gameStatus = useSelector(gameStatusSelector);
@@ -31,12 +32,20 @@ function ResultCartsContainerComponent() {
                />
             ) : null}
          </div>
-         {/* <ResultCardComponent
+         <ResultCardComponent
             heading={'200,00'}
             subHeading={'Total Users'}
             icon={<FiUsers className="text-gray-300" />}
             bg={'dark'}
-         /> */}
+            cl={'glass'}
+         />
+         <ResultCardComponent
+            heading={'$200100,00'}
+            subHeading={'Total profit'}
+            icon={<MdTrendingUp className="text-gray-300" />}
+            bg={'dark'}
+            cl={'glass'}
+         />
       </Fragment>
    );
 }

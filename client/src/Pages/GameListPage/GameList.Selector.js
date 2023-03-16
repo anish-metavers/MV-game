@@ -1,18 +1,18 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-const adminReducerSelector = (state) => state.admin;
+const gameReducerSelector = (state) => state.games;
 
 export const gameListInfoSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.gameListInfo
+   [gameReducerSelector],
+   (gamesSlice) => gamesSlice.gameListInfo
 );
 
 export const gameListLoadingSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.gameListLoading
+   [gameReducerSelector],
+   (gamesSlice) => gamesSlice.gameListLoading
 );
 
 export const gameListInfoErrorSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.gameListInfoError
+   [gameReducerSelector],
+   (gamesSlice) => gamesSlice.gameListInfoError
 );

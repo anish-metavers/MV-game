@@ -1,18 +1,18 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-const adminReducerSelector = (state) => state.admin;
+const gamesReducerSelector = (state) => state.games;
 
 export const allCategoryInfoSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.allCategoryInfo
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.allCategoryInfo
 );
 
 export const getAllCategoryInfoLoadingSelector = createSelector(
-   [adminReducerSelector],
-   (adminSice) => adminSice.getAllCategoryInfoLoading
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.getAllCategoryInfoLoading
 );
 
 export const getAllCategoryInfoErrorSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.getAllCategoryInfoError
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.getAllCategoryInfoError
 );

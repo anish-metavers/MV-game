@@ -1,38 +1,38 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-const adminReducerSelector = (state) => state.admin;
+const gamesReducerSelector = (state) => state.games;
 
 export const newGameCategorySelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.newGameCategory
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.newGameCategory
 );
 
 export const newGameCategoryLoadingSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.newGameCategoryLoading
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.newGameCategoryLoading
 );
 
 export const newGameCategoryErrorSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.newGameCategoryError
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.newGameCategoryError
 );
 
 export const singleGameCategorySelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.singleGameCategory
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.singleGameCategory
 );
 
 export const singleGameCategoryLoadingSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.singleGameCategoryLoading
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.singleGameCategoryLoading
 );
 
 export const singleGameCategoryErrorSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.singleGameCategoryError
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.singleGameCategoryError
 );
 
 export const updateGameCategoryLoadingSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.updateGameCategoryLoading
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.updateGameCategoryLoading
 );

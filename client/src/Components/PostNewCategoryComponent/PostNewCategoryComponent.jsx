@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router';
 import {
    postNewGameCategory,
    updateGameCategory,
-} from '../../App/Features/Admin/adminActions';
+} from '../../App/Features/Games/GameActions';
 import { message } from 'antd';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useAdmin from '../../Hooks/useAdmin';

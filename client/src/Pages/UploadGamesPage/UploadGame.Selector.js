@@ -1,63 +1,63 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-const adminReducerSelector = (state) => state.admin;
+const gamesReducerSelector = (state) => state.games;
 
 export const gameProvidersListSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.gameProvidersList
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.gameProvidersList
 );
 
 export const gameProvidersLoadingSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.gameProvidersLoading
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.gameProvidersLoading
 );
 
 export const gameProvidersErrorSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.gameProvidersError
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.gameProvidersError
 );
 
 export const insertGameInfoSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.insertGameInfo
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.insertGameInfo
 );
 
 export const insertGameLoadingSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.insertGameLoading
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.insertGameLoading
 );
 
 export const insertGameErrorSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.insertGameError
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.insertGameError
 );
 
 export const updateGameinfoSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.updateGameinfo
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.updateGameinfo
 );
 
 export const updateGameLoadingSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.updateGameLoading
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.updateGameLoading
 );
 
 export const updateGameErrorSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.updateGameError
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.updateGameError
 );
 
 export const allGamesCategorysSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.allGamesCategorys
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.allGamesCategorys
 );
 
 export const allGamesCategorysLoadingSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.allGamesCategorysLoading
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.allGamesCategorysLoading
 );
 
 export const allGamesCategorysErrorSelector = createSelector(
-   [adminReducerSelector],
-   (adminSlice) => adminSlice.allGamesCategorysError
+   [gamesReducerSelector],
+   (gamesSlice) => gamesSlice.allGamesCategorysError
 );

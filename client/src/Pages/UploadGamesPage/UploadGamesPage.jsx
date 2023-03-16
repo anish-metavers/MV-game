@@ -20,11 +20,11 @@ import {
    getSingleGameInfo,
    updateSingleGame,
    getAllGamesCategroy,
-} from '../../App/Features/Admin/adminActions';
+} from '../../App/Features/Games/GameActions';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
-import { removeGameInfo } from '../../App/Features/Admin/adminSlice';
+import { removeGameInfo } from '../../App/Features/Games/GameSlice';
 import {
    gameProvidersListSelector,
    gameProvidersLoadingSelector,

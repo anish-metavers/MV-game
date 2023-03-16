@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const div = styled.div`
-   width: 95%;
+   width: 100%;
    border: 1px solid var(--smooth-gray-sl-cl);
    border-radius: 10px;
 `;

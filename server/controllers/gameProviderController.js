@@ -127,8 +127,15 @@ const createNewGameProvider = catchAsync(async function (req, res, next) {
 });
 
 const updateGameProvider = catchAsync(async function (req, res, next) {
-   const { providerName, email, phoneNumber, description, status, _id } =
-      req.body;
+   const {
+      providerName,
+      email,
+      phoneNumber,
+      description,
+      status,
+      _id,
+      profileTag,
+   } = req.body;
 
    if (!providerName && !email) {
       return res.status(httpStatusCodes.INVALID_INPUT).json({
@@ -183,6 +190,7 @@ const updateGameProvider = catchAsync(async function (req, res, next) {
       phoneNumber,
       description,
       status,
+      profileTag,
    };
 
    if (req.file) {

@@ -5,7 +5,7 @@ import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHead
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import { useSearchParams } from 'react-router-dom';
-import { getGamesLists } from '../../App/Features/Admin/adminActions';
+import { getGamesLists } from '../../App/Features/Games/GameActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
