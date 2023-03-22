@@ -32,6 +32,7 @@ const Schema = yup.object({
       .required('Game category name is required')
       .min(2, 'Must be exactly 2 digits')
       .max(30, 'Must be exactly 30 digits'),
+   pageLink: yup.string().required('Game category page link is required'),
 });
 
 const Status = [
@@ -93,6 +94,7 @@ function PostNewCategoryComponent() {
          setValue('name', singleGameCategory?.category?.name);
          setValue('description', singleGameCategory?.category?.description);
          setCategoryStatus(singleGameCategory?.category?.status);
+         setValue('pageLink', singleGameCategory?.category?.pageLink);
       }
    }, [singleGameCategory]);
 
@@ -133,6 +135,24 @@ function PostNewCategoryComponent() {
                   </MenuItem>
                ))}
             </TextField>
+            <div className="w-full">
+               <TextField
+                  className="w-full"
+                  {...register('pageLink')}
+                  label="Category Page Link"
+                  variant="outlined"
+                  helperText="Client Page Link"
+                  required
+                  InputLabelProps={{
+                     shrink: true,
+                  }}
+               />
+               {!!errors?.pageLink?.message ? (
+                  <p className="error_cl text-sm">
+                     {errors?.pageLink?.message}
+                  </p>
+               ) : null}
+            </div>
             <TextField
                {...register('description')}
                label="Description"
