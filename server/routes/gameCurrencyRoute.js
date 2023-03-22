@@ -16,6 +16,11 @@ router.get(
    varifyJwtToken,
    gameCurrencyController.getSingleGameCurrency
 );
+router.get(
+   '/get-all-currency-list',
+   varifyJwtToken,
+   gameCurrencyController.getAllCurrencyList
+);
 
 // API => POST
 router.post(

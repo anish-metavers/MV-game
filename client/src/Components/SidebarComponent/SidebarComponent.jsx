@@ -11,6 +11,7 @@ import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { AiOutlineFileProtect } from '@react-icons/all-files/ai/AiOutlineFileProtect';
 import { SiNintendogamecube } from '@react-icons/all-files/si/SiNintendogamecube';
 import { MdDashboard } from '@react-icons/all-files/md/MdDashboard';
+import { VscSymbolMethod } from '@react-icons/all-files/vsc/VscSymbolMethod';
 
 function SidebarComponent() {
    return (
@@ -40,6 +41,7 @@ function SidebarComponent() {
                   heading={'Game Category'}
                   link={'/game-category?page=0'}
                />
+
                <IconListComponent
                   icon={<RiGameFill />}
                   heading={'Games'}
@@ -66,6 +68,13 @@ function SidebarComponent() {
                   icon={<AiOutlineFileProtect />}
                   heading={'Export Game Data'}
                   link={'/export/game/data'}
+               />
+            </DashboardSidebarTabComponent>
+            <DashboardSidebarTabComponent heading={'Payment'}>
+               <IconListComponent
+                  icon={<VscSymbolMethod />}
+                  heading={'Game Currency Payment'}
+                  link={'/game-currency-payment'}
                />
             </DashboardSidebarTabComponent>
          </styled.sclDiv>

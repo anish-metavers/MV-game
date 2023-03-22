@@ -17,6 +17,7 @@ import {
    getAllProductsCategory,
    getSinglegameCategory,
    deleteSingleGameCategory,
+   getAllCurrencyList,
 } from './GameActions';
 
 const INITAL_STATE = {
@@ -67,6 +68,9 @@ const INITAL_STATE = {
    singleGameCategoryError: null,
    deleteSingelGameCategoryError: null,
    deleteSingleGameCategoryLoading: false,
+   currencyList: null,
+   currencyListLoading: false,
+   currencyListError: null,
 };
 
 const gameSlice = createSlice({
@@ -412,6 +416,23 @@ const gameSlice = createSlice({
             }
             state.deleteSingelGameCategoryError = null;
             state.deleteSingleGameCategoryLoading = false;
+         });
+
+      bulder
+         .addCase(getAllCurrencyList.pending, (state) => {
+            state.currencyList = null;
+            state.currencyListLoading = true;
+            state.currencyListError = null;
+         })
+         .addCase(getAllCurrencyList.rejected, (state, action) => {
+            state.currencyList = null;
+            state.currencyListLoading = false;
+            state.currencyListError = action.error.message;
+         })
+         .addCase(getAllCurrencyList.fulfilled, (state, action) => {
+            state.currencyList = action.payload?.data;
+            state.currencyListLoading = false;
+            state.currencyListError = null;
          });
    },
 });

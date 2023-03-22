@@ -33,10 +33,10 @@ function GameCategoryPage() {
                showSubHeadingCM={true}
             />
             <styled.categoryDiv className="mt-5 flex">
-               <div className="w-6/12">
+               <div className="w-5/12">
                   <PostNewCategoryComponent />
                </div>
-               <div className="w-6/12 p-2">
+               <div className="w-7/12 p-2">
                   <CategoryListComponent />
                </div>
             </styled.categoryDiv>

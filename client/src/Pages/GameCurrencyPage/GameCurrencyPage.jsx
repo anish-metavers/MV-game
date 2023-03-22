@@ -126,7 +126,7 @@ function GameCurrencyPage() {
                                  )}
                               </td>
                               <td className="flex items-center space-x-2">
-                                 <Popconfirm
+                                 {/* <Popconfirm
                                     title="Delete the task"
                                     description="Are you sure to delete this task?"
                                     okText="Yes"
@@ -138,7 +138,7 @@ function GameCurrencyPage() {
                                     <p className="text-red-500 font-medium">
                                        Delete
                                     </p>
-                                 </Popconfirm>
+                                 </Popconfirm> */}
                                  <p
                                     onClick={() =>
                                        EditGamesCurrencyHandler(el._id)

@@ -338,3 +338,20 @@ export const deleteSingleGameCategory = createAsyncThunk(
       }
    }
 );
+
+export const getAllCurrencyList = createAsyncThunk(
+   'gamecurrency/getAllCurrencyList',
+   async (_, { rejectWithValue }) => {
+      try {
+         const allCurrencyList = axiosInstance.get(
+            '/game-currency/get-all-currency-list'
+         );
+         return allCurrencyList;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);

@@ -573,7 +573,7 @@ const getGames = catchAsync(async function (req, res, next) {
 });
 
 const postNewGameCategory = catchAsync(async function (req, res, next) {
-   const { name, description, status, pageLink } = req.body;
+   const { name, description, status } = req.body;
 
    if (!name) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
@@ -599,7 +599,6 @@ const postNewGameCategory = catchAsync(async function (req, res, next) {
          name,
          description,
          status,
-         pageLink,
       }).save();
 
       if (storeGameCategory) {
@@ -624,7 +623,7 @@ const postNewGameCategory = catchAsync(async function (req, res, next) {
 });
 
 const updateGameCategory = catchAsync(async function (req, res, next) {
-   const { name, status, description, categoryId, pageLink } = req.body;
+   const { name, status, description, categoryId } = req.body;
 
    if (!categoryId) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
@@ -671,7 +670,6 @@ const updateGameCategory = catchAsync(async function (req, res, next) {
             name,
             status,
             description,
-            pageLink,
          },
       }
    );

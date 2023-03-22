@@ -56,6 +56,26 @@ const getSingleGameCurrency = catchAsync(async function (req, res, next) {
    });
 });
 
+const getAllCurrencyList = catchAsync(async function (req, res, next) {
+   const allCurrency = await currencyModel.find(
+      {},
+      { currencyName: 1, icon: 1 }
+   );
+
+   if (allCurrency) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         currency: allCurrency,
+      });
+   }
+
+   return res.status(httpStatusCodes.NOT_FOUND).json({
+      success: false,
+      error: true,
+      message: 'Currency is not found',
+   });
+});
+
 // insert game curencey.
 const insertGamesCurrency = catchAsync(async function (req, res, next) {
    const { currencyName, locked, description, metaDescription } = req.body;
@@ -201,4 +221,5 @@ module.exports = {
    getAllGameCurrency,
    getSingleGameCurrency,
    updateSingleGameCurrency,
+   getAllCurrencyList,
 };

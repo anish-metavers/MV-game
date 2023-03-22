@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { varifyJwtToken } = require('../middlewares/jwtValidator');
 const gameController = require('../controllers/gameController');
-const adminControllers = require('../controllers/adminController');
 const { upload } = require('../helper/helper');
 
 // API => GET
@@ -45,6 +44,11 @@ router.post(
    upload.any(),
    gameController.insertNewGame
 );
+router.post(
+   '/post-new-game-category',
+   varifyJwtToken,
+   gameController.postNewGameCategory
+);
 
 // API => PATCH
 router.patch(
@@ -57,11 +61,6 @@ router.patch(
    '/update-game-category',
    varifyJwtToken,
    gameController.updateGameCategory
-);
-router.post(
-   '/post-new-game-category',
-   varifyJwtToken,
-   gameController.postNewGameCategory
 );
 
 // API => DELETE
