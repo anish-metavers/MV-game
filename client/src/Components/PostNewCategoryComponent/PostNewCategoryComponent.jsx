@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CustomButtonComponent from '../../Components/CustomButtonComponent/CustomButtonComponent';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { MenuItem } from '@mui/material';
 import {
@@ -45,7 +45,11 @@ function PostNewCategoryComponent() {
       handleSubmit,
       formState: { errors },
       setValue,
+      control,
    } = useForm({
+      defaultValues: {
+         CategoryStatus: 'Draft',
+      },
       resolver: yupResolver(Schema),
    });
    const naviation = useNavigate();
@@ -53,7 +57,6 @@ function PostNewCategoryComponent() {
    const [cookie] = useCookies();
    const [isAdmin] = useAdmin(cookie);
 
-   const [CategoryStatus, setCategoryStatus] = useState('Draft');
    const newGameCategory = useSelector(newGameCategorySelector);
    const newGameCategoryError = useSelector(newGameCategoryErrorSelector);
    const newGameCategoryLoading = useSelector(newGameCategoryLoadingSelector);
@@ -71,7 +74,7 @@ function PostNewCategoryComponent() {
          return naviation('/dashboard/auth/login');
       }
 
-      if (!CategoryStatus) {
+      if (!data?.CategoryStatus) {
          return message.info('game category status is required');
       }
 
@@ -79,12 +82,14 @@ function PostNewCategoryComponent() {
          dispatch(
             updateGameCategory({
                ...data,
-               status: CategoryStatus,
+               status: data?.CategoryStatus,
                categoryId: singleGameCategory?.category?._id,
             })
          );
       } else {
-         dispatch(postNewGameCategory({ ...data, status: CategoryStatus }));
+         dispatch(
+            postNewGameCategory({ ...data, status: data?.CategoryStatus })
+         );
       }
    };
 
@@ -92,7 +97,7 @@ function PostNewCategoryComponent() {
       if (!!singleGameCategory) {
          setValue('name', singleGameCategory?.category?.name);
          setValue('description', singleGameCategory?.category?.description);
-         setCategoryStatus(singleGameCategory?.category?.status);
+         setValue('CategoryStatus', singleGameCategory?.category?.status);
       }
    }, [singleGameCategory]);
 
@@ -117,22 +122,28 @@ function PostNewCategoryComponent() {
             {!!errors?.name?.message ? (
                <p className="error_cl text-sm">{errors?.name?.message}</p>
             ) : null}
-            <TextField
-               select
-               label="Select"
-               helperText="Please select your category status"
-               value={CategoryStatus}
-               onChange={(e) => setCategoryStatus(e.target.value)}
-               InputLabelProps={{
-                  shrink: true,
-               }}
-            >
-               {Status.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                     {option.label}
-                  </MenuItem>
-               ))}
-            </TextField>
+            <Controller
+               name="CategoryStatus"
+               control={control}
+               render={({ field: { onChange, value } }) => (
+                  <TextField
+                     select
+                     label="Select"
+                     helperText="Please select your category status"
+                     value={value}
+                     onChange={(e) => onChange(e.target.value)}
+                     InputLabelProps={{
+                        shrink: true,
+                     }}
+                  >
+                     {Status.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                           {option.label}
+                        </MenuItem>
+                     ))}
+                  </TextField>
+               )}
+            />
             <TextField
                {...register('description')}
                label="Description"

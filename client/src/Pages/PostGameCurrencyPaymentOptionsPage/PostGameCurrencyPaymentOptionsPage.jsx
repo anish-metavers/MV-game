@@ -4,7 +4,7 @@ import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHead
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import * as yup from 'yup';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomButtonComponent from '../../Components/CustomButtonComponent/CustomButtonComponent';
 import { MenuItem } from '@mui/material';
@@ -15,17 +15,21 @@ import { GiPayMoney } from '@react-icons/all-files/gi/GiPayMoney';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import useAdmin from '../../Hooks/useAdmin';
-import { getAllCurrencyList } from '../../App/Features/Games/GameActions';
 import {
-   currencyListSelector,
-   currencyListLoadingSelector,
-   currencyListErrorSelector,
    insertPaymentMethodInfoSelector,
    insertPaymentMethodInfoLoadingSelector,
    insertPaymentMethodErrorSelector,
+   updatePaymentOptionInfoSelector,
+   updatePaymentOptionLoadingSelector,
+   updatePaymentOptionErrorSelector,
 } from './PostGameCurrency.Selector';
-import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
-import { insertNewCurrencyPaymentOption } from '../../App/Features/Payment/paymentActions';
+import {
+   insertNewCurrencyPaymentOption,
+   getSinglePaymentCurrencyOption,
+   updatePaymentOption,
+} from '../../App/Features/Payment/paymentActions';
+import { useParams } from 'react-router-dom';
+import { removeUpdatePaymentOptionInfo } from '../../App/Features/Payment/paymentSlice';
 
 const Schema = yup.object({
    name: yup.string().required('Game name is required'),
@@ -53,23 +57,23 @@ function PostGameCurrencyPaymentOptionsPage() {
    const [isAdmin] = useAdmin(cookie);
    const dispatch = useDispatch();
    const [ImagePreview, setImagePreview] = useState(null);
-   const [Image, setImage] = useState(null);
-   const [SelectedCurrency, setSelectedCurrency] = useState('FAIT');
-   const [Vip, setVip] = useState(false);
-   const [SelectedCr, setSelectedCr] = useState('');
+   const params = useParams();
 
    const {
       register,
       handleSubmit,
       formState: { errors },
       setValue,
+      control,
+      getValues,
    } = useForm({
+      defaultValues: {
+         vipOnly: false,
+         wayName: 'FAIT',
+      },
       resolver: yupResolver(Schema),
    });
 
-   const currencyList = useSelector(currencyListSelector);
-   const currencyListLoading = useSelector(currencyListLoadingSelector);
-   const currencyListError = useSelector(currencyListErrorSelector);
    const insertPaymentMethodError = useSelector(
       insertPaymentMethodErrorSelector
    );
@@ -77,14 +81,17 @@ function PostGameCurrencyPaymentOptionsPage() {
    const insertPaymentMethodInfoLoading = useSelector(
       insertPaymentMethodInfoLoadingSelector
    );
-
-   const onChange = (checked) => {
-      setVip(checked);
-   };
+   const updatePaymentOptionError = useSelector(
+      updatePaymentOptionErrorSelector
+   );
+   const updatePaymentOptionLoading = useSelector(
+      updatePaymentOptionLoadingSelector
+   );
+   const updatePaymentOptionInfo = useSelector(updatePaymentOptionInfoSelector);
 
    const imageHandler = function (event) {
       const imageFile = event.target.files[0];
-      setImage(imageFile);
+      setValue('image', imageFile);
       if (imageFile) {
          const imageSrc = URL.createObjectURL(imageFile);
          setImagePreview(imageSrc);
@@ -94,30 +101,59 @@ function PostGameCurrencyPaymentOptionsPage() {
    const createFormData = function (data) {
       const formData = new FormData();
       formData.append('name', data?.name);
-      formData.append('wayName', SelectedCurrency);
+      formData.append('wayName', data?.wayName);
       formData.append('description', data?.description);
       formData.append('min', data?.min);
       formData.append('max', data?.max);
-      formData.append('vipOnly', Vip);
-      formData.append('image', Image);
-      formData.append('selectedCr', SelectedCr);
+      formData.append('vipOnly', data?.vipOnly);
+      formData.append('image', data?.image);
 
       return formData;
    };
 
    const onSubmit = function (data) {
-      if (!ImagePreview) {
-         return message.error('Payment options image is required');
+      const formData = createFormData(data);
+      if (!params?.id) {
+         if (!ImagePreview) {
+            return message.error('Payment options image is required');
+         }
+         dispatch(insertNewCurrencyPaymentOption({ formData }));
       }
 
-      const formData = createFormData(data);
-      dispatch(insertNewCurrencyPaymentOption({ formData }));
+      if (params?.id) {
+         dispatch(updatePaymentOption({ formData, _id: params?.id }));
+      }
+   };
+
+   const SinglePaymentOption = async function () {
+      try {
+         const response = await dispatch(
+            getSinglePaymentCurrencyOption({ _id: params?.id })
+         );
+         const data = response?.payload?.data;
+
+         if (data) {
+            setValue('name', data?.method?.name);
+            setValue('wayName', data?.method?.wayName);
+            setImagePreview(data?.method?.icon);
+            setValue('vipOnly', data?.method?.vipOnly);
+            setValue('description', data?.method?.description);
+            setValue('min', data?.method?.min?.$numberDecimal);
+            setValue('max', data?.method?.max?.$numberDecimal);
+         }
+      } catch (err) {
+         console.log(err);
+      }
    };
 
    useEffect(() => {
-      if (isAdmin && !currencyList) {
-         dispatch(getAllCurrencyList());
+      if (params?.id && isAdmin) {
+         SinglePaymentOption();
       }
+
+      return () => {
+         dispatch(removeUpdatePaymentOptionInfo());
+      };
    }, [isAdmin]);
 
    return (
@@ -126,7 +162,11 @@ function PostGameCurrencyPaymentOptionsPage() {
          <div className="container_div">
             <PageHeadingComponent
                showSubHeadingCM={true}
-               subHeading={'Create new payment options'}
+               subHeading={
+                  params?.id
+                     ? 'Update payment option'
+                     : 'Create new payment options'
+               }
                pageName={'Currency Payment'}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.
                Blanditiis, maiores perspiciatis. Est rerum, sit
@@ -147,55 +187,33 @@ function PostGameCurrencyPaymentOptionsPage() {
                            variant="outlined"
                            {...register('name')}
                            type={'text'}
+                           InputLabelProps={{
+                              shrink: true,
+                           }}
                         />
-                        <TextField
-                           select
-                           required
-                           className="w-full"
-                           label="Select"
-                           value={SelectedCurrency}
-                           onChange={(e) => setSelectedCurrency(e.target.value)}
-                        >
-                           {currencies.map((option) => (
-                              <MenuItem key={option.value} value={option.value}>
-                                 {option.label}
-                              </MenuItem>
-                           ))}
-                        </TextField>
-                        <div className="w-full">
-                           {!!currencyListLoading ? <SpinnerComponent /> : null}
-                           {!!currencyListError ? (
-                              <p className="text-sm error_cl">
-                                 {currencyListError}
-                              </p>
-                           ) : null}
-                           {!!currencyList &&
-                           currencyList?.success &&
-                           currencyList?.currency ? (
+                        <Controller
+                           name="wayName"
+                           control={control}
+                           render={({ field: { onChange, value } }) => (
                               <TextField
                                  select
                                  required
                                  className="w-full"
                                  label="Select"
-                                 value={SelectedCr}
-                                 onChange={(e) => setSelectedCr(e.target.value)}
+                                 value={value}
+                                 onChange={(e) => onChange(e.target.value)}
                               >
-                                 {currencyList?.currency.map((option) => (
+                                 {currencies.map((option) => (
                                     <MenuItem
-                                       key={option._id}
-                                       value={option._id}
+                                       key={option.value}
+                                       value={option.value}
                                     >
-                                       <div className="flex items-center space-x-4">
-                                          <div className="cr_icon_div">
-                                             <img src={option?.icon} alt="" />
-                                          </div>
-                                          <p>{option?.currencyName}</p>
-                                       </div>
+                                       {option.label}
                                     </MenuItem>
                                  ))}
                               </TextField>
-                           ) : null}
-                        </div>
+                           )}
+                        />
                      </div>
                      <TextField
                         label="Description"
@@ -203,6 +221,9 @@ function PostGameCurrencyPaymentOptionsPage() {
                         multiline
                         rows={5}
                         {...register('description')}
+                        InputLabelProps={{
+                           shrink: true,
+                        }}
                      />
                      <div className="w-full flex items-center space-x-2">
                         <div className="w-full">
@@ -213,6 +234,9 @@ function PostGameCurrencyPaymentOptionsPage() {
                               variant="outlined"
                               {...register('min')}
                               type={'number'}
+                              InputLabelProps={{
+                                 shrink: true,
+                              }}
                            />
                            {!!errors?.min?.message ? (
                               <p className="text-sm error_cl">
@@ -228,6 +252,9 @@ function PostGameCurrencyPaymentOptionsPage() {
                               variant="outlined"
                               {...register('max')}
                               type={'number'}
+                              InputLabelProps={{
+                                 shrink: true,
+                              }}
                            />
                            {!!errors?.max?.message ? (
                               <p className="text-sm error_cl">
@@ -240,13 +267,19 @@ function PostGameCurrencyPaymentOptionsPage() {
                         <p className="text-gray-200 text-sm font-medium mt-3">
                            Vip only
                         </p>
-                        <Switch
-                           className="mt-3"
-                           checkedChildren="Yes"
-                           unCheckedChildren="No"
-                           defaultChecked
-                           onChange={onChange}
-                           checked={Vip}
+                        <Controller
+                           name="vipOnly"
+                           control={control}
+                           render={({ field: { onChange, value } }) => (
+                              <Switch
+                                 className="mt-3"
+                                 checkedChildren="Yes"
+                                 unCheckedChildren="No"
+                                 defaultChecked
+                                 onChange={onChange}
+                                 checked={value}
+                              />
+                           )}
                         />
                      </div>
                   </Box>
@@ -266,14 +299,28 @@ function PostGameCurrencyPaymentOptionsPage() {
                   <div className="flex">
                      <CustomButtonComponent
                         type={'submit'}
-                        text={'Save'}
+                        text={params?.id ? 'Update' : 'Save'}
                         btnCl={'Publish mt-3'}
-                        isLoading={insertPaymentMethodInfoLoading}
+                        isLoading={
+                           params?.id
+                              ? updatePaymentOptionLoading
+                              : insertPaymentMethodInfoLoading
+                        }
                      />
                   </div>
+                  {!!updatePaymentOptionInfo ? (
+                     <p className="text-sm text-gray-300 mt-2">
+                        {updatePaymentOptionInfo?.message}
+                     </p>
+                  ) : null}
                   {!!insertPaymentMethodError ? (
                      <p className="text-sm error_cl mt-2">
                         {insertPaymentMethodError}
+                     </p>
+                  ) : null}
+                  {!!updatePaymentOptionError ? (
+                     <p className="text-sm error_cl mt-2">
+                        {updatePaymentOptionError}
                      </p>
                   ) : null}
                   {!!insertPaymentMethodInfo &&

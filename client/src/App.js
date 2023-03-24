@@ -105,6 +105,10 @@ function App() {
                      path="/game-currency-payment/create"
                      element={<PostGameCurrencyPaymentOptionsPage />}
                   />
+                  <Route
+                     path="/game-currency-payment/edit/:id"
+                     element={<PostGameCurrencyPaymentOptionsPage />}
+                  />
                </Route>
                <Route path="/dashboard/auth/login" element={<LoginPage />} />
             </Routes>

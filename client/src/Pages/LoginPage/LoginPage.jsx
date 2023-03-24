@@ -32,7 +32,6 @@ function LoginPage() {
       handleSubmit,
       formState: { errors },
    } = useForm({ resolver: yupResolver(schema) });
-
    const navigation = useNavigate();
 
    const auth = useSelector(authSelector);

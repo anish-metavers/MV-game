@@ -2,7 +2,7 @@ import React from 'react';
 import * as styled from './HomePage.style';
 import SidebarComponent from '../../Components/SidebarComponent/SidebarComponent';
 import { Outlet } from 'react-router';
-import InfoSidebarComponent from '../../Components/InfoSidebarComponent/InfoSidebarComponent';
+// import InfoSidebarComponent from '../../Components/InfoSidebarComponent/InfoSidebarComponent';
 
 function HomePage() {
    return (
@@ -13,7 +13,7 @@ function HomePage() {
          <styled.renderDiv>
             <Outlet />
          </styled.renderDiv>
-         <InfoSidebarComponent />
+         {/* <InfoSidebarComponent /> */}
       </styled.div>
    );
 }

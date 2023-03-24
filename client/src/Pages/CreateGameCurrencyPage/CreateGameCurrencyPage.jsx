@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import * as styled from './CreateGameCurrencyPage.style';
 import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
 import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHeadingComponent';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Box from '@mui/material/Box';
@@ -21,7 +21,8 @@ import {
 } from '../../App/Features/Games/GameActions';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
-import { removeCurrencyInfo } from '../../App/Features/Admin/adminSlice';
+import { removeCurrencyInfo } from '../../App/Features/Games/GameSlice';
+import { getAllPaymentOptionList } from '../../App/Features/Payment/paymentActions';
 import {
    uploadCurrencyInfoSelector,
    uploadCurrencyLoadingSelector,
@@ -31,7 +32,12 @@ import {
    updateGameCurrencySelector,
    updateGameCurrencyLoadingSelector,
    updateGameCurrencyErrorSelector,
+   paymentOptionsListSelector,
+   paymentOptionsListLoadingSelector,
+   paymentOptionsListErrorSelector,
 } from './CreateGame.Selector';
+import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
+import AutoCompleteTagComponent from '../../Components/AutoCompleteTagComponent/AutoCompleteTagComponent';
 
 const currencies = [
    { value: true, label: 'yes' },
@@ -45,19 +51,18 @@ const Schema = yup.object({
 function CreateGameCurrencyPage() {
    const [PrevImage, setPrevImage] = useState(null);
    const editor = useRef(null);
-   const [Icon, setIcons] = useState(null);
    const [content, setContent] = useState(null);
    const {
       register,
       handleSubmit,
       setValue,
       formState: { errors },
+      getValues,
+      control,
    } = useForm({
       resolver: yupResolver(Schema),
    });
    const [cookie] = useCookies();
-   const [currencyLocked, setCurrencyLocked] = useState('');
-
    const [isAdmin] = useAdmin(cookie);
    const params = useParams();
    const dispatch = useDispatch();
@@ -72,12 +77,17 @@ function CreateGameCurrencyPage() {
       updateGameCurrencyLoadingSelector
    );
    const updateGameCurrencyError = useSelector(updateGameCurrencyErrorSelector);
+   const paymentOptionsList = useSelector(paymentOptionsListSelector);
+   const paymentOptionsListLoading = useSelector(
+      paymentOptionsListLoadingSelector
+   );
+   const paymentOptionsListError = useSelector(paymentOptionsListErrorSelector);
 
    const ImageHandler = function (event) {
       const imageFiles = event.target.files;
       const imageFilesLength = imageFiles.length;
       const file = imageFiles[0];
-      setIcons(file);
+      setValue('file', file);
       if (imageFilesLength > 0) {
          const imageSrc = URL.createObjectURL(imageFiles[0]);
          setPrevImage(imageSrc);
@@ -87,10 +97,12 @@ function CreateGameCurrencyPage() {
    const CreateFormData = function (data) {
       const formData = new FormData();
       formData.append('currencyName', data?.currencyName);
-      formData.append('locked', currencyLocked);
+      formData.append('locked', data?.locked);
       formData.append('description', data?.description);
       formData.append('metaDescription', content);
-      formData.append('file', Icon);
+      formData.append('file', data?.file);
+      formData.append('paymentOptions', JSON.stringify(data?.paymentOptions));
+
       return formData;
    };
 
@@ -104,13 +116,8 @@ function CreateGameCurrencyPage() {
       }
    };
 
-   const ChangeHandler = function (event) {
-      const { value } = event.target;
-      setCurrencyLocked(value);
-   };
-
    useEffect(() => {
-      if (isAdmin && params?.id) {
+      if (isAdmin && params?.id && !singleGameCurrency) {
          dispatch(getSingleGameCurrency({ id: params?.id }));
       }
    }, [params?.id, isAdmin]);
@@ -119,17 +126,26 @@ function CreateGameCurrencyPage() {
       if (
          !!singleGameCurrency &&
          singleGameCurrency?.success &&
-         !!singleGameCurrency?.currency
+         !!singleGameCurrency?.currency &&
+         singleGameCurrency?.currency?.length
       ) {
-         setValue('description', singleGameCurrency?.currency?.description);
-         setValue('currencyName', singleGameCurrency?.currency?.currencyName);
-         setCurrencyLocked(singleGameCurrency?.currency?.locked);
-         setContent(singleGameCurrency?.currencies?.metaDescription);
-         setPrevImage(singleGameCurrency?.currency?.icon);
+         const currencyData = singleGameCurrency?.currency[0]?._id;
+         setValue('description', currencyData?.description);
+         setValue('currencyName', currencyData?.currencyName);
+         setValue('locked', currencyData?.locked);
+         setValue(
+            'paymentOptions',
+            singleGameCurrency?.currency[0]?.paymentOptions
+         );
+         setContent(currencyData?.metaDescription);
+         setPrevImage(currencyData?.icon);
       }
    }, [singleGameCurrency]);
 
    useEffect(() => {
+      if (!paymentOptionsList) {
+         dispatch(getAllPaymentOptionList());
+      }
       return () => {
          dispatch(removeCurrencyInfo());
       };
@@ -141,9 +157,13 @@ function CreateGameCurrencyPage() {
          <div className="container_div">
             <PageHeadingComponent
                showSubHeadingCM={true}
-               subHeading={'Create New Game Currency'}
+               subHeading={
+                  params?.id
+                     ? 'Update Game Currency'
+                     : 'Create New Game Currency'
+               }
                pageName={'Game Currency'}
-               para={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s.`}
+               para={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a.`}
             />
             <div className="mt-5">
                <form onSubmit={handleSubmit(onSubmit)}>
@@ -161,7 +181,7 @@ function CreateGameCurrencyPage() {
                               className="w-full"
                               label="currency Name"
                               {...register('currencyName')}
-                              variant="standard"
+                              variant="outlined"
                               InputLabelProps={{
                                  shrink: true,
                               }}
@@ -173,32 +193,60 @@ function CreateGameCurrencyPage() {
                            ) : null}
                         </div>
                         <div className="w-full">
-                           <TextField
-                              className="w-full"
-                              select
-                              required
-                              label="Currency Locked"
+                           <Controller
                               name="locked"
-                              variant="standard"
-                              InputLabelProps={{
-                                 shrink: true,
-                              }}
-                              value={currencyLocked}
-                              onChange={ChangeHandler}
-                           >
-                              {currencies.map((option) => (
-                                 <MenuItem
-                                    key={option.value}
-                                    value={option.value}
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                 <TextField
+                                    className="w-full"
+                                    select
+                                    required
+                                    label="Currency Locked"
+                                    variant="outlined"
+                                    InputLabelProps={{
+                                       shrink: true,
+                                    }}
+                                    onChange={onChange}
+                                    value={value?.toString() || ''}
                                  >
-                                    {option.label}
-                                 </MenuItem>
-                              ))}
-                           </TextField>
-                           {errors?.locked?.message ? (
+                                    {currencies.map((option) => (
+                                       <MenuItem
+                                          key={option.value}
+                                          value={option.value}
+                                       >
+                                          {option.label}
+                                       </MenuItem>
+                                    ))}
+                                 </TextField>
+                              )}
+                           />
+                        </div>
+                        <div className="w-full mt-4 md:mt-0">
+                           {!!paymentOptionsListLoading ? (
+                              <SpinnerComponent />
+                           ) : null}
+                           {!!paymentOptionsListError ? (
                               <p className="text-sm error_cl">
-                                 {errors?.locked?.message}
+                                 {paymentOptionsListError}
                               </p>
+                           ) : null}
+                           {!!paymentOptionsList &&
+                           paymentOptionsList?.success &&
+                           paymentOptionsList?.items &&
+                           paymentOptionsList?.items.length ? (
+                              <Controller
+                                 name="paymentOptions"
+                                 control={control}
+                                 render={({ field: { value } }) => (
+                                    <AutoCompleteTagComponent
+                                       setValue={setValue}
+                                       getValues={getValues}
+                                       items={paymentOptionsList?.items}
+                                       filed={'paymentOptions'}
+                                       value={value}
+                                    />
+                                 )}
+                              />
                            ) : null}
                         </div>
                      </div>

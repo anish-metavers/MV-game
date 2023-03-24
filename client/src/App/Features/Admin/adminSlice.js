@@ -56,11 +56,6 @@ const adminSlice = createSlice({
          state.singleRole = null;
          state.newRoleInsertInfo = null;
       },
-      removeCurrencyInfo: (state) => {
-         state.updateGameCurrency = null;
-         state.singleGameCurrency = null;
-         state.uploadCurrencyInfo = null;
-      },
 
       removeAvatarInfo: (state) => {
          state.gameAvatarUploadInfo = null;
@@ -269,7 +264,6 @@ const adminSlice = createSlice({
    },
 });
 
-export const { removeSingleRoleInfo, removeCurrencyInfo, removeAvatarInfo } =
-   adminSlice.actions;
+export const { removeSingleRoleInfo, removeAvatarInfo } = adminSlice.actions;
 
 export default adminSlice.reducer;

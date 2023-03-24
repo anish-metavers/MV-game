@@ -16,8 +16,6 @@ function CategoryListComponent() {
    );
    const getAllCategoryInfoError = useSelector(getAllCategoryInfoErrorSelector);
 
-   console.log(allCategoryInfo);
-
    return (
       <styled.div>
          {!!getAllCategoryInfoLoading ? <SpinnerComponent /> : null}

@@ -10,6 +10,16 @@ router.get(
    varifyJwtToken,
    paymentController.getCurrencyPaymentOptions
 );
+router.get(
+   '/get-single-currency-payment-method',
+   varifyJwtToken,
+   paymentController.getSinglePaymentCurrencyOption
+);
+router.get(
+   '/get-all-payment-option-list',
+   varifyJwtToken,
+   paymentController.getAllPaymentOptionList
+);
 
 // API => POST
 router.post(
@@ -20,6 +30,12 @@ router.post(
 );
 
 // API => PATCH
+router.patch(
+   '/update-single-payment-option',
+   varifyJwtToken,
+   upload.single('image'),
+   paymentController.updatePaymentOption
+);
 
 // API => DELETE
 

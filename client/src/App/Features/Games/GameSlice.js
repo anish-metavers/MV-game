@@ -83,6 +83,11 @@ const gameSlice = createSlice({
          state.updateGameinfo = null;
          state.updateGameError = null;
       },
+      removeCurrencyInfo: (state) => {
+         state.updateGameCurrency = null;
+         state.singleGameCurrency = null;
+         state.uploadCurrencyInfo = null;
+      },
    },
    extraReducers: (bulder) => {
       bulder
@@ -437,6 +442,6 @@ const gameSlice = createSlice({
    },
 });
 
-export const { removeGameInfo } = gameSlice.actions;
+export const { removeGameInfo, removeCurrencyInfo } = gameSlice.actions;
 
 export default gameSlice.reducer;

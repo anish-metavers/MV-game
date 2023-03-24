@@ -111,9 +111,11 @@ function GameCurrencyPage() {
                               <td>{el?.currencyName}</td>
                               <td>{el?.locked.toString()}</td>
                               <td>
-                                 <div className="currency_icon_div shadow">
-                                    <img src={el?.icon} alt="" />
-                                 </div>
+                                 {el?.icon ? (
+                                    <div className="currency_icon_div shadow">
+                                       <img src={el?.icon} alt="" />
+                                    </div>
+                                 ) : null}
                               </td>
                               <td style={{ width: '40%' }}>
                                  {el?.description?.length > 100

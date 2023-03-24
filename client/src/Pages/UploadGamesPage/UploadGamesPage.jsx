@@ -3,7 +3,7 @@ import * as styled from './UploadGamesPage.style';
 import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
 import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHeadingComponent';
 import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import JoditEditor from 'jodit-react';
@@ -59,18 +59,19 @@ function UploadGamesPage() {
       handleSubmit,
       formState: { errors },
       setValue,
+      control,
    } = useForm({
+      defaultValues: {
+         gameStatus: 'Draft',
+         gameCategory: '',
+         gameProvider: '',
+      },
       resolver: yupResolver(Schema),
    });
 
    const [cookie] = useCookies();
    const editor = useRef(null);
-   const [Content, setContent] = useState(null);
-   const [GameImage, setGameImage] = useState(null);
    const [GameImagePreview, setGameImagePreview] = useState(null);
-   const [Provider, setProvider] = useState('');
-   const [GameStatus, setGameStatus] = useState('Draft');
-   const [GameCategory, setGameCategory] = useState(null);
    const params = useParams();
    const [isAdmin] = useAdmin(cookie);
    const dispatch = useDispatch();
@@ -92,7 +93,7 @@ function UploadGamesPage() {
 
    const ImageHandler = function (event) {
       const imageFile = event.target.files[0];
-      setGameImage(imageFile);
+      setValue('gameMainImage', imageFile);
       if (imageFile) {
          const imageSrc = URL.createObjectURL(imageFile);
          setGameImagePreview(imageSrc);
@@ -104,18 +105,19 @@ function UploadGamesPage() {
       formData.append('name', data?.name);
       formData.append('by', data?.by);
       formData.append('description', data?.description);
-      formData.append('aboutGame', Content);
-      formData.append('gameMainImage', GameImage);
-      formData.append('gameProvider', Provider);
+      formData.append('aboutGame', data?.aboutGame);
+      formData.append('gameMainImage', data?.gameMainImage);
+      formData.append('gameProvider', data?.gameProvider);
       formData.append('url', data?.url);
-      formData.append('gameStatus', GameStatus);
-      formData.append('gameCategory', GameCategory);
+      formData.append('gameStatus', data?.gameStatus);
+      formData.append('gameCategory', data?.gameCategory);
 
-      if (GameCategory) {
-         const GameCategoryAr = allGamesCategorys?.categorys.find(
-            (el) => el._id === GameCategory
+      if (data?.gameCategory) {
+         const gameCategoryAr = allGamesCategorys?.categorys.find(
+            (el) => el._id === data?.gameCategory
          );
-         formData.append('gameCategoryName', GameCategoryAr?.name);
+
+         formData.append('gameCategoryName', gameCategoryAr?.name);
       }
 
       return formData;
@@ -123,11 +125,10 @@ function UploadGamesPage() {
 
    const onSubmit = function (data) {
       if (isAdmin && !params?.id) {
-         if (!GameImage) {
+         if (!data?.gameMainImage) {
             return message.error('Game image is required');
          }
-
-         if (!Provider) {
+         if (!data?.gameProvider) {
             return message.error('Game provider is required');
          }
          const formData = CreateFormData(data);
@@ -156,11 +157,11 @@ function UploadGamesPage() {
          setValue('by', data?.game?.by);
          setValue('url', data?.game?.url);
          setValue('description', data?.game?.description);
-         setContent(data?.game?.aboutGame);
+         setValue('gameStatus', data?.game?.gameStatus);
+         setValue('gameCategory', data?.game?.gameCategory);
+         setValue('gameProvider', data?.game?.gameProvider);
+         setValue('aboutGame', data?.game?.aboutGame);
          setGameImagePreview(data?.game?.gameImage);
-         setGameStatus(data?.game?.gameStatus);
-         setProvider(data?.game?.gameProvider);
-         setGameCategory(data?.game?.gameCategory);
       } else {
          console.log(gameResponse);
       }
@@ -243,53 +244,67 @@ function UploadGamesPage() {
                            {!!allGamesCategorys &&
                            !!allGamesCategorys?.categorys &&
                            allGamesCategorys?.categorys.length ? (
-                              <TextField
-                                 select
-                                 label="Game Category"
-                                 className="w-full"
-                                 value={GameCategory}
-                                 name="data"
-                                 onChange={(e) =>
-                                    setGameCategory(e.target.value)
-                                 }
-                                 required
-                                 InputLabelProps={{
-                                    shrink: true,
-                                 }}
-                              >
-                                 {allGamesCategorys?.categorys.map((option) => (
-                                    <MenuItem
-                                       key={option._id}
-                                       value={option._id}
-                                       name={option.name}
+                              <Controller
+                                 name="gameCategory"
+                                 control={control}
+                                 render={({ field: { onChange, value } }) => (
+                                    <TextField
+                                       select
+                                       label="Game Category"
+                                       className="w-full"
+                                       value={value}
+                                       name="data"
+                                       onChange={(e) =>
+                                          onChange(e.target.value)
+                                       }
+                                       required
+                                       InputLabelProps={{
+                                          shrink: true,
+                                       }}
                                     >
-                                       {option.name}
-                                    </MenuItem>
-                                 ))}
-                              </TextField>
+                                       {allGamesCategorys?.categorys.map(
+                                          (option) => (
+                                             <MenuItem
+                                                key={option._id}
+                                                value={option._id}
+                                                name={option.name}
+                                             >
+                                                {option.name}
+                                             </MenuItem>
+                                          )
+                                       )}
+                                    </TextField>
+                                 )}
+                              />
                            ) : null}
                         </div>
                         <div className="w-full">
-                           <TextField
-                              select
-                              label="Game Status"
-                              className="w-full"
-                              value={GameStatus}
-                              onChange={(e) => setGameStatus(e.target.value)}
-                              required
-                              InputLabelProps={{
-                                 shrink: true,
-                              }}
-                           >
-                              {Status.map((option) => (
-                                 <MenuItem
-                                    key={option.values}
-                                    value={option.values}
+                           <Controller
+                              name="gameStatus"
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                 <TextField
+                                    select
+                                    label="Game Status"
+                                    className="w-full"
+                                    value={value}
+                                    onChange={(e) => onChange(e.target.value)}
+                                    required
+                                    InputLabelProps={{
+                                       shrink: true,
+                                    }}
                                  >
-                                    {option.values}
-                                 </MenuItem>
-                              ))}
-                           </TextField>
+                                    {Status.map((option) => (
+                                       <MenuItem
+                                          key={option.values}
+                                          value={option.values}
+                                       >
+                                          {option.values}
+                                       </MenuItem>
+                                    ))}
+                                 </TextField>
+                              )}
+                           />
                         </div>
                         {!!gameProvidersLoading ? (
                            <div className="w-full">
@@ -299,28 +314,36 @@ function UploadGamesPage() {
                         {!!gameProvidersList &&
                         gameProvidersList?.success &&
                         gameProvidersList?.response ? (
-                           <div className="w-full">
-                              <TextField
-                                 className="w-full"
-                                 id="outlined-select-currency"
-                                 select
-                                 required
-                                 label="Game provider"
-                                 value={Provider}
-                                 onChange={(event) =>
-                                    setProvider(event.target.value)
-                                 }
-                              >
-                                 {gameProvidersList?.response.map((option) => (
-                                    <MenuItem
-                                       key={option._id}
-                                       value={option._id}
+                           <Controller
+                              name="gameProvider"
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                 <div className="w-full">
+                                    <TextField
+                                       className="w-full"
+                                       id="outlined-select-currency"
+                                       select
+                                       required
+                                       label="Game provider"
+                                       value={value}
+                                       onChange={(event) =>
+                                          onChange(event.target.value)
+                                       }
                                     >
-                                       {option.providerName}
-                                    </MenuItem>
-                                 ))}
-                              </TextField>
-                           </div>
+                                       {gameProvidersList?.response.map(
+                                          (option) => (
+                                             <MenuItem
+                                                key={option._id}
+                                                value={option._id}
+                                             >
+                                                {option.providerName}
+                                             </MenuItem>
+                                          )
+                                       )}
+                                    </TextField>
+                                 </div>
+                              )}
+                           />
                         ) : null}
                      </div>
                      <TextField
@@ -350,12 +373,20 @@ function UploadGamesPage() {
                      <div>
                         <label className="text-gray-400">About this game</label>
                         <div className="mt-2">
-                           <JoditEditor
-                              ref={editor}
-                              value={Content}
-                              tabIndex={1}
-                              onChange={(newContent) => setContent(newContent)}
-                              config={{ theme: 'dark' }}
+                           <Controller
+                              name="aboutGame"
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                 <JoditEditor
+                                    ref={editor}
+                                    value={value}
+                                    tabIndex={1}
+                                    onChange={(newContent) =>
+                                       onChange(newContent)
+                                    }
+                                    config={{ theme: 'dark' }}
+                                 />
+                              )}
                            />
                         </div>
                      </div>

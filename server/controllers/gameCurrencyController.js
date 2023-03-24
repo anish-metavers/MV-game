@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const { catchAsync, httpStatusCodes, uploadToS3 } = require('../helper/helper');
 const currencyModel = require('../model/schema/currencySchema');
 
@@ -39,7 +40,54 @@ const getSingleGameCurrency = catchAsync(async function (req, res, next) {
       });
    }
 
-   const findCurrencyDocument = await currencyModel.findOne({ _id: id });
+   const findCurrencyDocument = await currencyModel.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(id) } },
+      {
+         $unwind: {
+            path: '$paymentOptions',
+            preserveNullAndEmptyArrays: true,
+         },
+      },
+      {
+         $lookup: {
+            from: 'walletpaymentoptions',
+            localField: 'paymentOptions.paymentMethodId',
+            foreignField: '_id',
+            as: 'paymentOptions.payment',
+         },
+      },
+      {
+         $unwind: {
+            path: '$paymentOptions.payment',
+            preserveNullAndEmptyArrays: true,
+         },
+      },
+      {
+         $project: {
+            _id: 1,
+            currencyName: 1,
+            locked: 1,
+            icon: 1,
+            description: 1,
+            metaDescription: 1,
+            'paymentOptions._id': '$paymentOptions.payment._id',
+            'paymentOptions.name': '$paymentOptions.payment.name',
+         },
+      },
+      {
+         $group: {
+            _id: {
+               _id: '$_id',
+               currencyName: '$currencyName',
+               locked: '$locked',
+               icon: '$icon',
+               description: '$description',
+               metaDescription: '$metaDescription',
+            },
+            paymentOptions: { $push: '$paymentOptions' },
+         },
+      },
+   ]);
 
    if (findCurrencyDocument) {
       return res.status(httpStatusCodes.OK).json({
@@ -78,7 +126,13 @@ const getAllCurrencyList = catchAsync(async function (req, res, next) {
 
 // insert game curencey.
 const insertGamesCurrency = catchAsync(async function (req, res, next) {
-   const { currencyName, locked, description, metaDescription } = req.body;
+   const {
+      currencyName,
+      locked,
+      description,
+      metaDescription,
+      paymentOptions,
+   } = req.body;
 
    // first check currency name is already exists in database or not.
    // if the currency is already exists then send back the false response
@@ -101,10 +155,19 @@ const insertGamesCurrency = catchAsync(async function (req, res, next) {
    };
 
    // if user send the file then wait for the s3 upload.
-   if (req.file) {
+   if (req.file && req.file !== 'undefined' && req.file !== 'null') {
       const uploadData = await uploadToS3(req.file.buffer);
       // file url.
       insertData.icon = uploadData.Location;
+   }
+
+   const paymentMethodArray = JSON.parse(paymentOptions);
+   if (paymentOptions.length) {
+      const selectedPaymentMethods = paymentMethodArray.map((el) => ({
+         paymentMethodId: mongoose.Types.ObjectId(el?._id),
+      }));
+
+      insertData.paymentOptions = selectedPaymentMethods;
    }
 
    const insertNewCurrency = await currencyModel(insertData).save();
@@ -126,7 +189,13 @@ const insertGamesCurrency = catchAsync(async function (req, res, next) {
 
 const updateSingleGameCurrency = catchAsync(async function (req, res, next) {
    const { id } = req.query;
-   const { currencyName, locked, description, metaDescription } = req.body;
+   const {
+      currencyName,
+      locked,
+      description,
+      metaDescription,
+      paymentOptions,
+   } = req.body;
 
    if (!id) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
@@ -137,7 +206,7 @@ const updateSingleGameCurrency = catchAsync(async function (req, res, next) {
    }
 
    // check currency is exists.
-   const findCurrencyDocument = await currencyModel.findOne({ id });
+   const findCurrencyDocument = await currencyModel.findOne({ _id: id });
 
    if (!findCurrencyDocument) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
@@ -176,9 +245,18 @@ const updateSingleGameCurrency = catchAsync(async function (req, res, next) {
       insertData.icon = uploadData.Location;
    }
 
+   const paymentMethodArray = JSON.parse(paymentOptions);
+   if (paymentOptions.length) {
+      const selectedPaymentMethods = paymentMethodArray.map((el) => ({
+         paymentMethodId: mongoose.Types.ObjectId(el?._id),
+      }));
+
+      insertData.paymentOptions = selectedPaymentMethods;
+   }
+
    const findAndUpdateDocument = await currencyModel.updateOne(
       { _id: id },
-      { $set: req.body }
+      { $set: insertData }
    );
 
    if (!!findAndUpdateDocument?.modifiedCount) {

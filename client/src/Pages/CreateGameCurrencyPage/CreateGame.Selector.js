@@ -2,6 +2,8 @@ import { createSelector } from '@reduxjs/toolkit';
 
 const gamesReducerSelector = (state) => state.games;
 
+const paymentReducerSelector = (state) => state.payment;
+
 export const uploadCurrencyInfoSelector = createSelector(
    [gamesReducerSelector],
    (gamesSlice) => gamesSlice.uploadCurrencyInfo
@@ -40,4 +42,19 @@ export const updateGameCurrencyLoadingSelector = createSelector(
 export const updateGameCurrencyErrorSelector = createSelector(
    [gamesReducerSelector],
    (gamesSlice) => gamesSlice.updateGameCurrencyError
+);
+
+export const paymentOptionsListSelector = createSelector(
+   [paymentReducerSelector],
+   (paymentSlice) => paymentSlice.paymentOptionsList
+);
+
+export const paymentOptionsListLoadingSelector = createSelector(
+   [paymentReducerSelector],
+   (paymentSlice) => paymentSlice.paymentOptionsListLoading
+);
+
+export const paymentOptionsListErrorSelector = createSelector(
+   [paymentReducerSelector],
+   (paymentSlice) => paymentSlice.paymentOptionsListError
 );
