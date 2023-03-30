@@ -27,6 +27,8 @@ import ProvidersGamesPage from './Pages/ProvidersGamesPage/ProvidersGamesPage';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import GameCurrencyPaymentMethodsPage from './Pages/GameCurrencyPaymentMethodsPage/GameCurrencyPaymentMethodsPage';
 import PostGameCurrencyPaymentOptionsPage from './Pages/PostGameCurrencyPaymentOptionsPage/PostGameCurrencyPaymentOptionsPage';
+import NotificationPage from './Pages/NotificationPage/NotificationPage';
+import PushNotificationPage from './Pages/PushNotificationPage/PushNotificationPage';
 
 const darkTheme = createTheme({
    palette: {
@@ -108,6 +110,15 @@ function App() {
                   <Route
                      path="/game-currency-payment/edit/:id"
                      element={<PostGameCurrencyPaymentOptionsPage />}
+                  />
+                  <Route path="/notification" element={<NotificationPage />} />
+                  <Route
+                     path="/notification/create"
+                     element={<PushNotificationPage />}
+                  />
+                  <Route
+                     path="/notification/edit/:id"
+                     element={<PushNotificationPage />}
                   />
                </Route>
                <Route path="/dashboard/auth/login" element={<LoginPage />} />

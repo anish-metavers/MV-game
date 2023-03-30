@@ -7,19 +7,24 @@ import { BrowserRouter } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
 import store from './App/Store/store';
 import { Provider } from 'react-redux';
+import { SocketContext, socket } from './Context/SocketContext';
 
 import 'react-phone-number-input/style.css';
+import 'react-quill/dist/quill.snow.css';
+import 'react-quill/dist/quill.bubble.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
    <BrowserRouter>
-      <CookiesProvider>
-         <Provider store={store}>
-            {/* <React.StrictMode> */}
-            <App />
-            {/* </React.StrictMode> */}
-         </Provider>
-      </CookiesProvider>
+      <SocketContext.Provider value={socket}>
+         <CookiesProvider>
+            <Provider store={store}>
+               {/* <React.StrictMode> */}
+               <App />
+               {/* </React.StrictMode> */}
+            </Provider>
+         </CookiesProvider>
+      </SocketContext.Provider>
    </BrowserRouter>
 );
 

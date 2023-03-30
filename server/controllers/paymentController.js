@@ -46,7 +46,7 @@ const insertNewCurrencyPaymentOption = catchAsync(async function (
    res,
    next
 ) {
-   const { name, wayName, description, min, max, vipOnly } = req.body;
+   const { name, description, min, max, vipOnly } = req.body;
 
    let icon;
 
@@ -59,7 +59,6 @@ const insertNewCurrencyPaymentOption = catchAsync(async function (
    // insert new payment method
    const insertNewMethoInfo = await walletPaymentOptionModel({
       name,
-      wayName,
       description,
       min: mongoose.Types.Decimal128.fromString(min),
       max: mongoose.Types.Decimal128.fromString(max),
@@ -163,7 +162,7 @@ const updatePaymentOption = catchAsync(async function (req, res, next) {
       });
    }
 
-   const { name, wayName, description, min, max, vipOnly } = req.body;
+   const { name, description, min, max, vipOnly } = req.body;
 
    let icon;
 
@@ -181,7 +180,6 @@ const updatePaymentOption = catchAsync(async function (req, res, next) {
       {
          $set: {
             name,
-            wayName,
             description,
             min: mongoose.Types.Decimal128.fromString(min),
             max: mongoose.Types.Decimal128.fromString(max),

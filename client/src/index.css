@@ -158,3 +158,13 @@ img {
    height: 100%;
    object-fit: contain;
 }
+
+.ql-toolbar.ql-snow {
+   border: 1px solid var(--smooth-gray-cl) !important;
+   border-radius: 5px 5px 0 0;
+}
+
+.ql-toolbar.ql-snow + .ql-container.ql-snow {
+   border-radius: 0 0 5px 5px;
+   border: 1px solid var(--smooth-gray-cl) !important;
+}

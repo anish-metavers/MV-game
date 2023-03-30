@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import * as styled from './SidebarComponent.style';
 import DashboardSidebarTabComponent from '../DashboardSidebarTabComponent/DashboardSidebarTabComponent';
 import IconListComponent from '../IconListComponent/IconListComponent';
@@ -12,8 +12,25 @@ import { AiOutlineFileProtect } from '@react-icons/all-files/ai/AiOutlineFilePro
 import { SiNintendogamecube } from '@react-icons/all-files/si/SiNintendogamecube';
 import { MdDashboard } from '@react-icons/all-files/md/MdDashboard';
 import { VscSymbolMethod } from '@react-icons/all-files/vsc/VscSymbolMethod';
+import { RiNotificationBadgeFill } from '@react-icons/all-files/ri/RiNotificationBadgeFill';
+import { authSelector } from './Sidebar.Selector';
+import { useSelector } from 'react-redux';
+import useAdmin from '../../Hooks/useAdmin';
+import { useCookies } from 'react-cookie';
+import { SocketContext } from '../../Context/SocketContext';
 
 function SidebarComponent() {
+   const auth = useSelector(authSelector);
+   const [cookie] = useCookies();
+   const [isAdmin] = useAdmin(cookie);
+   const socket = useContext(SocketContext);
+
+   useEffect(() => {
+      if (!!auth && isAdmin && auth?.user && auth?.user?._id) {
+         socket.emit('_online_user', { userId: auth?.user?._id });
+      }
+   }, [auth, isAdmin]);
+
    return (
       <styled.div>
          <div className="nav_logo_div">
@@ -41,7 +58,6 @@ function SidebarComponent() {
                   heading={'Game Category'}
                   link={'/game-category?page=0'}
                />
-
                <IconListComponent
                   icon={<RiGameFill />}
                   heading={'Games'}
@@ -61,6 +77,13 @@ function SidebarComponent() {
                   icon={<SiNintendogamecube />}
                   heading={'Games providers'}
                   link={'/games/providers?page=0'}
+               />
+            </DashboardSidebarTabComponent>
+            <DashboardSidebarTabComponent heading={'Push Notification'}>
+               <IconListComponent
+                  icon={<RiNotificationBadgeFill />}
+                  heading={'Notification'}
+                  link={'notification'}
                />
             </DashboardSidebarTabComponent>
             <DashboardSidebarTabComponent heading={'Tools'}>

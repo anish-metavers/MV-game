@@ -39,10 +39,12 @@ import {
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import AutoCompleteTagComponent from '../../Components/AutoCompleteTagComponent/AutoCompleteTagComponent';
 
-const currencies = [
+const Currencies = [
    { value: true, label: 'yes' },
    { value: false, label: 'no' },
 ];
+
+const CurrencyType = [{ name: 'FIAT', value: 'FIAT' }];
 
 const Schema = yup.object({
    currencyName: yup.string().required('Currency name is required'),
@@ -60,6 +62,9 @@ function CreateGameCurrencyPage() {
       getValues,
       control,
    } = useForm({
+      defaultValues: {
+         currencyType: 'FIAT',
+      },
       resolver: yupResolver(Schema),
    });
    const [cookie] = useCookies();
@@ -100,6 +105,7 @@ function CreateGameCurrencyPage() {
       formData.append('locked', data?.locked);
       formData.append('description', data?.description);
       formData.append('metaDescription', content);
+      formData.append('currencyType', data?.currencyType);
       formData.append('file', data?.file);
       formData.append('paymentOptions', JSON.stringify(data?.paymentOptions));
 
@@ -108,7 +114,6 @@ function CreateGameCurrencyPage() {
 
    const onSubmit = function (data) {
       const formData = CreateFormData(data);
-
       if (isAdmin && !params?.id) {
          dispatch(inertNewGameCurrency({ formData }));
       } else if (isAdmin && params?.id) {
@@ -209,12 +214,41 @@ function CreateGameCurrencyPage() {
                                     onChange={onChange}
                                     value={value?.toString() || ''}
                                  >
-                                    {currencies.map((option) => (
+                                    {Currencies.map((option) => (
                                        <MenuItem
                                           key={option.value}
                                           value={option.value}
                                        >
                                           {option.label}
+                                       </MenuItem>
+                                    ))}
+                                 </TextField>
+                              )}
+                           />
+                        </div>
+                        <div className="w-full">
+                           <Controller
+                              name="currencyType"
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                 <TextField
+                                    className="w-full"
+                                    select
+                                    required
+                                    label="Currency Type"
+                                    variant="outlined"
+                                    InputLabelProps={{
+                                       shrink: true,
+                                    }}
+                                    onChange={onChange}
+                                    value={value?.toString() || ''}
+                                 >
+                                    {CurrencyType.map((option) => (
+                                       <MenuItem
+                                          key={option.value}
+                                          value={option.value}
+                                       >
+                                          {option.value}
                                        </MenuItem>
                                     ))}
                                  </TextField>
@@ -244,6 +278,8 @@ function CreateGameCurrencyPage() {
                                        items={paymentOptionsList?.items}
                                        filed={'paymentOptions'}
                                        value={value}
+                                       label={'Payment methods'}
+                                       placeholder={'Payment methods'}
                                     />
                                  )}
                               />

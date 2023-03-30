@@ -132,6 +132,7 @@ const insertGamesCurrency = catchAsync(async function (req, res, next) {
       description,
       metaDescription,
       paymentOptions,
+      currencyType,
    } = req.body;
 
    // first check currency name is already exists in database or not.
@@ -152,6 +153,7 @@ const insertGamesCurrency = catchAsync(async function (req, res, next) {
       locked,
       description,
       metaDescription,
+      currencyType,
    };
 
    // if user send the file then wait for the s3 upload.
@@ -195,6 +197,7 @@ const updateSingleGameCurrency = catchAsync(async function (req, res, next) {
       description,
       metaDescription,
       paymentOptions,
+      currencyType,
    } = req.body;
 
    if (!id) {
@@ -236,6 +239,7 @@ const updateSingleGameCurrency = catchAsync(async function (req, res, next) {
       locked,
       description,
       metaDescription,
+      currencyType,
    };
 
    // if user send the file then wait for the s3 upload.

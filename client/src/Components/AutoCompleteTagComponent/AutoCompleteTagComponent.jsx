@@ -10,6 +10,8 @@ function AutoCompleteTagComponent({
    getValues,
    filed,
    value,
+   label,
+   placeholder,
 }) {
    return (
       <Autocomplete
@@ -45,11 +47,7 @@ function AutoCompleteTagComponent({
             );
          }}
          renderInput={(params) => (
-            <TextField
-               {...params}
-               label="Main Industries"
-               placeholder="Main Industries"
-            />
+            <TextField {...params} label={label} placeholder={placeholder} />
          )}
       />
    );

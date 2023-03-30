@@ -37,10 +37,9 @@ axiosInstance.interceptors.request.use(async (req) => {
        */
 
       const decodeAccessToken = jwtDecode(accessToken);
-      const now = new Date();
 
       // if the user token is not expire then send back the request.
-      if (!(decodeAccessToken.exp * 1000 < now.getTime())) {
+      if (!(Date.now() >= decodeAccessToken.exp * 1000)) {
          req.headers.Authorization = `Bearer ${accessToken}`;
 
          return req;

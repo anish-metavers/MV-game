@@ -5,6 +5,7 @@ import adminToolsSlice from '../Features/Tools/adminToolsSlice';
 import gameProvidersSlice from '../Features/GameProviders/GameProvidersSlice';
 import GameSlice from '../Features/Games/GameSlice';
 import paymentSlice from '../Features/Payment/paymentSlice';
+import notificationSlice from '../Features/Notification/notificationSlice';
 
 const store = configureStore({
    reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
       gameProviders: gameProvidersSlice,
       games: GameSlice,
       payment: paymentSlice,
+      notification: notificationSlice,
    },
    middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

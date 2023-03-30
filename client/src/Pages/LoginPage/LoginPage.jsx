@@ -107,6 +107,11 @@ function LoginPage() {
                         {!!authError ? (
                            <p className="text-sm error_cl mt-2">{authError}</p>
                         ) : null}
+                        {!!auth && !auth?.success ? (
+                           <p className="text-sm error_cl mt-2">
+                              {auth?.message}
+                           </p>
+                        ) : null}
                      </form>
                   </div>
                </div>

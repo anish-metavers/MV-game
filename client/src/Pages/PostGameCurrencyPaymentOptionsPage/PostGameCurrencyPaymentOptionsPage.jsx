@@ -48,7 +48,7 @@ const Schema = yup.object({
 });
 
 const currencies = [
-   { value: 'FAIT', label: 'FAIT' },
+   { value: 'FIAT', label: 'FIAT' },
    { value: 'CRYPTO', label: 'CRYPTO' },
 ];
 
@@ -65,11 +65,10 @@ function PostGameCurrencyPaymentOptionsPage() {
       formState: { errors },
       setValue,
       control,
-      getValues,
    } = useForm({
       defaultValues: {
          vipOnly: false,
-         wayName: 'FAIT',
+         // wayName: 'FIAT',
       },
       resolver: yupResolver(Schema),
    });
@@ -101,7 +100,7 @@ function PostGameCurrencyPaymentOptionsPage() {
    const createFormData = function (data) {
       const formData = new FormData();
       formData.append('name', data?.name);
-      formData.append('wayName', data?.wayName);
+      // formData.append('wayName', data?.wayName);
       formData.append('description', data?.description);
       formData.append('min', data?.min);
       formData.append('max', data?.max);
@@ -134,7 +133,7 @@ function PostGameCurrencyPaymentOptionsPage() {
 
          if (data) {
             setValue('name', data?.method?.name);
-            setValue('wayName', data?.method?.wayName);
+            // setValue('wayName', data?.method?.wayName);
             setImagePreview(data?.method?.icon);
             setValue('vipOnly', data?.method?.vipOnly);
             setValue('description', data?.method?.description);
@@ -191,7 +190,7 @@ function PostGameCurrencyPaymentOptionsPage() {
                               shrink: true,
                            }}
                         />
-                        <Controller
+                        {/* <Controller
                            name="wayName"
                            control={control}
                            render={({ field: { onChange, value } }) => (
@@ -213,7 +212,7 @@ function PostGameCurrencyPaymentOptionsPage() {
                                  ))}
                               </TextField>
                            )}
-                        />
+                        /> */}
                      </div>
                      <TextField
                         label="Description"
