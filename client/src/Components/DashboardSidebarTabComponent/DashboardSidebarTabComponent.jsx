@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import * as styled from './DashboardSidebarTabComponent.style';
 import { MdKeyboardArrowDown } from '@react-icons/all-files/md/MdKeyboardArrowDown';
-import { AnimatePresence, motion } from 'framer-motion';
 
 function DashboardSidebarTabComponent({ heading, children }) {
    const [ShowInnerTabs, setShowInnerTabs] = useState(false);
@@ -11,24 +10,18 @@ function DashboardSidebarTabComponent({ heading, children }) {
    };
 
    return (
-      <styled.div>
+      <styled.div active={ShowInnerTabs}>
          <div className="content_div" onClick={ShowAndHideTabs}>
-            <p className="text-gray-300 text-md font-medium">{heading}</p>
+            <p className="text-gray-300 text-sm font-medium">{heading}</p>
             <div className="arrow_icon">
-               <MdKeyboardArrowDown className="text-gray-400" />
+               <MdKeyboardArrowDown
+                  className={`text-gray-400 ar-right ${
+                     ShowInnerTabs && 'down'
+                  }`}
+               />
             </div>
          </div>
-         <AnimatePresence>
-            {ShowInnerTabs ? (
-               <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-               >
-                  <styled.innerItems>{children}</styled.innerItems>
-               </motion.div>
-            ) : null}
-         </AnimatePresence>
+         <styled.innerItems>{children}</styled.innerItems>
       </styled.div>
    );
 }

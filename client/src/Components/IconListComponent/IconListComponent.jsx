@@ -9,7 +9,7 @@ function IconListComponent({ heading, icon, link }) {
             <div className="icon_div flex items-center text-gray-400">
                {icon}
             </div>
-            <p className="text-gray-400 font-medium">{heading}</p>
+            <p className="text-gray-400 text-sm font-medium">{heading}</p>
          </styled.div>
       </Link>
    );

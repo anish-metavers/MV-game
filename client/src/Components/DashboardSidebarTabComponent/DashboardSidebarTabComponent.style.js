@@ -2,14 +2,25 @@ import styled from 'styled-components';
 
 export const div = styled.div`
    width: 100%;
-   border-bottom: 1px solid var(--smooth-gray-sl-cl);
+   max-height: ${(props) => (props.active ? '500px' : '36px')};
+   overflow: hidden;
+   transition: all 0.3s ease;
 
    .content_div {
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
-      padding: 1rem;
+      padding: 0.5rem 1rem;
+
+      .ar-right {
+         rotate: -90deg;
+         transition: all 0.2s ease;
+      }
+
+      .down {
+         rotate: 0deg;
+      }
    }
 `;
 

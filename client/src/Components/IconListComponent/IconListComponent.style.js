@@ -7,7 +7,9 @@ export const div = styled.div`
    border-radius: 5px;
 
    &:hover {
-      background-color: var(--smooth-gray-sl-cl);
+      /* background-color: var(--smooth-gray-sl-cl); */
+      background: rgba(255, 255, 255, 0.044);
+      transition: all 0.2s ease;
    }
 
    .active_tab {
@@ -17,6 +19,7 @@ export const div = styled.div`
 
    svg {
       font-size: 17px;
+      color: var(--smooth-gray-lg-cl);
    }
 
    .icon_div {

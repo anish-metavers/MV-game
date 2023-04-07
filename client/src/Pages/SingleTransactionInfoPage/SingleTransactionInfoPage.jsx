@@ -69,7 +69,7 @@ function SingleTransactionInfoPage() {
                {singleOrder &&
                   singleOrder?.success &&
                   singleOrder?.transactions && (
-                     <div className="border border-gray-600 rounded-xl shadow p-4">
+                     <div className="result_cr_div">
                         <h5 className="text-gray-400 font-medium text-xl mb-5">
                            Info
                         </h5>

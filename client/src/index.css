@@ -27,7 +27,7 @@ code {
    --dark-bg-slate-cl: #222531;
    --dark-home-body-cl: #1e2122;
    --dark-home-cl: #141516;
-   --model-bg-cl: #1a1c20;
+   --model-bg-cl: #22242a;
    --dark-blue-cl: #181a1f;
    --smooth-gray-cl: #7b7f84;
    --smooth-gray-sl-cl: #323237;
@@ -196,4 +196,19 @@ img {
 
 .FAILED {
    background-color: var(--error);
+}
+
+.result_cr_div {
+   background: rgba(255, 255, 255, 0.044);
+   border-radius: 16px;
+   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+   backdrop-filter: blur(5px);
+   -webkit-backdrop-filter: blur(5px);
+   border: 1px solid rgba(255, 255, 255, 0.3);
+   padding: 1.5rem 2rem;
+   transition: all 0.2s ease;
+}
+
+.result_cr_div:hover {
+   background: rgba(255, 255, 255, 0.08);
 }
