@@ -20,6 +20,16 @@ router.get(
    varifyJwtToken,
    paymentController.getAllPaymentOptionList
 );
+router.get(
+   '/get-all-fiat-transactions',
+   varifyJwtToken,
+   paymentController.getAllFiatTransactions
+);
+router.get(
+   '/get-single-order-info',
+   varifyJwtToken,
+   paymentController.getSingleOrderInfo
+);
 
 // API => POST
 router.post(

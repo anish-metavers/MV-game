@@ -168,3 +168,32 @@ img {
    border-radius: 0 0 5px 5px;
    border: 1px solid var(--smooth-gray-cl) !important;
 }
+
+.status {
+   padding: 0.3rem;
+   border-radius: 30px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.status p {
+   font-size: 11px;
+   color: var(--main-cl);
+}
+
+.COMPLETED {
+   background-color: var(--light-green-cl);
+}
+
+.Deposit-is-in-progress {
+   background-color: var(--smooth-lg-sl-cl);
+   -webkit-box-shadow: 7px 11px 20px -7px rgba(0, 0, 0, 0.53);
+   -moz-box-shadow: 7px 11px 20px -7px rgba(0, 0, 0, 0.53);
+   box-shadow: 7px 11px 20px -7px rgba(0, 0, 0, 0.53);
+   border: 1px solid var(--light-sl-cl);
+}
+
+.FAILED {
+   background-color: var(--error);
+}

@@ -4,6 +4,8 @@ import {
    getCurrencyPaymentOptions,
    updatePaymentOption,
    getAllPaymentOptionList,
+   getAllFiatTransactions,
+   getSingleOrderInfo,
 } from './paymentActions';
 
 const INITAL_STATE = {
@@ -19,6 +21,12 @@ const INITAL_STATE = {
    paymentOptionsList: null,
    paymentOptionsListLoading: false,
    paymentOptionsListError: null,
+   fiatTransactions: null,
+   fiatTransactionsLoading: false,
+   fiatTransactionsError: null,
+   singleOrder: null,
+   singleOrderLoading: false,
+   singleOrderError: null,
 };
 
 const paymentSlice = createSlice({
@@ -97,6 +105,40 @@ const paymentSlice = createSlice({
             state.paymentOptionsList = action.payload?.data;
             state.paymentOptionsListLoading = false;
             state.paymentOptionsListError = null;
+         });
+
+      bulder
+         .addCase(getAllFiatTransactions.pending, (state) => {
+            state.fiatTransactions = null;
+            state.fiatTransactionsLoading = true;
+            state.fiatTransactionsError = null;
+         })
+         .addCase(getAllFiatTransactions.rejected, (state, action) => {
+            state.fiatTransactions = null;
+            state.fiatTransactionsLoading = false;
+            state.fiatTransactionsError = action.error?.message;
+         })
+         .addCase(getAllFiatTransactions.fulfilled, (state, action) => {
+            state.fiatTransactions = action.payload?.data;
+            state.fiatTransactionsLoading = false;
+            state.fiatTransactionsError = null;
+         });
+
+      bulder
+         .addCase(getSingleOrderInfo.pending, (state) => {
+            state.singleOrder = null;
+            state.singleOrderLoading = true;
+            state.singleOrderError = null;
+         })
+         .addCase(getSingleOrderInfo.rejected, (state, action) => {
+            state.singleOrder = null;
+            state.singleOrderLoading = false;
+            state.singleOrderError = action.error?.message;
+         })
+         .addCase(getSingleOrderInfo.fulfilled, (state, action) => {
+            state.singleOrder = action.payload?.data;
+            state.singleOrderLoading = false;
+            state.singleOrderError = null;
          });
    },
 });

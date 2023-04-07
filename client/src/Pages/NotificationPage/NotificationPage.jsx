@@ -143,12 +143,12 @@ function NotificationPage() {
                            <td>{el?.heading}</td>
                            <td>
                               {dayjs(el?.createdAt).format(
-                                 'DD MMMM YY h:m:s A'
+                                 'DD MMMM YY hh:mm:ss A'
                               )}
                            </td>
                            <td>
                               {dayjs(el?.updatedAt).format(
-                                 'DD MMMM YY h:m:s A'
+                                 'DD MMMM YY hh:mm:ss A'
                               )}
                            </td>
                            <td className="flex items-center space-x-3 icon_box">

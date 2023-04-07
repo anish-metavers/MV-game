@@ -29,6 +29,8 @@ import GameCurrencyPaymentMethodsPage from './Pages/GameCurrencyPaymentMethodsPa
 import PostGameCurrencyPaymentOptionsPage from './Pages/PostGameCurrencyPaymentOptionsPage/PostGameCurrencyPaymentOptionsPage';
 import NotificationPage from './Pages/NotificationPage/NotificationPage';
 import PushNotificationPage from './Pages/PushNotificationPage/PushNotificationPage';
+import FiatPaymentsPage from './Pages/FiatPaymentsPage/FiatPaymentsPage';
+import SingleTransactionInfoPage from './Pages/SingleTransactionInfoPage/SingleTransactionInfoPage';
 
 const darkTheme = createTheme({
    palette: {
@@ -119,6 +121,11 @@ function App() {
                   <Route
                      path="/notification/edit/:id"
                      element={<PushNotificationPage />}
+                  />
+                  <Route path="/fiat-payments" element={<FiatPaymentsPage />} />
+                  <Route
+                     path="/order/:orderId"
+                     element={<SingleTransactionInfoPage />}
                   />
                </Route>
                <Route path="/dashboard/auth/login" element={<LoginPage />} />

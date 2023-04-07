@@ -1,10 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-const REACT_APP_BACKEND_BASE_USER_URL =
-   process.env.REACT_APP_BACKEND_BASE_USER_URL;
 
 const axiosAuthInstance = axios.create({
-   baseURL: REACT_APP_BACKEND_BASE_USER_URL,
+   baseURL: process.env.REACT_APP_CLIENT_BACKEND_URL,
    headers: {
       'Access-Control-Allow-Origin': '*',
       'Content-Type': 'application/json',

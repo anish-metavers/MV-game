@@ -1,6 +1,6 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
-const USER_API_ROUTE_URL = process.env.REACT_APP_BACKEND_BASE_USER_URL;
+const USER_API_ROUTE_URL = process.env.REACT_APP_CLIENT_BACKEND_URL;
 const ADMIN_DASHBOARD_URL = process.env.REACT_APP_BACKEND_BASE_ADMIN_URL;
 const ADMIN_KEY = process.env.REACT_APP_ADMIN_SECRET_KEY;
 

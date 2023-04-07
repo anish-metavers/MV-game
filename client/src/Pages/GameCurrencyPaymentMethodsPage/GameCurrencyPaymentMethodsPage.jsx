@@ -19,7 +19,6 @@ import dayjs from 'dayjs';
 
 const ROW = [
    { heading: 'Name', id: 1 },
-   { heading: 'Way Name', id: 2 },
    { heading: 'Min', id: 3 },
    { heading: 'Max', id: 4 },
    { heading: 'Icon', id: 5 },
@@ -103,7 +102,6 @@ function GameCurrencyPaymentMethodsPage() {
                      {currencyMethods?.methods.map((el) => (
                         <tr key={el?._id}>
                            <td>{el?.name}</td>
-                           <td>{el?.wayName}</td>
                            <td>{el?.min?.$numberDecimal}</td>
                            <td>{el?.max?.$numberDecimal}</td>
                            <td>

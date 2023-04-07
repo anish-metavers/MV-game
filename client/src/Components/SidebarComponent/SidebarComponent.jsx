@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import { SocketContext } from '../../Context/SocketContext';
+import { MdPayment } from '@react-icons/all-files/md/MdPayment';
 
 function SidebarComponent() {
    const auth = useSelector(authSelector);
@@ -98,6 +99,11 @@ function SidebarComponent() {
                   icon={<VscSymbolMethod />}
                   heading={'Game Currency Payment'}
                   link={'/game-currency-payment'}
+               />
+               <IconListComponent
+                  icon={<MdPayment />}
+                  heading={'Fiat payments'}
+                  link={'/fiat-payments'}
                />
             </DashboardSidebarTabComponent>
          </styled.sclDiv>

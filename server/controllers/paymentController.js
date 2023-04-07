@@ -2,6 +2,7 @@ const { default: mongoose } = require('mongoose');
 const { catchAsync, httpStatusCodes, uploadToS3 } = require('../helper/helper');
 const walletPaymentOptionModel = require('../model/schema/walletPaymentOptionsSchema');
 const currencyModel = require('../model/schema/currencySchema');
+const transactionsModel = require('../model/schema/transactionSchema');
 
 const getCurrencyPaymentOptions = catchAsync(async function (req, res, next) {
    const { page } = req.query;
@@ -20,7 +21,7 @@ const getCurrencyPaymentOptions = catchAsync(async function (req, res, next) {
    const totalDocuments = await walletPaymentOptionModel.countDocuments();
 
    const currencyPaymentOptions = await walletPaymentOptionModel
-      .find({}, { name: 1, wayName: 1, min: 1, max: 1, icon: 1 })
+      .find({}, { name: 1, min: 1, max: 1, icon: 1 })
       .limit(DOCUMENT_LIMIT)
       .skip(page * DOCUMENT_LIMIT);
 
@@ -225,10 +226,135 @@ const getAllPaymentOptionList = catchAsync(async function (req, res, next) {
    });
 });
 
+const getAllFiatTransactions = catchAsync(async function (req, res, next) {
+   const { page } = req.query;
+
+   if (!page) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Page number is required',
+      });
+   }
+
+   const DOCUMENT_LIMIT = 30;
+
+   const totalDocuments = await transactionsModel.countDocuments();
+
+   const allTransaction = await transactionsModel.aggregate([
+      { $sort: { createdAt: -1 } },
+      { $skip: page * DOCUMENT_LIMIT },
+      { $limit: DOCUMENT_LIMIT },
+      {
+         $project: {
+            amount: {
+               $convert: {
+                  input: '$amount',
+                  to: 'string',
+               },
+            },
+            status: 1,
+            wayName: 1,
+            orderId: 1,
+            createdAt: 1,
+         },
+      },
+   ]);
+
+   if (allTransaction) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         transactions: allTransaction,
+         totalPages: Math.ceil(totalDocuments / DOCUMENT_LIMIT - 1),
+         page: +page,
+         totalDocuments: totalDocuments,
+      });
+   }
+
+   return res.status(httpStatusCodes.OK).json({
+      success: true,
+      error: false,
+      transactions: [],
+   });
+});
+
+const getSingleOrderInfo = catchAsync(async function (req, res, next) {
+   const { orderId } = req.query;
+
+   if (!orderId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Order id is required',
+      });
+   }
+
+   const transactionInfo = await transactionsModel.aggregate([
+      { $match: { orderId: orderId } },
+      {
+         $lookup: {
+            from: 'auths',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'user',
+         },
+      },
+      { $unwind: '$user' },
+      {
+         $lookup: {
+            from: 'currencies',
+            localField: 'currencyId',
+            foreignField: '_id',
+            as: 'currency',
+         },
+      },
+      { $unwind: '$currency' },
+      {
+         $project: {
+            amount: {
+               $convert: {
+                  input: '$amount',
+                  to: 'string',
+               },
+            },
+            status: 1,
+            wayName: 1,
+            orderId: 1,
+            createdAt: 1,
+            'user.name': 1,
+            'user.avatar': 1,
+            'user.userId': 1,
+            'currency.icon': 1,
+            'currency.currencyName': 1,
+            'currency.currencyType': 1,
+         },
+      },
+   ]);
+
+   const transactions = transactionInfo?.[0];
+
+   if (transactions) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         transactions,
+      });
+   }
+
+   return res.status(httpStatusCodes.BAD_REQUEST).json({
+      status: true,
+      error: false,
+      message: 'Order is not found',
+   });
+});
+
 module.exports = {
    getCurrencyPaymentOptions,
    insertNewCurrencyPaymentOption,
    getSinglePaymentCurrencyOption,
    updatePaymentOption,
    getAllPaymentOptionList,
+   getAllFiatTransactions,
+   getSingleOrderInfo,
 };

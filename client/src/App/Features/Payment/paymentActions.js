@@ -87,3 +87,38 @@ export const getAllPaymentOptionList = createAsyncThunk(
       }
    }
 );
+
+export const getAllFiatTransactions = createAsyncThunk(
+   'payment/getAllFiatTransactions',
+   async ({ page }, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(
+            `/payment/get-all-fiat-transactions?page=${page}`
+         );
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getSingleOrderInfo = createAsyncThunk(
+   'payment/getSingleOrderInfo',
+   async ({ orderId }, { rejectWithValue }) => {
+      try {
+         const orderResponse = await axiosInstance.get(
+            `/payment/get-single-order-info?orderId=${orderId}`
+         );
+
+         return orderResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
