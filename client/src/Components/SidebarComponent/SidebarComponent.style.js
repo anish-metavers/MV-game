@@ -3,6 +3,8 @@ import styled from 'styled-components';
 export const div = styled.div`
    width: 100%;
    height: 100%;
+   display: flex;
+   flex-direction: column;
 
    .nav_logo_div {
       border-bottom: 1px solid var(--smooth-gray-sl-cl);
@@ -22,6 +24,6 @@ export const div = styled.div`
 
 export const sclDiv = styled.div`
    width: 100%;
-   height: 92%;
+   height: 100%;
    overflow-x: hidden;
 `;

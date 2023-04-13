@@ -23,7 +23,6 @@ const ROW = [
    { heading: 'Max', id: 4 },
    { heading: 'Icon', id: 5 },
    { heading: 'Created At', id: 6 },
-   { heading: 'Updated At', id: 7 },
    { heading: 'Options', id: 8 },
 ];
 
@@ -97,7 +96,7 @@ function GameCurrencyPaymentMethodsPage() {
                      disableNextbtn={
                         +Page >= currencyMethods?.totalPages ? true : false
                      }
-                     tableWidth={1200}
+                     tableWidth={1100}
                   >
                      {currencyMethods?.methods.map((el) => (
                         <tr key={el?._id}>
@@ -111,11 +110,6 @@ function GameCurrencyPaymentMethodsPage() {
                            </td>
                            <td>
                               {dayjs(el?.spinTimePeriod).format(
-                                 'DD MMMM YYYY hh:mm:ss A'
-                              )}
-                           </td>
-                           <td>
-                              {dayjs(el?.updatedAt).format(
                                  'DD MMMM YYYY hh:mm:ss A'
                               )}
                            </td>

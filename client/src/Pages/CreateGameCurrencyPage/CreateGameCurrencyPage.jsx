@@ -88,7 +88,7 @@ function CreateGameCurrencyPage() {
    );
    const paymentOptionsListError = useSelector(paymentOptionsListErrorSelector);
 
-   const ImageHandler = function (event) {
+   const imageHandler = function (event) {
       const imageFiles = event.target.files;
       const imageFilesLength = imageFiles.length;
       const file = imageFiles[0];
@@ -99,7 +99,7 @@ function CreateGameCurrencyPage() {
       }
    };
 
-   const CreateFormData = function (data) {
+   const createFormData = function (data) {
       const formData = new FormData();
       formData.append('currencyName', data?.currencyName);
       formData.append('locked', data?.locked);
@@ -113,7 +113,7 @@ function CreateGameCurrencyPage() {
    };
 
    const onSubmit = function (data) {
-      const formData = CreateFormData(data);
+      const formData = createFormData(data);
       if (isAdmin && !params?.id) {
          dispatch(inertNewGameCurrency({ formData }));
       } else if (isAdmin && params?.id) {
@@ -280,6 +280,7 @@ function CreateGameCurrencyPage() {
                                        value={value}
                                        label={'Payment methods'}
                                        placeholder={'Payment methods'}
+                                       fieldName={'name'}
                                     />
                                  )}
                               />
@@ -325,7 +326,7 @@ function CreateGameCurrencyPage() {
                         width={200}
                         height={200}
                         preview={PrevImage}
-                        onChange={ImageHandler}
+                        onChange={imageHandler}
                         label={'Currency Icon'}
                         icon={<AiFillFileImage className="text-gray-500" />}
                      />

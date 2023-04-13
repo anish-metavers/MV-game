@@ -7,7 +7,6 @@ import * as yup from 'yup';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomButtonComponent from '../../Components/CustomButtonComponent/CustomButtonComponent';
-import { MenuItem } from '@mui/material';
 import { Switch } from 'antd';
 import ImageUploadComponent from '../../Components/ImageUploadComponent/ImageUploadComponent';
 import { message } from 'antd';
@@ -22,14 +21,20 @@ import {
    updatePaymentOptionInfoSelector,
    updatePaymentOptionLoadingSelector,
    updatePaymentOptionErrorSelector,
+   paymentFieldsSelector,
+   paymentFieldsLoadingSelector,
+   paymentFieldsErrorSelector,
 } from './PostGameCurrency.Selector';
 import {
    insertNewCurrencyPaymentOption,
    getSinglePaymentCurrencyOption,
    updatePaymentOption,
+   getAllPaymentOptionFieldsList,
 } from '../../App/Features/Payment/paymentActions';
 import { useParams } from 'react-router-dom';
 import { removeUpdatePaymentOptionInfo } from '../../App/Features/Payment/paymentSlice';
+import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
+import AutoCompleteTagComponent from '../../Components/AutoCompleteTagComponent/AutoCompleteTagComponent';
 
 const Schema = yup.object({
    name: yup.string().required('Game name is required'),
@@ -47,11 +52,6 @@ const Schema = yup.object({
       .moreThan(yup.ref('min'), 'Max should be more then min'),
 });
 
-const currencies = [
-   { value: 'FIAT', label: 'FIAT' },
-   { value: 'CRYPTO', label: 'CRYPTO' },
-];
-
 function PostGameCurrencyPaymentOptionsPage() {
    const [cookie] = useCookies();
    const [isAdmin] = useAdmin(cookie);
@@ -65,10 +65,11 @@ function PostGameCurrencyPaymentOptionsPage() {
       formState: { errors },
       setValue,
       control,
+      getValues,
    } = useForm({
       defaultValues: {
          vipOnly: false,
-         // wayName: 'FIAT',
+         paymentOptionsFields: '',
       },
       resolver: yupResolver(Schema),
    });
@@ -87,6 +88,9 @@ function PostGameCurrencyPaymentOptionsPage() {
       updatePaymentOptionLoadingSelector
    );
    const updatePaymentOptionInfo = useSelector(updatePaymentOptionInfoSelector);
+   const paymentFields = useSelector(paymentFieldsSelector);
+   const paymentFieldsLoading = useSelector(paymentFieldsLoadingSelector);
+   const paymentFieldsError = useSelector(paymentFieldsErrorSelector);
 
    const imageHandler = function (event) {
       const imageFile = event.target.files[0];
@@ -100,18 +104,26 @@ function PostGameCurrencyPaymentOptionsPage() {
    const createFormData = function (data) {
       const formData = new FormData();
       formData.append('name', data?.name);
-      // formData.append('wayName', data?.wayName);
       formData.append('description', data?.description);
       formData.append('min', data?.min);
       formData.append('max', data?.max);
       formData.append('vipOnly', data?.vipOnly);
       formData.append('image', data?.image);
+      formData.append(
+         'paymentFields',
+         JSON.stringify(data?.paymentOptionsFields)
+      );
 
       return formData;
    };
 
    const onSubmit = function (data) {
       const formData = createFormData(data);
+
+      if (!data?.paymentOptionsFields.length) {
+         return message.error('Payment options fields is required');
+      }
+
       if (!params?.id) {
          if (!ImagePreview) {
             return message.error('Payment options image is required');
@@ -131,14 +143,16 @@ function PostGameCurrencyPaymentOptionsPage() {
          );
          const data = response?.payload?.data;
 
-         if (data) {
-            setValue('name', data?.method?.name);
-            // setValue('wayName', data?.method?.wayName);
-            setImagePreview(data?.method?.icon);
-            setValue('vipOnly', data?.method?.vipOnly);
-            setValue('description', data?.method?.description);
-            setValue('min', data?.method?.min?.$numberDecimal);
-            setValue('max', data?.method?.max?.$numberDecimal);
+         if (data && data?.method.length) {
+            const method = data?.method?.[0];
+
+            setValue('name', method?._id.name);
+            setImagePreview(method?._id.icon);
+            setValue('vipOnly', method?._id.vipOnly);
+            setValue('description', method?._id.description);
+            setValue('min', method?._id.min);
+            setValue('max', method?._id.max);
+            setValue('paymentOptionsFields', method.paymentFields);
          }
       } catch (err) {
          console.log(err);
@@ -146,8 +160,12 @@ function PostGameCurrencyPaymentOptionsPage() {
    };
 
    useEffect(() => {
-      if (params?.id && isAdmin) {
-         SinglePaymentOption();
+      if (isAdmin) {
+         if (params?.id) {
+            SinglePaymentOption();
+         }
+
+         dispatch(getAllPaymentOptionFieldsList());
       }
 
       return () => {
@@ -179,40 +197,48 @@ function PostGameCurrencyPaymentOptionsPage() {
                      }}
                   >
                      <div className="w-full flex items-center space-x-2">
-                        <TextField
-                           label="Name"
-                           className="w-full"
-                           required
-                           variant="outlined"
-                           {...register('name')}
-                           type={'text'}
-                           InputLabelProps={{
-                              shrink: true,
-                           }}
-                        />
-                        {/* <Controller
-                           name="wayName"
-                           control={control}
-                           render={({ field: { onChange, value } }) => (
-                              <TextField
-                                 select
-                                 required
-                                 className="w-full"
-                                 label="Select"
-                                 value={value}
-                                 onChange={(e) => onChange(e.target.value)}
-                              >
-                                 {currencies.map((option) => (
-                                    <MenuItem
-                                       key={option.value}
-                                       value={option.value}
-                                    >
-                                       {option.label}
-                                    </MenuItem>
-                                 ))}
-                              </TextField>
+                        <div className="w-full">
+                           <TextField
+                              label="Name"
+                              className="w-full"
+                              required
+                              variant="outlined"
+                              {...register('name')}
+                              type={'text'}
+                              InputLabelProps={{
+                                 shrink: true,
+                              }}
+                           />
+                        </div>
+                        <div className="w-full">
+                           {paymentFieldsLoading && <SpinnerComponent />}
+                           {paymentFieldsError && (
+                              <p className="text-sm error_cl">
+                                 {paymentFieldsError}
+                              </p>
                            )}
-                        /> */}
+                           {!!paymentFields &&
+                           paymentFields?.success &&
+                           paymentFields?.items &&
+                           paymentFields?.items.length ? (
+                              <Controller
+                                 name="paymentOptionsFields"
+                                 control={control}
+                                 render={({ field: { value } }) => (
+                                    <AutoCompleteTagComponent
+                                       setValue={setValue}
+                                       getValues={getValues}
+                                       items={paymentFields?.items}
+                                       filed={'paymentOptionsFields'}
+                                       value={value}
+                                       label={'Fields'}
+                                       placeholder={'Fields'}
+                                       fieldName={'label'}
+                                    />
+                                 )}
+                              />
+                           ) : null}
+                        </div>
                      </div>
                      <TextField
                         label="Description"

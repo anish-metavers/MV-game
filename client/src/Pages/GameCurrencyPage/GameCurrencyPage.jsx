@@ -16,7 +16,6 @@ import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent
 import { useNavigate } from 'react-router-dom';
 import { ROW } from './TableCl';
 import dayjs from 'dayjs';
-import { Popconfirm } from 'antd';
 import {
    gameCurrencyListInfoSelector,
    gameCurrencyListLoadingSelector,

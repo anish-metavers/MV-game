@@ -3,6 +3,7 @@ const { catchAsync, httpStatusCodes, uploadToS3 } = require('../helper/helper');
 const walletPaymentOptionModel = require('../model/schema/walletPaymentOptionsSchema');
 const currencyModel = require('../model/schema/currencySchema');
 const transactionsModel = require('../model/schema/transactionSchema');
+const paymentOptionsFieldModel = require('../model/schema/paymentOptionsFieldSchema');
 
 const getCurrencyPaymentOptions = catchAsync(async function (req, res, next) {
    const { page } = req.query;
@@ -47,7 +48,9 @@ const insertNewCurrencyPaymentOption = catchAsync(async function (
    res,
    next
 ) {
-   const { name, description, min, max, vipOnly } = req.body;
+   const { name, description, min, max, vipOnly, paymentFields } = req.body;
+   const fields = JSON.parse(paymentFields);
+   const selectedFields = fields.map((el) => ({ fieldId: el?._id }));
 
    let icon;
 
@@ -65,6 +68,7 @@ const insertNewCurrencyPaymentOption = catchAsync(async function (
       max: mongoose.Types.Decimal128.fromString(max),
       vipOnly,
       icon,
+      paymentFields: selectedFields,
    }).save();
 
    if (!insertNewMethoInfo) {
@@ -131,12 +135,67 @@ const getSinglePaymentCurrencyOption = catchAsync(async function (
    }
 
    // find single currency payment option.
-   const singlePaymentWalletOption = await walletPaymentOptionModel.findOne(
+   const singlePaymentWalletOption = await walletPaymentOptionModel.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(optionId) } },
       {
-         _id: optionId,
+         $unwind: {
+            path: '$paymentFields',
+            preserveNullAndEmptyArrays: true,
+         },
       },
-      { createdAt: 0, updatedAt: 0, _id: 0, __v: 0 }
-   );
+      {
+         $lookup: {
+            from: 'paymentoptionsfields',
+            localField: 'paymentFields.fieldId',
+            foreignField: '_id',
+            as: 'paymentFields.field',
+         },
+      },
+      {
+         $unwind: {
+            path: '$paymentFields.field',
+            preserveNullAndEmptyArrays: true,
+         },
+      },
+      {
+         $project: {
+            name: 1,
+            description: 1,
+            min: {
+               $convert: {
+                  input: '$min',
+                  to: 'string',
+               },
+            },
+            max: {
+               $convert: {
+                  input: '$max',
+                  to: 'string',
+               },
+            },
+            vipOnly: 1,
+            icon: 1,
+            updatedAt: 1,
+            'paymentFields._id': '$paymentFields.field._id',
+            'paymentFields.label': '$paymentFields.field.label',
+         },
+      },
+      {
+         $group: {
+            _id: {
+               _id: '$_id',
+               name: '$name',
+               description: '$description',
+               vipOnly: '$vipOnly',
+               icon: '$icon',
+               updatedAt: '$updatedAt',
+               min: '$min',
+               max: '$max',
+            },
+            paymentFields: { $push: '$paymentFields' },
+         },
+      },
+   ]);
 
    if (singlePaymentWalletOption) {
       return res.status(httpStatusCodes.OK).json({
@@ -163,7 +222,10 @@ const updatePaymentOption = catchAsync(async function (req, res, next) {
       });
    }
 
-   const { name, description, min, max, vipOnly } = req.body;
+   const { name, description, min, max, vipOnly, paymentFields } = req.body;
+
+   const fields = JSON.parse(paymentFields);
+   const selectedFields = fields.map((el) => ({ fieldId: el?._id }));
 
    let icon;
 
@@ -186,6 +248,7 @@ const updatePaymentOption = catchAsync(async function (req, res, next) {
             max: mongoose.Types.Decimal128.fromString(max),
             vipOnly,
             icon,
+            paymentFields: selectedFields,
          },
       }
    );
@@ -349,6 +412,173 @@ const getSingleOrderInfo = catchAsync(async function (req, res, next) {
    });
 });
 
+const createNewPaymentOptionField = catchAsync(async function (req, res, next) {
+   const saveInput = await paymentOptionsFieldModel(req.body).save();
+   if (saveInput) {
+      return res.status(httpStatusCodes.CREATED).json({
+         success: true,
+         message: 'Input save',
+      });
+   }
+
+   return res.status(httpStatusCodes.INTERNAL_SERVER).json({
+      success: false,
+      error: true,
+      message: 'Internal server error',
+   });
+});
+
+const getAllPaymentOptionFields = catchAsync(async function (req, res, next) {
+   const { page } = req.query;
+   if (!page) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Page is reuqired',
+      });
+   }
+
+   const documents = await paymentOptionsFieldModel.countDocuments();
+   const DOCUMENT_LIMIT = 30;
+
+   const findDocuments = await paymentOptionsFieldModel
+      .find({}, { __v: 0 })
+      .skip(page * DOCUMENT_LIMIT)
+      .limit(DOCUMENT_LIMIT);
+
+   if (findDocuments) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         items: findDocuments,
+         totalPages: Math.ceil(documents / DOCUMENT_LIMIT - 1),
+         page: +page,
+         totalDocuments: documents,
+      });
+   }
+
+   return res.status(httpStatusCodes.BAD_REQUEST).json({
+      success: false,
+      error: true,
+      message: 'Fileds not found',
+   });
+});
+
+const deletePaymentOptionsField = catchAsync(async function (req, res, next) {
+   const { fieldId } = req.query;
+
+   if (!fieldId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'field id is reuqired',
+      });
+   }
+
+   const deleteFiled = await paymentOptionsFieldModel.deleteOne({
+      _id: fieldId,
+   });
+
+   if (deleteFiled.deletedCount) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         message: 'Field delete',
+         fieldId,
+      });
+   }
+
+   return res.status(httpStatusCodes.BAD_REQUEST).json({
+      success: false,
+      error: true,
+      message: 'Filed is not found',
+   });
+});
+
+const getSinglePaymentOptionField = catchAsync(async function (req, res, next) {
+   const { fieldId } = req.query;
+
+   if (!fieldId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'field id is reuqired',
+      });
+   }
+
+   const singlefield = await paymentOptionsFieldModel.findOne(
+      { _id: fieldId },
+      { __v: 0, createdAt: 0 }
+   );
+
+   if (singlefield) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         item: singlefield,
+      });
+   }
+
+   return res.status(httpStatusCodes.BAD_REQUEST).json({
+      success: false,
+      error: true,
+      message: 'Filed is not found',
+   });
+});
+
+const updatePaymentOptionField = catchAsync(async function (req, res, next) {
+   const { fieldId } = req.body;
+
+   if (!fieldId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'field id is reuqired',
+      });
+   }
+
+   const updatePaymentField = await paymentOptionsFieldModel.updateOne(
+      { _id: fieldId },
+      { $set: req.body }
+   );
+
+   if (updatePaymentField?.modifiedCount) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         message: 'option updated',
+      });
+   }
+
+   return res.status(httpStatusCodes.OK).json({
+      success: false,
+      error: true,
+      message: 'No changes',
+   });
+});
+
+const getAllPaymentOptionFieldsList = catchAsync(async function (
+   req,
+   res,
+   next
+) {
+   const findFieldLists = await paymentOptionsFieldModel.find({}, { label: 1 });
+
+   if (findFieldLists) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         items: findFieldLists,
+      });
+   }
+
+   return res.status(httpStatusCodes.BAD_REQUEST).json({
+      success: false,
+      error: true,
+      message: 'Payment options fields is not found',
+   });
+});
+
 module.exports = {
    getCurrencyPaymentOptions,
    insertNewCurrencyPaymentOption,
@@ -357,4 +587,10 @@ module.exports = {
    getAllPaymentOptionList,
    getAllFiatTransactions,
    getSingleOrderInfo,
+   createNewPaymentOptionField,
+   getAllPaymentOptionFields,
+   deletePaymentOptionsField,
+   getSinglePaymentOptionField,
+   updatePaymentOptionField,
+   getAllPaymentOptionFieldsList,
 };

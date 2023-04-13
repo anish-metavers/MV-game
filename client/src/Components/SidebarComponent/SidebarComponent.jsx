@@ -19,6 +19,7 @@ import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import { SocketContext } from '../../Context/SocketContext';
 import { MdPayment } from '@react-icons/all-files/md/MdPayment';
+import { VscSymbolArray } from '@react-icons/all-files/vsc/VscSymbolArray';
 
 function SidebarComponent() {
    const auth = useSelector(authSelector);
@@ -95,6 +96,11 @@ function SidebarComponent() {
                />
             </DashboardSidebarTabComponent>
             <DashboardSidebarTabComponent heading={'Payment'}>
+               <IconListComponent
+                  icon={<VscSymbolArray />}
+                  heading={'Payment fields'}
+                  link={'/payment-fields'}
+               />
                <IconListComponent
                   icon={<VscSymbolMethod />}
                   heading={'Game Currency Payment'}

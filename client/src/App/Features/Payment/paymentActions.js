@@ -122,3 +122,110 @@ export const getSingleOrderInfo = createAsyncThunk(
       }
    }
 );
+
+export const createNewPaymentOptionField = createAsyncThunk(
+   'payment/createNewPaymentOptionField',
+   async (data, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.post(
+            '/payment/create-new-payment-options-filed',
+            data
+         );
+
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getAllPaymentOptionFields = createAsyncThunk(
+   'payment/createNewPaymentOptionField',
+   async ({ page }, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(
+            `/payment/get-all-payment-options-fields?page=${page}`
+         );
+
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const deletePaymentOptionsFiled = createAsyncThunk(
+   'payment/deletePaymentOptionsField',
+   async ({ fieldId }, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.delete(
+            `/payment/delete-single-payment-filed?fieldId=${fieldId}`
+         );
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getSinglePaymentOptionField = createAsyncThunk(
+   'payment/getSinglePaymentOptionField',
+   async ({ fieldId }, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(
+            `/payment/get-single-payment-option-field?fieldId=${fieldId}`
+         );
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const updatePaymentOptionField = createAsyncThunk(
+   'payment/updatePaymentOptionField',
+   async (data, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.patch(
+            '/payment/update-single-payment-option-field',
+            data
+         );
+
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getAllPaymentOptionFieldsList = createAsyncThunk(
+   'payment/getAllPaymentOptionFieldsList',
+   async (_, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(
+            '/payment/get-all-payment-options-field-list'
+         );
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);

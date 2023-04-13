@@ -41,7 +41,6 @@ axiosInstance.interceptors.request.use(async (req) => {
       // if the user token is not expire then send back the request.
       if (!(Date.now() >= decodeAccessToken.exp * 1000)) {
          req.headers.Authorization = `Bearer ${accessToken}`;
-
          return req;
       } else {
          // request for the new token when the user token is expire.

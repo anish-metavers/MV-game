@@ -35,8 +35,6 @@ function GameUploadResultChartComponent() {
    const [isAdmin] = useAdmin(cookie);
    const dispatch = useDispatch();
 
-   console.log(cookie);
-
    const gameStatus = useSelector(gameStatusSelector);
    const gameStatusLoading = useSelector(gameStatusLoadingSelector);
    const gameStatusError = useSelector(gameStatusErrorSelector);

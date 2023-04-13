@@ -31,6 +31,8 @@ import NotificationPage from './Pages/NotificationPage/NotificationPage';
 import PushNotificationPage from './Pages/PushNotificationPage/PushNotificationPage';
 import FiatPaymentsPage from './Pages/FiatPaymentsPage/FiatPaymentsPage';
 import SingleTransactionInfoPage from './Pages/SingleTransactionInfoPage/SingleTransactionInfoPage';
+import PaymentFiledsPage from './Pages/PaymentFiledsPage/PaymentFiledsPage';
+import CreatePaymentFieldsPage from './Pages/CreatePaymentFieldsPage/CreatePaymentFieldsPage';
 
 const darkTheme = createTheme({
    palette: {
@@ -126,6 +128,18 @@ function App() {
                   <Route
                      path="/order/:orderId"
                      element={<SingleTransactionInfoPage />}
+                  />
+                  <Route
+                     path="/payment-fields"
+                     element={<PaymentFiledsPage />}
+                  />
+                  <Route
+                     path="/payment-fields/create"
+                     element={<CreatePaymentFieldsPage />}
+                  />
+                  <Route
+                     path="/payment-fields/edit/:id"
+                     element={<CreatePaymentFieldsPage />}
                   />
                </Route>
                <Route path="/dashboard/auth/login" element={<LoginPage />} />

@@ -31,3 +31,18 @@ export const updatePaymentOptionErrorSelector = createSelector(
    [paymentReducerSelector],
    (paymentSlice) => paymentSlice.updatePaymentOptionError
 );
+
+export const paymentFieldsSelector = createSelector(
+   [paymentReducerSelector],
+   (paymentSlice) => paymentSlice.paymentFields
+);
+
+export const paymentFieldsLoadingSelector = createSelector(
+   [paymentReducerSelector],
+   (paymentSlice) => paymentSlice.paymentFieldsLoading
+);
+
+export const paymentFieldsErrorSelector = createSelector(
+   [paymentReducerSelector],
+   (paymentSlice) => paymentSlice.paymentFieldsError
+);

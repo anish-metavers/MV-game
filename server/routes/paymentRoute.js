@@ -3,6 +3,7 @@ const router = express.Router();
 const { varifyJwtToken } = require('../middlewares/jwtValidator');
 const { upload } = require('../helper/helper');
 const paymentController = require('../controllers/paymentController');
+const { validatePaymentOptions } = require('../middlewares/DocumentValidator');
 
 // API => GET
 router.get(
@@ -30,13 +31,34 @@ router.get(
    varifyJwtToken,
    paymentController.getSingleOrderInfo
 );
+router.get(
+   '/get-all-payment-options-fields',
+   varifyJwtToken,
+   paymentController.getAllPaymentOptionFields
+);
+router.get(
+   '/get-single-payment-option-field',
+   varifyJwtToken,
+   paymentController.getSinglePaymentOptionField
+);
+router.get(
+   '/get-all-payment-options-field-list',
+   varifyJwtToken,
+   paymentController.getAllPaymentOptionFieldsList
+);
 
 // API => POST
 router.post(
    '/insert-new-currency-payment-options',
    varifyJwtToken,
    upload.single('image'),
+   validatePaymentOptions,
    paymentController.insertNewCurrencyPaymentOption
+);
+router.post(
+   '/create-new-payment-options-filed',
+   varifyJwtToken,
+   paymentController.createNewPaymentOptionField
 );
 
 // API => PATCH
@@ -44,9 +66,20 @@ router.patch(
    '/update-single-payment-option',
    varifyJwtToken,
    upload.single('image'),
+   validatePaymentOptions,
    paymentController.updatePaymentOption
+);
+router.patch(
+   '/update-single-payment-option-field',
+   varifyJwtToken,
+   paymentController.updatePaymentOptionField
 );
 
 // API => DELETE
+router.delete(
+   '/delete-single-payment-filed',
+   varifyJwtToken,
+   paymentController.deletePaymentOptionsField
+);
 
 module.exports = router;

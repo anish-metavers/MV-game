@@ -39,3 +39,13 @@ exports.gameProviderDocValidation = [
       validateErrors(req, res, next);
    },
 ];
+
+exports.validatePaymentOptions = [
+   body('name').isString().withMessage('Payment option name must be string'),
+   body('min', 'min must be number')
+      .isInt({ min: 50 })
+      .withMessage('Minimum payment threshold is 50'),
+   (req, res, next) => {
+      validateErrors(req, res, next);
+   },
+];

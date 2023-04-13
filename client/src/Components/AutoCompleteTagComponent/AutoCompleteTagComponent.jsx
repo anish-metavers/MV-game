@@ -12,6 +12,7 @@ function AutoCompleteTagComponent({
    value,
    label,
    placeholder,
+   fieldName,
 }) {
    return (
       <Autocomplete
@@ -19,7 +20,7 @@ function AutoCompleteTagComponent({
          limitTags={2}
          value={value?.length && value[0]?._id ? value : []}
          options={items}
-         getOptionLabel={(option) => option.name}
+         getOptionLabel={(option) => option[fieldName]}
          isOptionEqualToValue={(option, value) => option?._id === value?._id}
          onChange={(_, values) => {
             setValue(filed, values, {
@@ -42,7 +43,7 @@ function AutoCompleteTagComponent({
                      style={{ marginRight: 8 }}
                      checked={selected}
                   />
-                  {option.name}
+                  {option[fieldName]}
                </li>
             );
          }}

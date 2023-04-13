@@ -6,6 +6,9 @@ import {
    getAllPaymentOptionList,
    getAllFiatTransactions,
    getSingleOrderInfo,
+   getAllPaymentOptionFields,
+   deletePaymentOptionsFiled,
+   getAllPaymentOptionFieldsList,
 } from './paymentActions';
 
 const INITAL_STATE = {
@@ -27,6 +30,14 @@ const INITAL_STATE = {
    singleOrder: null,
    singleOrderLoading: false,
    singleOrderError: null,
+   paymentOptionsFields: null,
+   paymentOptionsFieldsLoading: false,
+   paymentOptionsFieldsError: null,
+   deletePaymentOptionsFiledError: null,
+   deletePaymentOptionsFiledLoading: false,
+   paymentFields: null,
+   paymentFieldsLoading: false,
+   paymentFieldsError: null,
 };
 
 const paymentSlice = createSlice({
@@ -139,6 +150,60 @@ const paymentSlice = createSlice({
             state.singleOrder = action.payload?.data;
             state.singleOrderLoading = false;
             state.singleOrderError = null;
+         });
+
+      bulder
+         .addCase(getAllPaymentOptionFields.pending, (state) => {
+            state.paymentOptionsFields = null;
+            state.paymentOptionsFieldsLoading = true;
+            state.paymentOptionsFieldsError = null;
+         })
+         .addCase(getAllPaymentOptionFields.rejected, (state, action) => {
+            state.paymentOptionsFields = null;
+            state.paymentOptionsFieldsLoading = false;
+            state.paymentOptionsFieldsError = action.error?.message;
+         })
+         .addCase(getAllPaymentOptionFields.fulfilled, (state, action) => {
+            state.paymentOptionsFields = action.payload?.data;
+            state.paymentOptionsFieldsLoading = false;
+            state.paymentOptionsFieldsError = null;
+         });
+
+      bulder
+         .addCase(getAllPaymentOptionFieldsList.pending, (state) => {
+            state.paymentFields = null;
+            state.paymentFieldsLoading = true;
+            state.paymentFieldsError = null;
+         })
+         .addCase(getAllPaymentOptionFieldsList.rejected, (state, action) => {
+            state.paymentFields = null;
+            state.paymentFieldsLoading = false;
+            state.paymentFieldsError = action.error?.message;
+         })
+         .addCase(getAllPaymentOptionFieldsList.fulfilled, (state, action) => {
+            state.paymentFields = action.payload?.data;
+            state.paymentFieldsLoading = false;
+            state.paymentFieldsError = null;
+         });
+
+      bulder
+         .addCase(deletePaymentOptionsFiled.pending, (state) => {
+            state.deletePaymentOptionsFiledError = null;
+            state.deletePaymentOptionsFiledLoading = true;
+         })
+         .addCase(deletePaymentOptionsFiled.rejected, (state, action) => {
+            state.deletePaymentOptionsFiledError = action.error?.message;
+            state.deletePaymentOptionsFiledLoading = false;
+         })
+         .addCase(deletePaymentOptionsFiled.fulfilled, (state, action) => {
+            state.deletePaymentOptionsFiledError = null;
+            state.deletePaymentOptionsFiledLoading = false;
+            state.paymentOptionsFields = {
+               ...state.paymentOptionsFields,
+               items: state.paymentOptionsFields?.items.filter(
+                  (el) => el?._id !== action.payload?.data?.fieldId
+               ),
+            };
          });
    },
 });
