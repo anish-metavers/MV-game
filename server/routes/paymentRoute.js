@@ -22,9 +22,9 @@ router.get(
    paymentController.getAllPaymentOptionList
 );
 router.get(
-   '/get-all-fiat-transactions',
+   '/get-all-fiat-deposit-transactions',
    varifyJwtToken,
-   paymentController.getAllFiatTransactions
+   paymentController.getAllFiatDepositTransactions
 );
 router.get(
    '/get-single-order-info',
@@ -45,6 +45,11 @@ router.get(
    '/get-all-payment-options-field-list',
    varifyJwtToken,
    paymentController.getAllPaymentOptionFieldsList
+);
+router.get(
+   '/get-all-fiat-withdraw-transaction',
+   varifyJwtToken,
+   paymentController.getAllFiatWithdrawTransaction
 );
 
 // API => POST

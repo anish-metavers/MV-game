@@ -33,6 +33,7 @@ import FiatPaymentsPage from './Pages/FiatPaymentsPage/FiatPaymentsPage';
 import SingleTransactionInfoPage from './Pages/SingleTransactionInfoPage/SingleTransactionInfoPage';
 import PaymentFiledsPage from './Pages/PaymentFiledsPage/PaymentFiledsPage';
 import CreatePaymentFieldsPage from './Pages/CreatePaymentFieldsPage/CreatePaymentFieldsPage';
+import FiatWithdrawTransactionPage from './Pages/FiatWithdrawTransactionPage/FiatWithdrawTransactionPage';
 
 const darkTheme = createTheme({
    palette: {
@@ -124,7 +125,10 @@ function App() {
                      path="/notification/edit/:id"
                      element={<PushNotificationPage />}
                   />
-                  <Route path="/fiat-payments" element={<FiatPaymentsPage />} />
+                  <Route
+                     path="/fiat-deposit-payments"
+                     element={<FiatPaymentsPage />}
+                  />
                   <Route
                      path="/order/:orderId"
                      element={<SingleTransactionInfoPage />}
@@ -140,6 +144,10 @@ function App() {
                   <Route
                      path="/payment-fields/edit/:id"
                      element={<CreatePaymentFieldsPage />}
+                  />
+                  <Route
+                     path="/fiat/withdraw/transaction"
+                     element={<FiatWithdrawTransactionPage />}
                   />
                </Route>
                <Route path="/dashboard/auth/login" element={<LoginPage />} />

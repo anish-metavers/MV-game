@@ -88,12 +88,12 @@ export const getAllPaymentOptionList = createAsyncThunk(
    }
 );
 
-export const getAllFiatTransactions = createAsyncThunk(
-   'payment/getAllFiatTransactions',
+export const getAllFiatDepositTransactions = createAsyncThunk(
+   'payment/getAllFiatDepositTransactions',
    async ({ page }, { rejectWithValue }) => {
       try {
          const response = await axiosInstance.get(
-            `/payment/get-all-fiat-transactions?page=${page}`
+            `/payment/get-all-fiat-deposit-transactions?page=${page}`
          );
          return response;
       } catch (err) {
@@ -219,6 +219,23 @@ export const getAllPaymentOptionFieldsList = createAsyncThunk(
       try {
          const response = await axiosInstance.get(
             '/payment/get-all-payment-options-field-list'
+         );
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getAllFiatWithdrawTransaction = createAsyncThunk(
+   'payment/getAllFiatWithdrawTransaction',
+   async ({ page }, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(
+            `/payment/get-all-fiat-withdraw-transaction?page=${page}`
          );
          return response;
       } catch (err) {

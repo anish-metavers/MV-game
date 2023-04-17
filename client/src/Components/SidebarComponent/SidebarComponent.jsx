@@ -20,6 +20,7 @@ import { useCookies } from 'react-cookie';
 import { SocketContext } from '../../Context/SocketContext';
 import { MdPayment } from '@react-icons/all-files/md/MdPayment';
 import { VscSymbolArray } from '@react-icons/all-files/vsc/VscSymbolArray';
+import { AiOutlineTransaction } from '@react-icons/all-files/ai/AiOutlineTransaction';
 
 function SidebarComponent() {
    const auth = useSelector(authSelector);
@@ -108,8 +109,13 @@ function SidebarComponent() {
                />
                <IconListComponent
                   icon={<MdPayment />}
-                  heading={'Fiat payments'}
-                  link={'/fiat-payments'}
+                  heading={'Fiat deposit payments'}
+                  link={'/fiat-deposit-payments'}
+               />
+               <IconListComponent
+                  icon={<AiOutlineTransaction />}
+                  heading={'Fiat withdraw transaction'}
+                  link={'/fiat/withdraw/transaction'}
                />
             </DashboardSidebarTabComponent>
          </styled.sclDiv>

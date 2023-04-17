@@ -202,4 +202,8 @@ export const div = styled.div`
       opacity: 0.5;
       cursor: not-allowed;
    }
+
+   .rejected {
+      background: var(--dark-red-cl);
+   }
 `;

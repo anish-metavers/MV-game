@@ -3,7 +3,7 @@ import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
 import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHeadingComponent';
 import * as styled from './FiatPaymentsPage.style';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllFiatTransactions } from '../../App/Features/Payment/paymentActions';
+import { getAllFiatDepositTransactions } from '../../App/Features/Payment/paymentActions';
 import {
    fiatTransactionsSelector,
    fiatTransactionsLoadingSelector,
@@ -47,7 +47,7 @@ function FiatPaymentsPage() {
 
    useEffect(() => {
       if (isAdmin) {
-         dispatch(getAllFiatTransactions({ page: Page }));
+         dispatch(getAllFiatDepositTransactions({ page: Page }));
       }
    }, [isAdmin, Page]);
 

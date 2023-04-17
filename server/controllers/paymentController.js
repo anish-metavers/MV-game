@@ -289,7 +289,11 @@ const getAllPaymentOptionList = catchAsync(async function (req, res, next) {
    });
 });
 
-const getAllFiatTransactions = catchAsync(async function (req, res, next) {
+const getAllFiatDepositTransactions = catchAsync(async function (
+   req,
+   res,
+   next
+) {
    const { page } = req.query;
 
    if (!page) {
@@ -302,9 +306,12 @@ const getAllFiatTransactions = catchAsync(async function (req, res, next) {
 
    const DOCUMENT_LIMIT = 30;
 
-   const totalDocuments = await transactionsModel.countDocuments();
+   const totalDocuments = await transactionsModel.countDocuments({
+      transactionType: 'deposit',
+   });
 
    const allTransaction = await transactionsModel.aggregate([
+      { $match: { transactionType: 'deposit' } },
       { $sort: { createdAt: -1 } },
       { $skip: page * DOCUMENT_LIMIT },
       { $limit: DOCUMENT_LIMIT },
@@ -374,10 +381,25 @@ const getSingleOrderInfo = catchAsync(async function (req, res, next) {
       },
       { $unwind: '$currency' },
       {
+         $lookup: {
+            from: 'walletpaymentoptions',
+            localField: 'paymentMethod.paymentMethodId',
+            foreignField: '_id',
+            as: 'paymentMethod.paymentMethod',
+         },
+      },
+      { $unwind: '$paymentMethod.paymentMethod' },
+      {
          $project: {
             amount: {
                $convert: {
-                  input: '$amount',
+                  input: {
+                     $cond: {
+                        if: '$amount',
+                        then: '$amount',
+                        else: '$withdrawInformation.amount',
+                     },
+                  },
                   to: 'string',
                },
             },
@@ -385,12 +407,28 @@ const getSingleOrderInfo = catchAsync(async function (req, res, next) {
             wayName: 1,
             orderId: 1,
             createdAt: 1,
+            transactionType: 1,
+            withdrawInformation: 1,
             'user.name': 1,
             'user.avatar': 1,
             'user.userId': 1,
             'currency.icon': 1,
             'currency.currencyName': 1,
             'currency.currencyType': 1,
+            'paymentMethod.minPayment': {
+               $convert: {
+                  input: '$paymentMethod.minPayment',
+                  to: 'string',
+               },
+            },
+            'paymentMethod.maxPayment': {
+               $convert: {
+                  input: '$paymentMethod.maxPayment',
+                  to: 'string',
+               },
+            },
+            'paymentMethod.name': '$paymentMethod.paymentMethod.name',
+            'paymentMethod.icon': '$paymentMethod.paymentMethod.icon',
          },
       },
    ]);
@@ -579,13 +617,85 @@ const getAllPaymentOptionFieldsList = catchAsync(async function (
    });
 });
 
+const getAllFiatWithdrawTransaction = catchAsync(async function (
+   req,
+   res,
+   next
+) {
+   const { page } = req.query;
+
+   if (!page) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Page number is reuqired',
+      });
+   }
+
+   const DOCUMENT_LIMIT = 30;
+
+   const totalDocuments = await transactionsModel.countDocuments({
+      transactionType: 'withdraw',
+   });
+
+   const withdrawTransaction = await transactionsModel.aggregate([
+      { $match: { transactionType: 'withdraw' } },
+      { $sort: { createdAt: -1 } },
+      { $skip: page * DOCUMENT_LIMIT },
+      { $limit: DOCUMENT_LIMIT },
+      {
+         $lookup: {
+            from: 'auths',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'user',
+         },
+      },
+      { $unwind: '$user' },
+      {
+         $project: {
+            status: 1,
+            wayName: 1,
+            transactionType: 1,
+            orderId: 1,
+            name: '$user.name',
+            avatar: '$user.avatar',
+            userId: '$user.userId',
+            amount: {
+               $convert: {
+                  input: '$withdrawInformation.amount',
+                  to: 'string',
+               },
+            },
+         },
+      },
+   ]);
+
+   if (withdrawTransaction) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         transactions: withdrawTransaction,
+         totalPages: Math.ceil(totalDocuments / DOCUMENT_LIMIT - 1),
+         page: +page,
+         totalDocuments: totalDocuments,
+      });
+   }
+
+   return res.status(httpStatusCodes.OK).json({
+      success: true,
+      error: false,
+      transactions: [],
+   });
+});
+
 module.exports = {
    getCurrencyPaymentOptions,
    insertNewCurrencyPaymentOption,
    getSinglePaymentCurrencyOption,
    updatePaymentOption,
    getAllPaymentOptionList,
-   getAllFiatTransactions,
+   getAllFiatDepositTransactions,
    getSingleOrderInfo,
    createNewPaymentOptionField,
    getAllPaymentOptionFields,
@@ -593,4 +703,5 @@ module.exports = {
    getSinglePaymentOptionField,
    updatePaymentOptionField,
    getAllPaymentOptionFieldsList,
+   getAllFiatWithdrawTransaction,
 };

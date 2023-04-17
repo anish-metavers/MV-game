@@ -4,11 +4,12 @@ import {
    getCurrencyPaymentOptions,
    updatePaymentOption,
    getAllPaymentOptionList,
-   getAllFiatTransactions,
+   getAllFiatDepositTransactions,
    getSingleOrderInfo,
    getAllPaymentOptionFields,
    deletePaymentOptionsFiled,
    getAllPaymentOptionFieldsList,
+   getAllFiatWithdrawTransaction,
 } from './paymentActions';
 
 const INITAL_STATE = {
@@ -38,6 +39,9 @@ const INITAL_STATE = {
    paymentFields: null,
    paymentFieldsLoading: false,
    paymentFieldsError: null,
+   fiatWithdrawTransaction: null,
+   fiatWithdrawTransactionLoading: false,
+   fiatWithdrawTransactionError: null,
 };
 
 const paymentSlice = createSlice({
@@ -119,17 +123,17 @@ const paymentSlice = createSlice({
          });
 
       bulder
-         .addCase(getAllFiatTransactions.pending, (state) => {
+         .addCase(getAllFiatDepositTransactions.pending, (state) => {
             state.fiatTransactions = null;
             state.fiatTransactionsLoading = true;
             state.fiatTransactionsError = null;
          })
-         .addCase(getAllFiatTransactions.rejected, (state, action) => {
+         .addCase(getAllFiatDepositTransactions.rejected, (state, action) => {
             state.fiatTransactions = null;
             state.fiatTransactionsLoading = false;
             state.fiatTransactionsError = action.error?.message;
          })
-         .addCase(getAllFiatTransactions.fulfilled, (state, action) => {
+         .addCase(getAllFiatDepositTransactions.fulfilled, (state, action) => {
             state.fiatTransactions = action.payload?.data;
             state.fiatTransactionsLoading = false;
             state.fiatTransactionsError = null;
@@ -204,6 +208,23 @@ const paymentSlice = createSlice({
                   (el) => el?._id !== action.payload?.data?.fieldId
                ),
             };
+         });
+
+      bulder
+         .addCase(getAllFiatWithdrawTransaction.pending, (state) => {
+            state.fiatWithdrawTransaction = null;
+            state.fiatWithdrawTransactionLoading = true;
+            state.fiatWithdrawTransactionError = null;
+         })
+         .addCase(getAllFiatWithdrawTransaction.rejected, (state, action) => {
+            state.fiatWithdrawTransaction = null;
+            state.fiatWithdrawTransactionLoading = false;
+            state.fiatWithdrawTransactionError = action.error?.message;
+         })
+         .addCase(getAllFiatWithdrawTransaction.fulfilled, (state, action) => {
+            state.fiatWithdrawTransaction = action.payload?.data;
+            state.fiatWithdrawTransactionLoading = false;
+            state.fiatWithdrawTransactionError = null;
          });
    },
 });
