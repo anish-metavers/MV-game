@@ -246,3 +246,21 @@ export const getAllFiatWithdrawTransaction = createAsyncThunk(
       }
    }
 );
+
+export const updateFiatWithdrawTransaction = createAsyncThunk(
+   'payment/updateFiatWithdrawTransaction',
+   async (data, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.patch(
+            '/payment/update-fiat-withdraw-transaction',
+            data
+         );
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);

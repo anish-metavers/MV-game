@@ -79,6 +79,11 @@ router.patch(
    varifyJwtToken,
    paymentController.updatePaymentOptionField
 );
+router.patch(
+   '/update-fiat-withdraw-transaction',
+   varifyJwtToken,
+   paymentController.updateFiatWithdrawTransaction
+);
 
 // API => DELETE
 router.delete(

@@ -409,6 +409,8 @@ const getSingleOrderInfo = catchAsync(async function (req, res, next) {
             createdAt: 1,
             transactionType: 1,
             withdrawInformation: 1,
+            transactionUpdatedAt: 1,
+            upiRefNumber: 1,
             'user.name': 1,
             'user.avatar': 1,
             'user.userId': 1,
@@ -689,6 +691,51 @@ const getAllFiatWithdrawTransaction = catchAsync(async function (
    });
 });
 
+const updateFiatWithdrawTransaction = catchAsync(async function (
+   req,
+   res,
+   next
+) {
+   const { transactionId, type, actionUserId, upiRefNumber } = req.body;
+
+   if (!upiRefNumber) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'UPI Ref Number is required',
+      });
+   }
+
+   // find and update the fiat transacation.
+   if (type === 'Approved') {
+      const findDocumentAndUpdate = await transactionsModel.updateOne(
+         { _id: transactionId },
+         {
+            $set: {
+               upiRefNumber,
+               transactionUpdatedAt: Date.now(),
+               paymentApprovedBy: actionUserId,
+               status: 'COMPLETED',
+            },
+         }
+      );
+
+      if (findDocumentAndUpdate.modifiedCount) {
+         return res.status(httpStatusCodes.OK).json({
+            success: true,
+            error: false,
+            message: 'Order updated',
+         });
+      }
+
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Order not found',
+      });
+   }
+});
+
 module.exports = {
    getCurrencyPaymentOptions,
    insertNewCurrencyPaymentOption,
@@ -704,4 +751,5 @@ module.exports = {
    updatePaymentOptionField,
    getAllPaymentOptionFieldsList,
    getAllFiatWithdrawTransaction,
+   updateFiatWithdrawTransaction,
 };

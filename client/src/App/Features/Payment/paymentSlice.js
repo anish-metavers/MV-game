@@ -10,6 +10,7 @@ import {
    deletePaymentOptionsFiled,
    getAllPaymentOptionFieldsList,
    getAllFiatWithdrawTransaction,
+   updateFiatWithdrawTransaction,
 } from './paymentActions';
 
 const INITAL_STATE = {
@@ -42,6 +43,9 @@ const INITAL_STATE = {
    fiatWithdrawTransaction: null,
    fiatWithdrawTransactionLoading: false,
    fiatWithdrawTransactionError: null,
+   updateFiatWithdraw: null,
+   updateFiatWithdrawLoading: false,
+   updateFiatWithdrawError: null,
 };
 
 const paymentSlice = createSlice({
@@ -51,6 +55,10 @@ const paymentSlice = createSlice({
       removeUpdatePaymentOptionInfo: (state) => {
          state.updatePaymentOptionInfo = null;
          state.updatePaymentOptionError = null;
+      },
+      removeUpdateWithdrawInfo: (state) => {
+         state.updateFiatWithdraw = null;
+         state.updateFiatWithdrawError = null;
       },
    },
    extraReducers: (bulder) => {
@@ -226,9 +234,27 @@ const paymentSlice = createSlice({
             state.fiatWithdrawTransactionLoading = false;
             state.fiatWithdrawTransactionError = null;
          });
+
+      bulder
+         .addCase(updateFiatWithdrawTransaction.pending, (state) => {
+            state.updateFiatWithdraw = null;
+            state.updateFiatWithdrawLoading = true;
+            state.updateFiatWithdrawError = null;
+         })
+         .addCase(updateFiatWithdrawTransaction.rejected, (state, action) => {
+            state.updateFiatWithdraw = null;
+            state.updateFiatWithdrawLoading = false;
+            state.updateFiatWithdrawError = action.error?.message;
+         })
+         .addCase(updateFiatWithdrawTransaction.fulfilled, (state, action) => {
+            state.updateFiatWithdraw = action.payload?.data;
+            state.updateFiatWithdrawLoading = false;
+            state.updateFiatWithdrawError = null;
+         });
    },
 });
 
-export const { removeUpdatePaymentOptionInfo } = paymentSlice.actions;
+export const { removeUpdatePaymentOptionInfo, removeUpdateWithdrawInfo } =
+   paymentSlice.actions;
 
 export default paymentSlice.reducer;

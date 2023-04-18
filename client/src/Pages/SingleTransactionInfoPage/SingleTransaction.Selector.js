@@ -23,3 +23,18 @@ export const authSelector = createSelector(
    [authReducer],
    (authSlice) => authSlice.auth
 );
+
+export const updateFiatWithdrawSelector = createSelector(
+   [paymentReducer],
+   (paymentSlice) => paymentSlice.updateFiatWithdraw
+);
+
+export const updateFiatWithdrawLoadingSelector = createSelector(
+   [paymentReducer],
+   (paymentSlice) => paymentSlice.updateFiatWithdrawLoading
+);
+
+export const updateFiatWithdrawErrorSelector = createSelector(
+   [paymentReducer],
+   (paymentSlice) => paymentSlice.updateFiatWithdrawError
+);
