@@ -11,7 +11,8 @@
       "client-dep": "npm install --prefix client",
       "client-build": "npm run build --prefix client",
       "client-dep-uninstall": "npm uninstall --prefix client",
-      "server-dep-uninstall": "npm uninstall --prefix server"
+      "server-dep-uninstall": "npm uninstall --prefix server",
+      "watch": "npm run server & npm run client"
    },
    "keywords": [],
    "author": "",
