@@ -195,6 +195,7 @@ const updateSingleGame = catchAsync(async function (req, res, next) {
       aboutGame: req.body?.aboutGame,
       url: req.body?.url,
       gameStatus: req.body?.gameStatus,
+      gameBitcontroller: req.body?.gameBitcontroller,
    };
 
    // check game is already exists or not.

@@ -40,6 +40,7 @@ import {
    allGamesCategorysErrorSelector,
 } from './UploadGame.Selector';
 import { message } from 'antd';
+import { Switch } from 'antd';
 
 const Schema = yup.object({
    name: yup.string().required('Game name is required'),
@@ -65,6 +66,7 @@ function UploadGamesPage() {
          gameStatus: 'Draft',
          gameCategory: '',
          gameProvider: '',
+         gameBitcontroller: false,
       },
       resolver: yupResolver(Schema),
    });
@@ -100,8 +102,9 @@ function UploadGamesPage() {
       }
    };
 
-   const CreateFormData = function (data) {
+   const createFormData = function (data) {
       const formData = new FormData();
+
       formData.append('name', data?.name);
       formData.append('by', data?.by);
       formData.append('description', data?.description);
@@ -111,6 +114,7 @@ function UploadGamesPage() {
       formData.append('url', data?.url);
       formData.append('gameStatus', data?.gameStatus);
       formData.append('gameCategory', data?.gameCategory);
+      formData.append('gameBitcontroller', data?.gameBitcontroller);
 
       if (data?.gameCategory) {
          const gameCategoryAr = allGamesCategorys?.categorys.find(
@@ -131,10 +135,10 @@ function UploadGamesPage() {
          if (!data?.gameProvider) {
             return message.error('Game provider is required');
          }
-         const formData = CreateFormData(data);
+         const formData = createFormData(data);
          dispatch(insertNewGame({ formData }));
       } else {
-         const formData = CreateFormData(data);
+         const formData = createFormData(data);
          dispatch(updateSingleGame({ gameId: params?.id, formData }));
       }
    };
@@ -146,7 +150,7 @@ function UploadGamesPage() {
       }
    }, [isAdmin]);
 
-   const GetSingleGameInfo = async function () {
+   const getSingleGameInfoHandler = async function () {
       const gameResponse = await dispatch(
          getSingleGameInfo({ gameId: params?.id })
       );
@@ -161,6 +165,7 @@ function UploadGamesPage() {
          setValue('gameCategory', data?.game?.gameCategory);
          setValue('gameProvider', data?.game?.gameProvider);
          setValue('aboutGame', data?.game?.aboutGame);
+         setValue('gameBitcontroller', data?.game?.gameBitcontroller);
          setGameImagePreview(data?.game?.gameImage);
       } else {
          console.log(gameResponse);
@@ -169,7 +174,7 @@ function UploadGamesPage() {
 
    useEffect(() => {
       if (isAdmin && params?.id) {
-         GetSingleGameInfo();
+         getSingleGameInfoHandler();
       }
    }, [isAdmin, params?.id]);
 
@@ -386,6 +391,20 @@ function UploadGamesPage() {
                                     }
                                     config={{ theme: 'dark' }}
                                  />
+                              )}
+                           />
+                        </div>
+                     </div>
+                     <div className="flex pt-3">
+                        <div>
+                           <p className="text-gray-400">
+                              Will the game have a bit controller ?
+                           </p>
+                           <Controller
+                              name="gameBitcontroller"
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                 <Switch onChange={onChange} checked={value} />
                               )}
                            />
                         </div>
