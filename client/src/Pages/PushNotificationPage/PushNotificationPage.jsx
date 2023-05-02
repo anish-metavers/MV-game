@@ -139,7 +139,6 @@ function PushNotificationPage() {
                            </p>
                         ) : null}
                      </div>
-
                      <div>
                         <Controller
                            name="description"

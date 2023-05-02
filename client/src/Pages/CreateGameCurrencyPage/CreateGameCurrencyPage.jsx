@@ -102,7 +102,7 @@ function CreateGameCurrencyPage() {
    const createFormData = function (data) {
       const formData = new FormData();
       formData.append('currencyName', data?.currencyName);
-      formData.append('locked', data?.locked);
+      // formData.append('locked', data?.locked);
       formData.append('description', data?.description);
       formData.append('metaDescription', content);
       formData.append('currencyType', data?.currencyType);
@@ -137,7 +137,7 @@ function CreateGameCurrencyPage() {
          const currencyData = singleGameCurrency?.currency[0]?._id;
          setValue('description', currencyData?.description);
          setValue('currencyName', currencyData?.currencyName);
-         setValue('locked', currencyData?.locked);
+         // setValue('locked', currencyData?.locked);
          setValue(
             'paymentOptions',
             singleGameCurrency?.currency[0]?.paymentOptions
@@ -197,7 +197,7 @@ function CreateGameCurrencyPage() {
                               </p>
                            ) : null}
                         </div>
-                        <div className="w-full">
+                        {/* <div className="w-full">
                            <Controller
                               name="locked"
                               control={control}
@@ -225,7 +225,7 @@ function CreateGameCurrencyPage() {
                                  </TextField>
                               )}
                            />
-                        </div>
+                        </div> */}
                         <div className="w-full">
                            <Controller
                               name="currencyType"

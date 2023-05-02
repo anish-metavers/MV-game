@@ -30,7 +30,10 @@ function SidebarComponent() {
 
    useEffect(() => {
       if (!!auth && isAdmin && auth?.user && auth?.user?._id) {
-         socket.emit('_online_user', { userId: auth?.user?._id });
+         socket.emit('_online_user', {
+            userId: auth?.user?._id,
+            userCrId: auth?.user?.userId,
+         });
       }
    }, [auth, isAdmin]);
 

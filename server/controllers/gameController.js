@@ -196,6 +196,7 @@ const updateSingleGame = catchAsync(async function (req, res, next) {
       url: req.body?.url,
       gameStatus: req.body?.gameStatus,
       gameBitcontroller: req.body?.gameBitcontroller,
+      urlMobile: req.body?.urlMobile,
    };
 
    // check game is already exists or not.
@@ -623,6 +624,7 @@ const postNewGameCategory = catchAsync(async function (req, res, next) {
    }
 });
 
+/******** under process ******************* */
 const updateGameCategory = catchAsync(async function (req, res, next) {
    const { name, status, description, categoryId } = req.body;
 
@@ -692,6 +694,7 @@ const updateGameCategory = catchAsync(async function (req, res, next) {
       message: 'No Changes',
    });
 });
+/******** under process ******************* */
 
 const getSinglegameCategory = catchAsync(async function (req, res, next) {
    const { categoryId } = req.query;

@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import JoditEditor from 'jodit-react';
 import CustomButtonComponent from '../../Components/CustomButtonComponent/CustomButtonComponent';
 import { useParams } from 'react-router-dom';
 import ImageUploadComponent from '../../Components/ImageUploadComponent/ImageUploadComponent';
@@ -41,6 +40,7 @@ import {
 } from './UploadGame.Selector';
 import { message } from 'antd';
 import { Switch } from 'antd';
+import QuillComponent from '../../Components/QuillComponent/QuillComponent';
 
 const Schema = yup.object({
    name: yup.string().required('Game name is required'),
@@ -56,7 +56,6 @@ const Status = [
 
 function UploadGamesPage() {
    const {
-      register,
       handleSubmit,
       formState: { errors },
       setValue,
@@ -67,6 +66,7 @@ function UploadGamesPage() {
          gameCategory: '',
          gameProvider: '',
          gameBitcontroller: false,
+         description: '',
       },
       resolver: yupResolver(Schema),
    });
@@ -93,7 +93,7 @@ function UploadGamesPage() {
    );
    const allGamesCategorysError = useSelector(allGamesCategorysErrorSelector);
 
-   const ImageHandler = function (event) {
+   const imageHandler = function (event) {
       const imageFile = event.target.files[0];
       setValue('gameMainImage', imageFile);
       if (imageFile) {
@@ -112,6 +112,7 @@ function UploadGamesPage() {
       formData.append('gameMainImage', data?.gameMainImage);
       formData.append('gameProvider', data?.gameProvider);
       formData.append('url', data?.url);
+      formData.append('urlMobile', data?.urlMobile);
       formData.append('gameStatus', data?.gameStatus);
       formData.append('gameCategory', data?.gameCategory);
       formData.append('gameBitcontroller', data?.gameBitcontroller);
@@ -160,6 +161,7 @@ function UploadGamesPage() {
          setValue('name', data?.game?.name);
          setValue('by', data?.game?.by);
          setValue('url', data?.game?.url);
+         setValue('urlMobile', data?.game?.urlMobile);
          setValue('description', data?.game?.description);
          setValue('gameStatus', data?.game?.gameStatus);
          setValue('gameCategory', data?.game?.gameCategory);
@@ -204,15 +206,19 @@ function UploadGamesPage() {
                   >
                      <div className="flex items-center space-x-3">
                         <div className="w-full">
-                           <TextField
-                              className="w-full"
-                              label="Game Name"
-                              required
-                              variant="outlined"
-                              {...register('name')}
-                              InputLabelProps={{
-                                 shrink: true,
-                              }}
+                           <Controller
+                              name="name"
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                 <TextField
+                                    onChange={onChange}
+                                    value={value || ''}
+                                    className="w-full"
+                                    label="Game Name"
+                                    required
+                                    variant="outlined"
+                                 />
+                              )}
                            />
                            {!!errors?.name?.message ? (
                               <p className="text-sm error_cl">
@@ -221,15 +227,19 @@ function UploadGamesPage() {
                            ) : null}
                         </div>
                         <div className="w-full">
-                           <TextField
-                              className="w-full"
-                              label="Game By"
-                              required
-                              variant="outlined"
-                              {...register('by')}
-                              InputLabelProps={{
-                                 shrink: true,
-                              }}
+                           <Controller
+                              name="by"
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                 <TextField
+                                    className="w-full"
+                                    label="Game By"
+                                    required
+                                    value={value || ''}
+                                    onChange={onChange}
+                                    variant="outlined"
+                                 />
+                              )}
                            />
                            {!!errors?.by?.message ? (
                               <p className="text-sm error_cl">
@@ -351,30 +361,51 @@ function UploadGamesPage() {
                            />
                         ) : null}
                      </div>
-                     <TextField
-                        {...register('description')}
-                        label="Game Description"
-                        multiline
-                        rows={7}
-                        InputLabelProps={{
-                           shrink: true,
-                        }}
+                     <Controller
+                        name="description"
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                           <TextField
+                              label="Game Description"
+                              multiline
+                              rows={7}
+                              onChange={onChange}
+                              value={value}
+                           />
+                        )}
                      />
-                     <TextField
-                        className="w-full"
-                        label="Game embed url"
-                        required
-                        variant="outlined"
-                        {...register('url')}
-                        InputLabelProps={{
-                           shrink: true,
-                        }}
+                     <Controller
+                        name="url"
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                           <TextField
+                              value={value || ''}
+                              onChange={onChange}
+                              className="w-full"
+                              label="Game embed url"
+                              required
+                              variant="outlined"
+                           />
+                        )}
                      />
                      {!!errors?.url?.message ? (
                         <p className="text-sm error_cl">
                            {errors?.url?.message}
                         </p>
                      ) : null}
+                     <Controller
+                        name="urlMobile"
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                           <TextField
+                              value={value || ''}
+                              onChange={onChange}
+                              className="w-full"
+                              label="Game embed url mobile"
+                              variant="outlined"
+                           />
+                        )}
+                     />
                      <div>
                         <label className="text-gray-400">About this game</label>
                         <div className="mt-2">
@@ -382,14 +413,9 @@ function UploadGamesPage() {
                               name="aboutGame"
                               control={control}
                               render={({ field: { onChange, value } }) => (
-                                 <JoditEditor
-                                    ref={editor}
+                                 <QuillComponent
+                                    onChange={onChange}
                                     value={value}
-                                    tabIndex={1}
-                                    onChange={(newContent) =>
-                                       onChange(newContent)
-                                    }
-                                    config={{ theme: 'dark' }}
                                  />
                               )}
                            />
@@ -416,7 +442,7 @@ function UploadGamesPage() {
                               width={400}
                               label={'Game Image'}
                               height={400}
-                              onChange={ImageHandler}
+                              onChange={imageHandler}
                               preview={GameImagePreview}
                               accept={'image/*'}
                            />

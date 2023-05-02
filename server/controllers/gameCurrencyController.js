@@ -128,7 +128,7 @@ const getAllCurrencyList = catchAsync(async function (req, res, next) {
 const insertGamesCurrency = catchAsync(async function (req, res, next) {
    const {
       currencyName,
-      locked,
+      // locked,
       description,
       metaDescription,
       paymentOptions,
@@ -150,7 +150,7 @@ const insertGamesCurrency = catchAsync(async function (req, res, next) {
    // database inserted data object.
    const insertData = {
       currencyName,
-      locked,
+      // locked,
       description,
       metaDescription,
       currencyType,
@@ -193,7 +193,7 @@ const updateSingleGameCurrency = catchAsync(async function (req, res, next) {
    const { id } = req.query;
    const {
       currencyName,
-      locked,
+      // locked,
       description,
       metaDescription,
       paymentOptions,
@@ -236,7 +236,7 @@ const updateSingleGameCurrency = catchAsync(async function (req, res, next) {
    // database inserted data object.
    const insertData = {
       currencyName,
-      locked,
+      // locked,
       description,
       metaDescription,
       currencyType,
