@@ -1,5 +1,5 @@
 import { IoLogoGameControllerB } from '@react-icons/all-files/io/IoLogoGameControllerB';
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useContext, useState } from 'react';
 import ResultCardComponent from '../ResultCardComponent/ResultCardComponent';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import {
@@ -10,11 +10,27 @@ import {
 import { useSelector } from 'react-redux';
 import SpinnerComponent from '../SpinnerComponent/SpinnerComponent';
 import { MdTrendingUp } from '@react-icons/all-files/md/MdTrendingUp';
+import { SocketContext } from '../../Context/SocketContext';
 
 function ResultCartsContainerComponent() {
+   const [SocketUsers, setSocketUsers] = useState(0);
+   const socket = useContext(SocketContext);
+
    const gameStatus = useSelector(gameStatusSelector);
    const gameStatusLoading = useSelector(gameStatusLoadingSelector);
    const gameStatusError = useSelector(gameStatusErrorSelector);
+
+   const onlineUsers = function (args) {
+      setSocketUsers(args?.socketUsers);
+   };
+
+   useEffect(() => {
+      socket.on('__live_users', onlineUsers);
+
+      return () => {
+         socket.off('__live_users', onlineUsers);
+      };
+   }, []);
 
    return (
       <Fragment>
@@ -33,19 +49,20 @@ function ResultCartsContainerComponent() {
             ) : null}
          </div>
          <ResultCardComponent
-            heading={'200,00'}
-            subHeading={'Total Users'}
+            heading={SocketUsers}
+            subHeading={'Online users'}
             icon={<FiUsers className="text-gray-300" />}
             bg={'dark'}
             cl={'glass'}
+            live={true}
          />
-         <ResultCardComponent
+         {/* <ResultCardComponent
             heading={'$200100,00'}
             subHeading={'Total profit'}
             icon={<MdTrendingUp className="text-gray-300" />}
             bg={'dark'}
             cl={'glass'}
-         />
+         /> */}
       </Fragment>
    );
 }

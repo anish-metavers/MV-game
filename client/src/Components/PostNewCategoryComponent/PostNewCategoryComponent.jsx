@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import CustomButtonComponent from '../../Components/CustomButtonComponent/CustomButtonComponent';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -25,6 +25,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import SpinnerComponent from '../SpinnerComponent/SpinnerComponent';
+import { Switch } from 'antd';
 
 const Schema = yup.object({
    name: yup
@@ -49,6 +50,7 @@ function PostNewCategoryComponent() {
    } = useForm({
       defaultValues: {
          CategoryStatus: 'Draft',
+         showCategory: false,
       },
       resolver: yupResolver(Schema),
    });
@@ -98,6 +100,7 @@ function PostNewCategoryComponent() {
          setValue('name', singleGameCategory?.category?.name);
          setValue('description', singleGameCategory?.category?.description);
          setValue('CategoryStatus', singleGameCategory?.category?.status);
+         setValue('showCategory', singleGameCategory?.category?.showCategory);
       }
    }, [singleGameCategory]);
 
@@ -144,6 +147,20 @@ function PostNewCategoryComponent() {
                   </TextField>
                )}
             />
+            <div className="flex">
+               <Controller
+                  control={control}
+                  name="showCategory"
+                  render={({ field: { onChange, value } }) => (
+                     <Switch
+                        checkedChildren="Yes"
+                        onChange={onChange}
+                        checked={value}
+                        unCheckedChildren="No"
+                     />
+                  )}
+               />
+            </div>
             <TextField
                {...register('description')}
                label="Description"

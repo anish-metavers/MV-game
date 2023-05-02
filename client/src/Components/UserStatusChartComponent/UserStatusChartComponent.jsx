@@ -24,8 +24,6 @@ function UserStatusChartComponent() {
       const data = await dispatch(getUserLoginResults());
       const result = data?.payload?.data?.result;
 
-      console.log(result);
-
       if (result) {
          return setUserResult(result);
       }
@@ -40,7 +38,7 @@ function UserStatusChartComponent() {
    }, [isAdmin]);
 
    return (
-      <styled.div className=" bg-zinc-800">
+      <styled.div className=" bg-zinc-800 p-4">
          <styled.filterDiv>
             <div>
                <h1 className="text-gray text-xl text-gray-200 font-semibold">
@@ -66,8 +64,12 @@ function UserStatusChartComponent() {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  {/* <Bar dataKey="user" fill="#8884d8" /> */}
-                  <Line type="monotone" dataKey="user" stroke="#ff7300" />
+                  <Line
+                     type="monotone"
+                     strokeWidth={2}
+                     dataKey="user"
+                     stroke="#ff7300"
+                  />
                </ComposedChart>
             </ResponsiveContainer>
          </styled.mapDiv>

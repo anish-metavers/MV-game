@@ -55,7 +55,7 @@ function CategoryListInnerComponent({ data }) {
                >
                   <VscEdit className="text-gray-300" />
                </styled.iconBoxDiv>
-               <Popconfirm
+               {/* <Popconfirm
                   title="Delete the task"
                   description="Are you sure to delete this category?"
                   okText="Yes"
@@ -65,7 +65,7 @@ function CategoryListInnerComponent({ data }) {
                   <styled.iconBoxDiv className="hover:bg-gray-300">
                      <MdDeleteForever className="text-red-600" />
                   </styled.iconBoxDiv>
-               </Popconfirm>
+               </Popconfirm> */}
                <p className="text-gray-300">{data?._id?.name || data?.name}</p>
                <div
                   className={`shadow status ${

@@ -218,6 +218,7 @@ const getUserLoginResults = catchAsync(async function (req, res, next) {
             user: { $sum: 1 },
          },
       },
+      { $sort: { _id: 1 } },
    ]);
 
    if (userInfo) {

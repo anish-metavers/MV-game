@@ -34,6 +34,8 @@ function SidebarComponent() {
             userId: auth?.user?._id,
             userCrId: auth?.user?.userId,
          });
+
+         socket.emit('_join_group_room', { groupId: 'admin_dashboard_room' });
       }
    }, [auth, isAdmin]);
 
