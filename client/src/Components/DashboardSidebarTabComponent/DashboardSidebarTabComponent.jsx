@@ -12,10 +12,10 @@ function DashboardSidebarTabComponent({ heading, children }) {
    return (
       <styled.div active={ShowInnerTabs}>
          <div className="content_div" onClick={ShowAndHideTabs}>
-            <p className="text-gray-300 text-sm font-medium">{heading}</p>
+            <p className="text-gray-300 font-medium">{heading}</p>
             <div className="arrow_icon">
                <MdKeyboardArrowDown
-                  className={`text-gray-400 ar-right ${
+                  className={`text-gray-400 text-xl ar-right ${
                      ShowInnerTabs && 'down'
                   }`}
                />

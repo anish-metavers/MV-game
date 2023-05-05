@@ -249,6 +249,8 @@ const updateSingleGameCurrency = catchAsync(async function (req, res, next) {
       insertData.icon = uploadData.Location;
    }
 
+   console.log(insertData);
+
    const paymentMethodArray = JSON.parse(paymentOptions);
    if (paymentOptions.length) {
       const selectedPaymentMethods = paymentMethodArray.map((el) => ({

@@ -8,6 +8,7 @@
       "@hookform/resolvers": "^2.9.11",
       "@mui/icons-material": "^5.11.11",
       "@mui/material": "^5.11.9",
+      "@nivo/core": "^0.82.0",
       "@react-icons/all-files": "^4.1.0",
       "@reduxjs/toolkit": "^1.9.2",
       "@testing-library/jest-dom": "^5.16.5",
