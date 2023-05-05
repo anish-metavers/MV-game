@@ -206,4 +206,11 @@ export const div = styled.div`
    .rejected {
       background: var(--dark-red-cl);
    }
+
+   .load_mode {
+      border-radius: 5px;
+      font-size: 10px;
+      padding: 0.5rem 1rem;
+      background-color: var(--primary-color);
+   }
 `;

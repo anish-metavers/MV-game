@@ -58,6 +58,8 @@ const gameCurrencyRoute = require('./routes/gameCurrencyRoute');
 const gameRoute = require('./routes/gameRoute');
 const paymentRoute = require('./routes/paymentRoute');
 const notificationRoute = require('./routes/notificationRoute');
+const luckyDraw = require('./routes/luckyDraw');
+const mediaRoute = require('./routes/mediaRoute');
 
 app.use('/admin', adminRoute);
 app.use('/user-role', userRolesRoute);
@@ -67,6 +69,8 @@ app.use('/admin-tools', adminToolsRoute);
 app.use('/games', gameRoute);
 app.use('/payment', paymentRoute);
 app.use('/notification', notificationRoute);
+app.use('/lucky-draw', luckyDraw);
+app.use('/media', mediaRoute);
 
 // for build file
 app.get('*', (req, res) => {

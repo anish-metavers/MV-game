@@ -34,6 +34,9 @@ import SingleTransactionInfoPage from './Pages/SingleTransactionInfoPage/SingleT
 import PaymentFiledsPage from './Pages/PaymentFiledsPage/PaymentFiledsPage';
 import CreatePaymentFieldsPage from './Pages/CreatePaymentFieldsPage/CreatePaymentFieldsPage';
 import FiatWithdrawTransactionPage from './Pages/FiatWithdrawTransactionPage/FiatWithdrawTransactionPage';
+import SpinDrawPage from './Pages/SpinDrawPage/SpinDrawPage';
+import CreateSpinItemPage from './Pages/CreateSpinItemPage/CreateSpinItemPage';
+import UploadImagesPage from './Pages/UploadImagesPage/UploadImagesPage';
 
 const darkTheme = createTheme({
    palette: {
@@ -149,6 +152,12 @@ function App() {
                      path="/fiat/withdraw/transaction"
                      element={<FiatWithdrawTransactionPage />}
                   />
+                  <Route path="/spin-draw" element={<SpinDrawPage />} />
+                  <Route
+                     path="/create-spin-items"
+                     element={<CreateSpinItemPage />}
+                  />
+                  <Route path="/upload-images" element={<UploadImagesPage />} />
                </Route>
                <Route path="/dashboard/auth/login" element={<LoginPage />} />
             </Routes>

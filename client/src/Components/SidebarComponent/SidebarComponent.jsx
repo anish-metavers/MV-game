@@ -21,6 +21,8 @@ import { SocketContext } from '../../Context/SocketContext';
 import { MdPayment } from '@react-icons/all-files/md/MdPayment';
 import { VscSymbolArray } from '@react-icons/all-files/vsc/VscSymbolArray';
 import { AiOutlineTransaction } from '@react-icons/all-files/ai/AiOutlineTransaction';
+import { ImSpinner10 } from '@react-icons/all-files/im/ImSpinner10';
+import { ImImages } from '@react-icons/all-files/im/ImImages';
 
 function SidebarComponent() {
    const auth = useSelector(authSelector);
@@ -86,6 +88,11 @@ function SidebarComponent() {
                   heading={'Games providers'}
                   link={'/games/providers?page=0'}
                />
+               <IconListComponent
+                  icon={<ImImages />}
+                  heading={'Images'}
+                  link={'/upload-images'}
+               />
             </DashboardSidebarTabComponent>
             <DashboardSidebarTabComponent heading={'Push Notification'}>
                <IconListComponent
@@ -121,6 +128,13 @@ function SidebarComponent() {
                   icon={<AiOutlineTransaction />}
                   heading={'Fiat withdraw transaction'}
                   link={'/fiat/withdraw/transaction'}
+               />
+            </DashboardSidebarTabComponent>
+            <DashboardSidebarTabComponent heading={'Lucky Draw'}>
+               <IconListComponent
+                  icon={<ImSpinner10 />}
+                  heading={'Spin'}
+                  link={'spin-draw'}
                />
             </DashboardSidebarTabComponent>
          </styled.sclDiv>

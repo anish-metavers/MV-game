@@ -9,6 +9,8 @@ function ImageUploadComponent({
    preview,
    height,
    width,
+   upload,
+   inputRef,
 }) {
    return (
       <Fragment>
@@ -24,7 +26,17 @@ function ImageUploadComponent({
          >
             <div className="icon_div">
                {icon}
-               <input onChange={onChange} accept={accept} type={'file'} />
+               {upload === 'multi' ? (
+                  <input
+                     onChange={onChange}
+                     accept={accept}
+                     type={'file'}
+                     multiple="multiple"
+                     ref={inputRef}
+                  />
+               ) : (
+                  <input onChange={onChange} accept={accept} type={'file'} />
+               )}
             </div>
             {!!preview ? (
                <div className="prevImage">
