@@ -3,6 +3,7 @@ import {
    uploadBulkImages,
    getAllUploadImages,
    deleteMediaFiles,
+   replaceMediaImage,
 } from './MediaActions';
 
 const INITAL_STATE = {
@@ -14,6 +15,9 @@ const INITAL_STATE = {
    mediaImagesError: null,
    deleteFileLoading: false,
    deleteFileError: null,
+   imageReplacedInfo: null,
+   imageReplaceLoading: false,
+   imageReplaceError: false,
 };
 
 const mediaSlice = createSlice({
@@ -24,6 +28,10 @@ const mediaSlice = createSlice({
          state.uploadBulkImagesInfo = null;
          state.uploadBulkImagesLoading = false;
          state.uploadBulkImagesError = null;
+      },
+      removeReplaceError: (state) => {
+         state.imageReplaceError = null;
+         state.imageReplacedInfo = null;
       },
    },
    extraReducers: (bulder) => {
@@ -41,10 +49,10 @@ const mediaSlice = createSlice({
          .addCase(uploadBulkImages.fulfilled, (state, action) => {
             state.mediaImages = {
                ...state.mediaImages,
-               images: state.mediaImages?.images.concat(
-                  action.payload?.data?.images,
-                  state.mediaImages?.images
-               ),
+               images: [
+                  ...action.payload?.data?.images,
+                  ...state.mediaImages.images,
+               ],
             };
             state.uploadBulkImagesInfo = action.payload?.data;
             state.uploadBulkImagesLoading = false;
@@ -87,9 +95,38 @@ const mediaSlice = createSlice({
             state.deleteFileLoading = false;
             state.deleteFileError = null;
          });
+
+      bulder
+         .addCase(replaceMediaImage.pending, (state, action) => {
+            state.imageReplaceLoading = true;
+            state.imageReplaceError = null;
+         })
+         .addCase(replaceMediaImage.rejected, (state, action) => {
+            state.imageReplaceLoading = false;
+            state.imageReplaceError = action.error?.message;
+         })
+         .addCase(replaceMediaImage.fulfilled, (state, action) => {
+            state.mediaImages = {
+               ...state.mediaImages,
+               images: state.mediaImages?.images.map((el) =>
+                  el?.key === action.payload?.data?.key
+                     ? {
+                          key:
+                             action.payload?.data?.key +
+                             '?' +
+                             new Date().getTime(),
+                          edit: true,
+                       }
+                     : el
+               ),
+            };
+            state.imageReplacedInfo = action.payload?.data?.message;
+            state.imageReplaceLoading = false;
+            state.imageReplaceError = null;
+         });
    },
 });
 
-export const { removeImagesInfo } = mediaSlice.actions;
+export const { removeImagesInfo, removeReplaceError } = mediaSlice.actions;
 
 export default mediaSlice.reducer;

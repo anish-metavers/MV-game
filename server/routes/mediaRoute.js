@@ -19,6 +19,14 @@ router.post(
    mediaController.uploadBulkImages
 );
 
+// API => PATCH
+router.patch(
+   '/replace-media-image',
+   varifyJwtToken,
+   upload.any(),
+   mediaController.replaceMediaImage
+);
+
 // API => DELETE
 router.delete(
    '/delete-media-files',

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import ImageUploadComponent from '../ImageUploadComponent/ImageUploadComponent';
 import {
    uploadBulkImagesInfoSelector,
@@ -14,6 +14,7 @@ import { uploadBulkImages } from '../../App/Features/Media/MediaActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import useAdmin from '../../Hooks/useAdmin';
+import { removeImagesInfo } from '../../App/Features/Media/MediaSlice';
 
 function UploadMediaImagesComponent() {
    const [SelectedImages, setSelectedImages] = useState([]);
@@ -83,6 +84,13 @@ function UploadMediaImagesComponent() {
       inputRef.current.value = '';
    };
 
+   useEffect(() => {
+      if (!!uploadBulkImagesInfo && uploadBulkImagesInfo?.success) {
+         message.info(uploadBulkImagesInfo?.message);
+         clearHandler();
+      }
+   }, [uploadBulkImagesInfo]);
+
    return (
       <div className="w-full">
          <ImageUploadComponent
@@ -132,13 +140,6 @@ function UploadMediaImagesComponent() {
          {!!uploadBulkImagesError && (
             <p className="text-sm error_cl">{uploadBulkImagesError}</p>
          )}
-         {!!uploadBulkImagesInfo &&
-            uploadBulkImagesInfo?.success &&
-            uploadBulkImagesInfo?.message && (
-               <p className="text-gray-200 text-sm mt-2">
-                  {uploadBulkImagesInfo?.message}
-               </p>
-            )}
       </div>
    );
 }

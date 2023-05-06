@@ -35,4 +35,31 @@ export const div = styled.div`
 export const imageBox = styled.div`
    width: 100%;
    height: 500px;
+   position: relative;
+
+   &:hover {
+      .replace_div {
+         visibility: visible;
+         opacity: 1;
+      }
+   }
+
+   .replace_div {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 100;
+      cursor: pointer;
+      background-color: var(--dark-cl);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+   }
 `;

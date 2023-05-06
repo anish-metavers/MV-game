@@ -54,3 +54,21 @@ export const deleteMediaFiles = createAsyncThunk(
       }
    }
 );
+
+export const replaceMediaImage = createAsyncThunk(
+   'media/replaceMediaImage',
+   async (data, { rejectWithValue }) => {
+      try {
+         const respose = await axiosInstance.patch(
+            '/media/replace-media-image',
+            data
+         );
+         return respose;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);

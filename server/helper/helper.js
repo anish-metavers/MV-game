@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const multer = require('multer');
 const AWS = require('aws-sdk');
+const sharp = require('sharp');
 
 require('aws-sdk/lib/maintenance_mode_message').suppress = true;
 
@@ -87,7 +88,8 @@ let upload = multer({
          file.mimetype === 'image/jpeg' ||
          file.mimetype === 'image/png' ||
          file.mimetype === 'image/jpg' ||
-         file.mimetype === 'image/avif'
+         file.mimetype === 'image/avif' ||
+         file.mimetype === 'image/webp'
       ) {
          done(null, true);
       } else {
@@ -99,6 +101,12 @@ let upload = multer({
    },
 });
 
+// resize image with sharp
+const comporessImage = async (file) => {
+   const imageBufferData = await sharp(file).jpeg({ quality: 40 }).toBuffer();
+   return imageBufferData;
+};
+
 module.exports = {
    catchAsync,
    httpStatusCodes,
@@ -107,4 +115,5 @@ module.exports = {
    S3,
    upload,
    awsConfig,
+   comporessImage,
 };

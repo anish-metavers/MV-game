@@ -7,8 +7,6 @@ import {
    mediaImagesSelector,
    mediaImagesLoadingSelector,
    mediaImagesErrorSelector,
-   uploadBulkImagesInfoSelector,
-   uploadBulkImagesErrorSelector,
 } from './Media.Selector';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -34,8 +32,6 @@ function MediaImagesComponent() {
    const mediaImages = useSelector(mediaImagesSelector);
    const mediaImagesLoading = useSelector(mediaImagesLoadingSelector);
    const mediaImagesError = useSelector(mediaImagesErrorSelector);
-   const uploadBulkImagesInfo = useSelector(uploadBulkImagesInfoSelector);
-   const uploadBulkImagesError = useSelector(uploadBulkImagesErrorSelector);
 
    const confirmDelete = function (imageKey) {
       dispatch(deleteMediaFiles({ fileName: imageKey }));
@@ -50,15 +46,14 @@ function MediaImagesComponent() {
       setIsEdit(true);
    };
 
-   // useEffect(() => {
-   //    if (isAdmin) {
-   //       dispatch(getAllUploadImages({ page: Page }));
-   //    }
-   //    return () => {
-   //       if (uploadBulkImagesInfo || uploadBulkImagesError)
-   //          dispatch(removeImagesInfo());
-   //    };
-   // }, [isAdmin]);
+   useEffect(() => {
+      if (isAdmin) {
+         dispatch(getAllUploadImages({ page: Page }));
+      }
+      return () => {
+         dispatch(removeImagesInfo());
+      };
+   }, [isAdmin]);
 
    return (
       <styled.div>

@@ -3,8 +3,9 @@ const {
    httpStatusCodes,
    uploadToS3,
    awsConfig,
+   comporessImage,
 } = require('../helper/helper');
-const mediaModel = require('../model/schema/mediaSchema');
+// const mediaModel = require('../model/schema/mediaSchema');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3(awsConfig);
 const Bucket = process.env.S3_BUCKET_NAME;
@@ -23,6 +24,7 @@ const getAllUploadImages = catchAsync(async function (req, res, next) {
 
    const params = {
       Bucket,
+      Prefix: 'bc-games/',
       // MaxKeys: 20, // to create pagination
    };
 
@@ -34,7 +36,11 @@ const getAllUploadImages = catchAsync(async function (req, res, next) {
             message: 'Internal server error',
          });
       } else {
-         const images = data?.Contents.map((el) => ({ key: baseUrl + el.Key }));
+         const sortData = data.Contents.sort(
+            (a, b) => b.LastModified - a.LastModified
+         );
+
+         const images = sortData.map((el) => ({ key: baseUrl + el.Key }));
 
          return res.status(httpStatusCodes.OK).json({
             success: true,
@@ -66,7 +72,8 @@ const uploadBulkImages = catchAsync(async function (req, res, next) {
     */
 
    for (let i = 0; i < files.length; i++) {
-      const uploadImageData = await uploadToS3(files[i].buffer);
+      const bufferData = await comporessImage(files[i]?.buffer);
+      const uploadImageData = await uploadToS3(bufferData);
       const imageUrl = uploadImageData.Location;
 
       if (imageUrl) {
@@ -105,6 +112,67 @@ const uploadBulkImages = catchAsync(async function (req, res, next) {
    });
 });
 
+const replaceMediaImage = catchAsync(async function (req, res, next) {
+   const file = req.files[0];
+
+   if (!file) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message:
+            'Replace image is reuqired. please attached the replace with input and then send to the server.',
+      });
+   }
+
+   /**
+    * @selectedImage image url. which we want to replace with new image and set the replace image
+    * url === selectedImage. in the case image will be change but the url is not.
+    * first delete the selected image from the s3 bucket. and then upload new image with the same url.
+    */
+
+   const { selectedImage } = req.body;
+   const splitFileName = selectedImage.split('/');
+   const originalName = splitFileName[splitFileName.length - 1];
+
+   s3.deleteObject(
+      { Bucket, Key: `bc-games/${originalName}` },
+      function (err, data) {
+         if (err) {
+            console.log('s3 list delete object error: ', err, err.stack);
+            return res.status(httpStatusCodes.BAD_REQUEST).json({
+               error: true,
+               success: false,
+               message: err?.message,
+            });
+         }
+
+         const params = {
+            Bucket: process.env.S3_BUCKET_NAME,
+            Key: `bc-games/${originalName}`,
+            Body: file.buffer,
+         };
+
+         s3.upload(params, (err, data) => {
+            if (err) {
+               console.log('s3 list upload object error: ', err, err.stack);
+               return res.status(httpStatusCodes.BAD_REQUEST).json({
+                  error: true,
+                  success: false,
+                  message: err?.message,
+               });
+            }
+
+            return res.status(httpStatusCodes.CREATED).json({
+               success: true,
+               error: false,
+               message: 'Image replaced',
+               key: data?.Location,
+            });
+         });
+      }
+   );
+});
+
 const deleteMediaFiles = catchAsync(async function (req, res, next) {
    const { fileName } = req.query;
 
@@ -141,4 +209,9 @@ const deleteMediaFiles = catchAsync(async function (req, res, next) {
    });
 });
 
-module.exports = { getAllUploadImages, uploadBulkImages, deleteMediaFiles };
+module.exports = {
+   getAllUploadImages,
+   uploadBulkImages,
+   replaceMediaImage,
+   deleteMediaFiles,
+};
