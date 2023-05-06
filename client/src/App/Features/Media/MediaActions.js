@@ -37,3 +37,20 @@ export const getAllUploadImages = createAsyncThunk(
       }
    }
 );
+
+export const deleteMediaFiles = createAsyncThunk(
+   'media/deleteMediaFiles',
+   async ({ fileName }, { rejectWithValue }) => {
+      try {
+         const deleteResponse = await axiosInstance.delete(
+            `/media/delete-media-files?fileName=${fileName}`
+         );
+         return deleteResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.respose.data);
+      }
+   }
+);

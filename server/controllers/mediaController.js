@@ -1,5 +1,14 @@
-const { catchAsync, httpStatusCodes, uploadToS3 } = require('../helper/helper');
+const {
+   catchAsync,
+   httpStatusCodes,
+   uploadToS3,
+   awsConfig,
+} = require('../helper/helper');
 const mediaModel = require('../model/schema/mediaSchema');
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3(awsConfig);
+const Bucket = process.env.S3_BUCKET_NAME;
+const baseUrl = `https://${process.env.S3_BUCKET_NAME}.s3.ap-south-1.amazonaws.com/`;
 
 const getAllUploadImages = catchAsync(async function (req, res, next) {
    const { page } = req.query;
@@ -12,28 +21,27 @@ const getAllUploadImages = catchAsync(async function (req, res, next) {
       });
    }
 
-   const DOCUMENT_LIMIT = 1;
-   const documentCount = await mediaModel.countDocuments();
-   const findImages = await mediaModel
-      .find({})
-      .sort({ createdAt: -1 })
-      .skip(page * DOCUMENT_LIMIT)
-      .limit(DOCUMENT_LIMIT);
+   const params = {
+      Bucket,
+      // MaxKeys: 20, // to create pagination
+   };
 
-   if (findImages) {
-      return res.status(httpStatusCodes.OK).json({
-         success: true,
-         error: false,
-         images: findImages,
-         totalDocuments: documentCount,
-         totalPages: Math.ceil(documentCount / DOCUMENT_LIMIT - 1),
-         page: +page,
-      });
-   }
+   s3.listObjects(params, function (err, data) {
+      if (err) {
+         console.log('s3 list object error: ', err, err.stack);
+         return res.status(httpStatusCodes.INTERNAL_SERVER).json({
+            error: true,
+            message: 'Internal server error',
+         });
+      } else {
+         const images = data?.Contents.map((el) => ({ key: baseUrl + el.Key }));
 
-   return res.status(httpStatusCodes.INTERNAL_SERVER).json({
-      error: true,
-      message: 'Internal server error',
+         return res.status(httpStatusCodes.OK).json({
+            success: true,
+            error: false,
+            images,
+         });
+      }
    });
 });
 
@@ -61,16 +69,24 @@ const uploadBulkImages = catchAsync(async function (req, res, next) {
       const uploadImageData = await uploadToS3(files[i].buffer);
       const imageUrl = uploadImageData.Location;
 
-      const storeImageData = await mediaModel({
-         imageUrl,
-      }).save();
-      if (storeImageData) {
-         imagesUrlAr.push({ imageUrl, _id: storeImageData._id });
+      if (imageUrl) {
+         imagesUrlAr.push({ key: imageUrl });
          isStored = true;
       } else {
          isStored = false;
          break;
       }
+
+      // const storeImageData = await mediaModel({
+      //    imageUrl,
+      // }).save();
+      // if (storeImageData) {
+      //    imagesUrlAr.push({ imageUrl, _id: storeImageData._id });
+      //    isStored = true;
+      // } else {
+      //    isStored = false;
+      //    break;
+      // }
    }
 
    if (isStored) {
@@ -89,4 +105,40 @@ const uploadBulkImages = catchAsync(async function (req, res, next) {
    });
 });
 
-module.exports = { getAllUploadImages, uploadBulkImages };
+const deleteMediaFiles = catchAsync(async function (req, res, next) {
+   const { fileName } = req.query;
+
+   if (!fileName) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Filename is required',
+      });
+   }
+
+   const splitFileName = fileName.split('/');
+   const originalName = splitFileName[splitFileName.length - 1];
+
+   const params = {
+      Bucket,
+      Key: `bc-games/${originalName}`,
+   };
+
+   s3.deleteObject(params, function (err, data) {
+      if (err) {
+         console.log('s3 list delete object error: ', err, err.stack);
+         return res.status(httpStatusCodes.BAD_REQUEST).json({
+            error: true,
+            success: false,
+            message: err?.message,
+         });
+      }
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         deleteObject: fileName,
+      });
+   });
+});
+
+module.exports = { getAllUploadImages, uploadBulkImages, deleteMediaFiles };

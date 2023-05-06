@@ -19,4 +19,11 @@ router.post(
    mediaController.uploadBulkImages
 );
 
+// API => DELETE
+router.delete(
+   '/delete-media-files',
+   varifyJwtToken,
+   mediaController.deleteMediaFiles
+);
+
 module.exports = router;

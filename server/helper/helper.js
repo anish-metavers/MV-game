@@ -106,4 +106,5 @@ module.exports = {
    uploadToS3,
    S3,
    upload,
+   awsConfig,
 };

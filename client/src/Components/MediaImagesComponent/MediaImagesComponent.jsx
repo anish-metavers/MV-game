@@ -11,17 +11,25 @@ import {
    uploadBulkImagesErrorSelector,
 } from './Media.Selector';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUploadImages } from '../../App/Features/Media/MediaActions';
+import {
+   deleteMediaFiles,
+   getAllUploadImages,
+} from '../../App/Features/Media/MediaActions';
 import { removeImagesInfo } from '../../App/Features/Media/MediaSlice';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import CustomButtonComponent from '../CustomButtonComponent/CustomButtonComponent';
+import { BiEditAlt } from '@react-icons/all-files/bi/BiEditAlt';
+import EditMediaFilePopupComponent from '../EditMediaFilePopupComponent/EditMediaFilePopupComponent';
+import { AnimatePresence } from 'framer-motion';
 
 function MediaImagesComponent() {
    const [Page, setPage] = useState(0);
    const [cookie] = useCookies();
    const [isAdmin] = useAdmin(cookie);
    const dispatch = useDispatch();
+   const [IsEdit, setIsEdit] = useState(false);
+   const [SelectedImage, setSelectedImage] = useState(false);
 
    const mediaImages = useSelector(mediaImagesSelector);
    const mediaImagesLoading = useSelector(mediaImagesLoadingSelector);
@@ -29,27 +37,39 @@ function MediaImagesComponent() {
    const uploadBulkImagesInfo = useSelector(uploadBulkImagesInfoSelector);
    const uploadBulkImagesError = useSelector(uploadBulkImagesErrorSelector);
 
-   const confirmDelete = function (imageId) {
-      console.log(imageId);
-      console.log('delete selected image.');
+   const confirmDelete = function (imageKey) {
+      dispatch(deleteMediaFiles({ fileName: imageKey }));
    };
 
    const loadMoreHandler = function () {
       setPage((prevState) => prevState + 1);
    };
 
-   useEffect(() => {
-      if (isAdmin) {
-         dispatch(getAllUploadImages({ page: Page }));
-      }
-      return () => {
-         if (uploadBulkImagesInfo || uploadBulkImagesError)
-            dispatch(removeImagesInfo());
-      };
-   }, [isAdmin, Page]);
+   const editImageHandler = function (key) {
+      setSelectedImage(key);
+      setIsEdit(true);
+   };
+
+   // useEffect(() => {
+   //    if (isAdmin) {
+   //       dispatch(getAllUploadImages({ page: Page }));
+   //    }
+   //    return () => {
+   //       if (uploadBulkImagesInfo || uploadBulkImagesError)
+   //          dispatch(removeImagesInfo());
+   //    };
+   // }, [isAdmin]);
 
    return (
       <styled.div>
+         <AnimatePresence>
+            {!!IsEdit && (
+               <EditMediaFilePopupComponent
+                  selectedImage={SelectedImage}
+                  close={() => setIsEdit(false)}
+               />
+            )}
+         </AnimatePresence>
          {!!mediaImagesError && (
             <p className="text-sm error_cl">{mediaImagesError}</p>
          )}
@@ -59,12 +79,12 @@ function MediaImagesComponent() {
                mediaImages?.success &&
                mediaImages?.images &&
                mediaImages?.images.length &&
-               mediaImages?.images.map((el) => (
-                  <styled.imageBox key={el?._id}>
+               mediaImages?.images.map((el, ind) => (
+                  <styled.imageBox key={ind}>
                      <Popconfirm
                         title="Delete the task"
                         description="Are you sure to delete this task?"
-                        onConfirm={() => confirmDelete(el?._id)}
+                        onConfirm={() => confirmDelete(el?.key)}
                         okText="Yes"
                         cancelText="No"
                      >
@@ -73,7 +93,13 @@ function MediaImagesComponent() {
                         </div>
                      </Popconfirm>
                      <div className="imgBox bg-white rounded">
-                        <img src={el?.imageUrl} />
+                        <img src={el?.key} />
+                        <div
+                           className="edit_btn"
+                           onClick={() => editImageHandler(el?.key)}
+                        >
+                           <BiEditAlt />
+                        </div>
                      </div>
                   </styled.imageBox>
                ))}

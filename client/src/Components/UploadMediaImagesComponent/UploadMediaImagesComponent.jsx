@@ -77,6 +77,12 @@ function UploadMediaImagesComponent() {
       }
    };
 
+   const clearHandler = function () {
+      setSelectedImages([]);
+      dt.clearData();
+      inputRef.current.value = '';
+   };
+
    return (
       <div className="w-full">
          <ImageUploadComponent
@@ -107,12 +113,19 @@ function UploadMediaImagesComponent() {
             </Stack>
          </div>
          {!!SelectedImages && SelectedImages?.length ? (
-            <CustomButtonComponent
-               text={'Upload'}
-               btnCl={'Publish'}
-               onClick={onSubmit}
-               isLoading={uploadBulkImagesLoading}
-            />
+            <div className="flex items-center space-x-3">
+               <CustomButtonComponent
+                  text={'Upload'}
+                  btnCl={'Publish'}
+                  onClick={onSubmit}
+                  isLoading={uploadBulkImagesLoading}
+               />
+               <CustomButtonComponent
+                  text={'Clear'}
+                  btnCl={'Publish'}
+                  onClick={clearHandler}
+               />
+            </div>
          ) : (
             <CustomButtonComponent text={'Upload'} btnCl={'Publish no_allow'} />
          )}

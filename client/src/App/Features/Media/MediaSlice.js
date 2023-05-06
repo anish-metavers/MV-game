@@ -1,5 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { uploadBulkImages, getAllUploadImages } from './MediaActions';
+import {
+   uploadBulkImages,
+   getAllUploadImages,
+   deleteMediaFiles,
+} from './MediaActions';
 
 const INITAL_STATE = {
    uploadBulkImagesInfo: null,
@@ -8,6 +12,8 @@ const INITAL_STATE = {
    mediaImages: null,
    mediaImagesLoading: false,
    mediaImagesError: null,
+   deleteFileLoading: false,
+   deleteFileError: null,
 };
 
 const mediaSlice = createSlice({
@@ -33,6 +39,13 @@ const mediaSlice = createSlice({
             state.uploadBulkImagesError = action.error?.message;
          })
          .addCase(uploadBulkImages.fulfilled, (state, action) => {
+            state.mediaImages = {
+               ...state.mediaImages,
+               images: state.mediaImages?.images.concat(
+                  action.payload?.data?.images,
+                  state.mediaImages?.images
+               ),
+            };
             state.uploadBulkImagesInfo = action.payload?.data;
             state.uploadBulkImagesLoading = false;
             state.uploadBulkImagesError = null;
@@ -53,6 +66,26 @@ const mediaSlice = createSlice({
             state.mediaImages = action.payload?.data;
             state.mediaImagesLoading = false;
             state.mediaImagesError = null;
+         });
+
+      bulder
+         .addCase(deleteMediaFiles.pending, (state, action) => {
+            state.deleteFileLoading = true;
+            state.deleteFileError = null;
+         })
+         .addCase(deleteMediaFiles.rejected, (state, action) => {
+            state.deleteFileLoading = false;
+            state.deleteFileError = action.error?.message;
+         })
+         .addCase(deleteMediaFiles.fulfilled, (state, action) => {
+            state.mediaImages = {
+               ...state.mediaImages,
+               images: state.mediaImages?.images.filter(
+                  (el) => el?.key !== action.payload?.data?.deleteObject
+               ),
+            };
+            state.deleteFileLoading = false;
+            state.deleteFileError = null;
          });
    },
 });
