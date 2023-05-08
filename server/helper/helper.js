@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator');
 const multer = require('multer');
 const AWS = require('aws-sdk');
 const sharp = require('sharp');
+const mongoose = require('mongoose');
 
 require('aws-sdk/lib/maintenance_mode_message').suppress = true;
 
@@ -96,6 +97,7 @@ let upload = multer({
          //prevent the upload
          var newError = new Error('File type is incorrect');
          newError.name = 'MulterError';
+         console.log(newError);
          done(newError, false);
       }
    },
@@ -107,6 +109,11 @@ const comporessImage = async (file) => {
    return imageBufferData;
 };
 
+const checkIsValidId = function (string, res) {
+   const isValidId = mongoose.isValidObjectId(string);
+   return isValidId;
+};
+
 module.exports = {
    catchAsync,
    httpStatusCodes,
@@ -116,4 +123,5 @@ module.exports = {
    upload,
    awsConfig,
    comporessImage,
+   checkIsValidId,
 };

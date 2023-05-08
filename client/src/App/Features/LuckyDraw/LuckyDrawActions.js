@@ -1,15 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../../Services/AxiosInstance';
 
-export const uploadBulkImages = createAsyncThunk(
-   'media/uploadBulkImages',
+export const createNewLuckyDraw = createAsyncThunk(
+   'luckyDraw/createNewLuckyDraw',
    async (data, { rejectWithValue }) => {
       try {
          const response = await axiosInstance.post(
-            '/media/upload-bulk-images',
+            '/lucky-draw/create-new-lucky-draw',
             data
          );
-
          return response;
       } catch (err) {
          if (err) {
@@ -20,14 +19,31 @@ export const uploadBulkImages = createAsyncThunk(
    }
 );
 
-export const getAllUploadImages = createAsyncThunk(
-   'media/getAllUploadImages',
+export const updateSpinLuckyDraw = createAsyncThunk(
+   'luckyDraw/updateSpinItem',
+   async ({ data, id }, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.patch(
+            `/lucky-draw/update-lucky-draw?id=${id}`,
+            data
+         );
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getAllLuckyDraw = createAsyncThunk(
+   'luckyDraw/getAllLuckyDraw',
    async ({ page }, { rejectWithValue }) => {
       try {
          const response = await axiosInstance.get(
-            `/media/get-all-uploded-images?page=${page}`
+            `/lucky-draw/get-all-lucky-draw?page=${page}`
          );
-
          return response;
       } catch (err) {
          if (err) {
@@ -38,32 +54,14 @@ export const getAllUploadImages = createAsyncThunk(
    }
 );
 
-export const deleteMediaFiles = createAsyncThunk(
-   'media/deleteMediaFiles',
-   async ({ fileName }, { rejectWithValue }) => {
+export const getSingleLuckyDraw = createAsyncThunk(
+   'luckyDraw/getSingleLuckyDraw',
+   async ({ id }, { rejectWithValue }) => {
       try {
-         const deleteResponse = await axiosInstance.delete(
-            `/media/delete-media-files?fileName=${fileName}`
+         const singleLuckyDrawResponse = await axiosInstance.get(
+            `/lucky-draw/get-single-lucky-draw?id=${id}`
          );
-         return deleteResponse;
-      } catch (err) {
-         if (err) {
-            throw err;
-         }
-         return rejectWithValue(err.response.data);
-      }
-   }
-);
-
-export const replaceMediaImage = createAsyncThunk(
-   'media/replaceMediaImage',
-   async (data, { rejectWithValue }) => {
-      try {
-         const respose = await axiosInstance.patch(
-            '/media/replace-media-image',
-            data
-         );
-         return respose;
+         return singleLuckyDrawResponse;
       } catch (err) {
          if (err) {
             throw err;

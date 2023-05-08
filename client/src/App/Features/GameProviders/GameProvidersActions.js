@@ -15,7 +15,7 @@ export const createNewGameProvider = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -32,7 +32,7 @@ export const getAllGameProviders = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -49,7 +49,7 @@ export const getSingleGameProvider = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -68,7 +68,7 @@ export const updateGameProvider = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -87,7 +87,7 @@ export const blockSingleGameProvider = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -106,7 +106,7 @@ export const unblockSingleGameProvider = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -123,7 +123,7 @@ export const getProvidersGames = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );

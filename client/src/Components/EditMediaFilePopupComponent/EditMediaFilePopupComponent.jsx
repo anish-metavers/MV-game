@@ -75,7 +75,7 @@ function EditMediaFilePopupComponent({ close, selectedImage }) {
                <VscClose className="text-gray-100 text-xl" />
             </div>
             <styled.imageBox>
-               <div className="replace_div" onClick={imageHandler}>
+               {/* <div className="replace_div" onClick={imageHandler}>
                   <input
                      type="file"
                      hidden
@@ -84,7 +84,7 @@ function EditMediaFilePopupComponent({ close, selectedImage }) {
                      accept={'image/*'}
                   />
                   <RiFindReplaceLine className="text-gray-200 text-xl" />
-               </div>
+               </div> */}
                <img src={selectedImage} ref={imageRef} alt="selected image" />
             </styled.imageBox>
             {!!ReplaceImage && (

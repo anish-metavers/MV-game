@@ -13,15 +13,20 @@ import {
    deleteMediaFiles,
    getAllUploadImages,
 } from '../../App/Features/Media/MediaActions';
-import { removeImagesInfo } from '../../App/Features/Media/MediaSlice';
+import {
+   pickedImageHandler,
+   removeImagesInfo,
+   showPickerPopUpHandler,
+} from '../../App/Features/Media/MediaSlice';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import CustomButtonComponent from '../CustomButtonComponent/CustomButtonComponent';
 import { BiEditAlt } from '@react-icons/all-files/bi/BiEditAlt';
 import EditMediaFilePopupComponent from '../EditMediaFilePopupComponent/EditMediaFilePopupComponent';
 import { AnimatePresence } from 'framer-motion';
+import { CgColorPicker } from '@react-icons/all-files/cg/CgColorPicker';
 
-function MediaImagesComponent() {
+function MediaImagesComponent({ type }) {
    const [Page, setPage] = useState(0);
    const [cookie] = useCookies();
    const [isAdmin] = useAdmin(cookie);
@@ -46,8 +51,13 @@ function MediaImagesComponent() {
       setIsEdit(true);
    };
 
+   const pickerHandler = function (pickedImage) {
+      dispatch(pickedImageHandler({ pickedImage }));
+      dispatch(showPickerPopUpHandler(false));
+   };
+
    useEffect(() => {
-      if (isAdmin) {
+      if (isAdmin && !mediaImages) {
          dispatch(getAllUploadImages({ page: Page }));
       }
       return () => {
@@ -76,25 +86,39 @@ function MediaImagesComponent() {
                mediaImages?.images.length &&
                mediaImages?.images.map((el, ind) => (
                   <styled.imageBox key={ind}>
-                     <Popconfirm
-                        title="Delete the task"
-                        description="Are you sure to delete this task?"
-                        onConfirm={() => confirmDelete(el?.key)}
-                        okText="Yes"
-                        cancelText="No"
-                     >
-                        <div className="cl_div">
-                           <VscClose className="text-gray-500" />
-                        </div>
-                     </Popconfirm>
-                     <div className="imgBox bg-white rounded">
-                        <img src={el?.key} />
-                        <div
-                           className="edit_btn"
-                           onClick={() => editImageHandler(el?.key)}
+                     {!!type && type === 'select' ? null : (
+                        <Popconfirm
+                           title="Delete the task"
+                           description="Are you sure to delete this task?"
+                           onConfirm={() => confirmDelete(el?.key)}
+                           okText="Yes"
+                           cancelText="No"
                         >
-                           <BiEditAlt />
-                        </div>
+                           <div className="cl_div">
+                              <VscClose className="text-gray-500" />
+                           </div>
+                        </Popconfirm>
+                     )}
+                     <div className="imgBox bg-white rounded">
+                        <img
+                           // src={el?.key + '?timestamp=' + new Date().getTime()}
+                           src={el?.key}
+                        />
+                        {!!type && type === 'select' ? (
+                           <div
+                              className="edit_btn"
+                              onClick={() => pickerHandler(el?.key)}
+                           >
+                              <CgColorPicker />
+                           </div>
+                        ) : (
+                           <div
+                              className="edit_btn"
+                              onClick={() => editImageHandler(el?.key)}
+                           >
+                              <BiEditAlt />
+                           </div>
+                        )}
                      </div>
                   </styled.imageBox>
                ))}

@@ -1,19 +1,284 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as styled from './CreateSpinItemPage.style';
 import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
 import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHeadingComponent';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import CustomButtonComponent from '../../Components/CustomButtonComponent/CustomButtonComponent';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { message } from 'antd';
+import { CgColorPicker } from '@react-icons/all-files/cg/CgColorPicker';
+import PicMediaImagesPopupComponent from '../PicMediaImagesPopupComponent/PicMediaImagesPopupComponent';
+import { AnimatePresence } from 'framer-motion';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+   showPickerPopUpSelector,
+   pickedImageSelector,
+   createNewLuckyDrawLoadingSelector,
+   singleDrawInfoSelector,
+   updateSingleDrawInfoLoadingSelector,
+} from './Spin.Selector';
+import {
+   showPickerPopUpHandler,
+   pickedImageHandler,
+} from '../../App/Features/Media/MediaSlice';
+import { VscClose } from '@react-icons/all-files/vsc/VscClose';
+import {
+   createNewLuckyDraw,
+   getSingleLuckyDraw,
+   updateSpinLuckyDraw,
+} from '../../App/Features/LuckyDraw/LuckyDrawActions';
+import { useParams } from 'react-router';
+import { useCookies } from 'react-cookie';
+import useAdmin from '../../Hooks/useAdmin';
+import { removeSingleDrawInfo } from '../../App/Features/LuckyDraw/LuckyDrawSlice';
+
+const schema = yup.object({
+   spinName: yup.string().required(),
+});
 
 function CreateSpinItemPage() {
+   const {
+      control,
+      getValues,
+      handleSubmit,
+      setValue,
+      formState: { errors },
+   } = useForm({
+      defaultValues: {
+         spinItems: [],
+         selectedPickedItem: '',
+      },
+      resolver: yupResolver(schema),
+   });
+
+   const { append, remove, fields } = useFieldArray({
+      control,
+      name: 'spinItems',
+   });
+
+   const dispatch = useDispatch();
+   const [cookie] = useCookies();
+   const [isAdmin] = useAdmin(cookie);
+   const params = useParams();
+   const paramId = params?.id;
+
+   const showPickerPopUp = useSelector(showPickerPopUpSelector);
+   const pickedImage = useSelector(pickedImageSelector);
+   const createNewLuckyDrawLoading = useSelector(
+      createNewLuckyDrawLoadingSelector
+   );
+   const singleDrawInfo = useSelector(singleDrawInfoSelector);
+   const updateSingleDrawInfoLoading = useSelector(
+      updateSingleDrawInfoLoadingSelector
+   );
+
+   const addNewSpinItemHandler = function () {
+      const spinName = getValues('spinName');
+
+      if (!spinName) {
+         return message.error('Spin name is reuqired to add new items.');
+      }
+
+      append({ name: '', price: '', level: '', icon: '' });
+   };
+
+   const pickedImageHander = function (index) {
+      dispatch(showPickerPopUpHandler(true));
+      setValue('selectedPickedItem', index);
+   };
+
+   const onSubmit = function (data) {
+      if (!isAdmin)
+         message.error('You have no permission to access this feature.');
+
+      if (!!paramId) {
+         return dispatch(updateSpinLuckyDraw({ data, id: paramId }));
+      }
+
+      dispatch(createNewLuckyDraw(data));
+   };
+
+   const removeItemHandler = function (index) {
+      remove(index);
+   };
+
+   useEffect(() => {
+      if (!!pickedImage) {
+         const pickerIndex = getValues('selectedPickedItem');
+         const stateArray = getValues('spinItems');
+         const updatedArray = stateArray.map((el, idx) =>
+            idx === pickerIndex ? { ...el, icon: pickedImage } : el
+         );
+         setValue('spinItems', updatedArray);
+         dispatch(pickedImageHandler({ pickedImage: null }));
+      }
+   }, [pickedImage]);
+
+   useEffect(() => {
+      if (!!paramId && !!isAdmin) {
+         dispatch(getSingleLuckyDraw({ id: paramId }));
+      }
+   }, [paramId, isAdmin]);
+
+   useEffect(() => {
+      if (
+         !!isAdmin &&
+         !!singleDrawInfo &&
+         singleDrawInfo?.success &&
+         singleDrawInfo?.item
+      ) {
+         setValue('spinName', singleDrawInfo?.item?.item?.spinName);
+         setValue('spinItems', singleDrawInfo?.item?.spinItems);
+      }
+   }, [singleDrawInfo, isAdmin]);
+
+   useEffect(() => {
+      return () => {
+         dispatch(removeSingleDrawInfo());
+      };
+   }, []);
+
    return (
       <styled.div>
+         <AnimatePresence>
+            {!!showPickerPopUp && (
+               <PicMediaImagesPopupComponent
+                  close={() => dispatch(showPickerPopUpHandler(false))}
+               />
+            )}
+         </AnimatePresence>
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               pageName={'Create new spin item'}
+               pageName={
+                  !!paramId ? 'Update spin draw' : 'Create new spin item'
+               }
                showSubHeadingCM={true}
                para={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.`}
                menu={false}
             />
+            <div className="mt-4">
+               <form onSubmit={handleSubmit(onSubmit)}>
+                  <Box
+                     sx={{
+                        '& > :not(style)': { my: 1, width: '100%' },
+                     }}
+                     noValidate
+                  >
+                     <div className="w-full">
+                        <Controller
+                           name="spinName"
+                           control={control}
+                           render={({ field: { onChange, value } }) => (
+                              <TextField
+                                 className="w-full"
+                                 onChange={onChange}
+                                 value={value || ''}
+                                 label="Spin name"
+                                 variant="outlined"
+                                 type={'text'}
+                              />
+                           )}
+                        />
+                        {!!errors && errors?.spinName?.message && (
+                           <p className="text-sm error_cl mt-2">
+                              {errors?.spinName?.message}
+                           </p>
+                        )}
+                     </div>
+                     {fields.map((item, index) => (
+                        <div
+                           key={index}
+                           className="flex items-center space-x-3 py-2"
+                        >
+                           <Controller
+                              name={`spinItems.${index}.name`}
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                 <TextField
+                                    className="w-full"
+                                    onChange={onChange}
+                                    value={value || ''}
+                                    label="Item name"
+                                    variant="outlined"
+                                    type={'text'}
+                                 />
+                              )}
+                           />
+                           <Controller
+                              name={`spinItems.${index}.price`}
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                 <TextField
+                                    className="w-full"
+                                    onChange={onChange}
+                                    value={value || ''}
+                                    label="Item price"
+                                    variant="outlined"
+                                    type={'number'}
+                                    required
+                                    inputProps={{ min: 0, step: '0.000001' }}
+                                 />
+                              )}
+                           />
+                           <Controller
+                              name={`spinItems.${index}.level`}
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                 <TextField
+                                    className="w-full"
+                                    onChange={onChange}
+                                    value={value || ''}
+                                    label="level"
+                                    variant="outlined"
+                                    type={'number'}
+                                    required
+                                    inputProps={{ min: 0 }}
+                                 />
+                              )}
+                           />
+                           {!!item.icon && (
+                              <div className="selected_image_div shadow">
+                                 <img src={item.icon} alt="selected image" />
+                              </div>
+                           )}
+                           <div className="image_picker">
+                              <CgColorPicker
+                                 className="text-gray-200 text-xl cursor-pointer"
+                                 onClick={() => pickedImageHander(index)}
+                              />
+                           </div>
+                           <div>
+                              <VscClose
+                                 className="text-red-500 text-xl cursor-pointer"
+                                 onClick={() => removeItemHandler(index)}
+                              />
+                           </div>
+                        </div>
+                     ))}
+                     <div className="flex items-center space-x-3">
+                        <CustomButtonComponent
+                           text={'Add new spin item'}
+                           btnCl={'Publish'}
+                           onClick={addNewSpinItemHandler}
+                        />
+                        <CustomButtonComponent
+                           text={!!paramId ? 'Update' : 'Save'}
+                           btnCl={'Publish'}
+                           type={'submit'}
+                           isLoading={
+                              !!paramId
+                                 ? updateSingleDrawInfoLoading
+                                 : createNewLuckyDrawLoading
+                           }
+                        />
+                     </div>
+                  </Box>
+               </form>
+            </div>
          </div>
       </styled.div>
    );

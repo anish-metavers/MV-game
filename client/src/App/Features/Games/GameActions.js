@@ -20,7 +20,7 @@ export const insertNewGame = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -37,7 +37,7 @@ export const getGamesLists = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -54,7 +54,7 @@ export const getSingleGameInfo = createAsyncThunk(
          if (err) {
             console.log(err);
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -78,7 +78,7 @@ export const updateSingleGame = createAsyncThunk(
          if (err) {
             console.log(err);
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -95,7 +95,7 @@ export const deleteSingleGame = createAsyncThunk(
          if (err) {
             console.log(err);
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -129,7 +129,7 @@ export const getTopFavoriteGames = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -147,7 +147,7 @@ export const getGameCurrencysList = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -171,7 +171,7 @@ export const inertNewGameCurrency = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -189,7 +189,7 @@ export const deleteSingleGameCurrency = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -206,7 +206,7 @@ export const getSingleGameCurrency = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -230,7 +230,7 @@ export const updateSingleGameCurrency = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -247,7 +247,7 @@ export const getAllGamesCategroy = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -265,7 +265,7 @@ export const postNewGameCategory = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -283,7 +283,7 @@ export const updateGameCategory = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -300,7 +300,7 @@ export const getAllProductsCategory = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -317,7 +317,7 @@ export const getSinglegameCategory = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -334,7 +334,7 @@ export const deleteSingleGameCategory = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );

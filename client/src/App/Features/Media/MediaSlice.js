@@ -18,6 +18,8 @@ const INITAL_STATE = {
    imageReplacedInfo: null,
    imageReplaceLoading: false,
    imageReplaceError: false,
+   pickedImage: null,
+   showPickerPopUp: false,
 };
 
 const mediaSlice = createSlice({
@@ -32,6 +34,12 @@ const mediaSlice = createSlice({
       removeReplaceError: (state) => {
          state.imageReplaceError = null;
          state.imageReplacedInfo = null;
+      },
+      showPickerPopUpHandler: (state, action) => {
+         state.showPickerPopUp = action.payload;
+      },
+      pickedImageHandler: (state, action) => {
+         state.pickedImage = action.payload?.pickedImage;
       },
    },
    extraReducers: (bulder) => {
@@ -127,6 +135,11 @@ const mediaSlice = createSlice({
    },
 });
 
-export const { removeImagesInfo, removeReplaceError } = mediaSlice.actions;
+export const {
+   removeImagesInfo,
+   removeReplaceError,
+   pickedImageHandler,
+   showPickerPopUpHandler,
+} = mediaSlice.actions;
 
 export default mediaSlice.reducer;

@@ -58,7 +58,7 @@ const gameCurrencyRoute = require('./routes/gameCurrencyRoute');
 const gameRoute = require('./routes/gameRoute');
 const paymentRoute = require('./routes/paymentRoute');
 const notificationRoute = require('./routes/notificationRoute');
-const luckyDraw = require('./routes/luckyDraw');
+const luckyDraw = require('./routes/luckyDrawRoute');
 const mediaRoute = require('./routes/mediaRoute');
 
 app.use('/admin', adminRoute);

@@ -14,7 +14,6 @@ router.get(
 // API => POST
 router.post(
    '/upload-bulk-images',
-   varifyJwtToken,
    upload.array('images'),
    mediaController.uploadBulkImages
 );

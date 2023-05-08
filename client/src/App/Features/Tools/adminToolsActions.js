@@ -35,7 +35,7 @@ export const exportGameCollectionNoPopulateData = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -56,7 +56,7 @@ export const exportGameAllData = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -77,7 +77,7 @@ export const getCollectionDataWithCategoryList = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -98,7 +98,7 @@ export const getAllProvidersData = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );

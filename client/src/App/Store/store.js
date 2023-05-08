@@ -7,6 +7,7 @@ import GameSlice from '../Features/Games/GameSlice';
 import paymentSlice from '../Features/Payment/paymentSlice';
 import notificationSlice from '../Features/Notification/notificationSlice';
 import MediaSlice from '../Features/Media/MediaSlice';
+import LuckyDrawSlice from '../Features/LuckyDraw/LuckyDrawSlice';
 
 const store = configureStore({
    reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
       payment: paymentSlice,
       notification: notificationSlice,
       media: MediaSlice,
+      LuckyDraw: LuckyDrawSlice,
    },
    middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

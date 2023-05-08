@@ -157,6 +157,10 @@ function App() {
                      path="/create-spin-items"
                      element={<CreateSpinItemPage />}
                   />
+                  <Route
+                     path="/spin/edit/:id"
+                     element={<CreateSpinItemPage />}
+                  />
                   <Route path="/upload-images" element={<UploadImagesPage />} />
                </Route>
                <Route path="/dashboard/auth/login" element={<LoginPage />} />

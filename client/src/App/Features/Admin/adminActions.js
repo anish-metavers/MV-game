@@ -13,7 +13,7 @@ export const getAllUserRoles = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -30,7 +30,7 @@ export const deleteUserRole = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -52,7 +52,7 @@ export const createUserRole = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -69,7 +69,7 @@ export const getSingleUserRole = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -87,7 +87,7 @@ export const updateSingleRole = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -111,7 +111,7 @@ export const uploadGameAvatar = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -126,7 +126,7 @@ export const getAllAvatars = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -143,7 +143,7 @@ export const deleteSingleAvatar = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -160,7 +160,7 @@ export const getAllUsers = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -177,7 +177,7 @@ export const filterGameUploadDataResult = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -194,7 +194,7 @@ export const getUserLoginResults = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
@@ -212,7 +212,7 @@ export const getGamesUploadResult = createAsyncThunk(
          if (err) {
             throw err;
          }
-         return rejectWithValue(err.respose.data);
+         return rejectWithValue(err.response.data);
       }
    }
 );
