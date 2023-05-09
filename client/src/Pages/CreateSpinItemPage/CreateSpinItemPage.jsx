@@ -34,6 +34,7 @@ import { useParams } from 'react-router';
 import { useCookies } from 'react-cookie';
 import useAdmin from '../../Hooks/useAdmin';
 import { removeSingleDrawInfo } from '../../App/Features/LuckyDraw/LuckyDrawSlice';
+import { Switch } from 'antd';
 
 const schema = yup.object({
    spinName: yup.string().required(),
@@ -50,6 +51,7 @@ function CreateSpinItemPage() {
       defaultValues: {
          spinItems: [],
          selectedPickedItem: '',
+         enable: false,
       },
       resolver: yupResolver(schema),
    });
@@ -132,6 +134,7 @@ function CreateSpinItemPage() {
       ) {
          setValue('spinName', singleDrawInfo?.item?.item?.spinName);
          setValue('spinItems', singleDrawInfo?.item?.spinItems);
+         setValue('enable', singleDrawInfo?.item?.item?.enable);
       }
    }, [singleDrawInfo, isAdmin]);
 
@@ -188,6 +191,20 @@ function CreateSpinItemPage() {
                               {errors?.spinName?.message}
                            </p>
                         )}
+                     </div>
+                     <div>
+                        <Controller
+                           name="enable"
+                           control={control}
+                           render={({ field: { onChange, value } }) => (
+                              <Switch
+                                 onChange={onChange}
+                                 checked={value}
+                                 checkedChildren={'yes'}
+                                 unCheckedChildren={'No'}
+                              />
+                           )}
+                        />
                      </div>
                      {fields.map((item, index) => (
                         <div

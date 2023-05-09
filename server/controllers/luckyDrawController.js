@@ -7,7 +7,7 @@ const {
 const luckySpinModel = require('../model/schema/luckySpinSchema');
 
 const createNewLuckyDraw = catchAsync(async function (req, res, next) {
-   const { spinName, spinItems } = req.body;
+   const { spinName, spinItems, enable } = req.body;
 
    if (!spinName) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
@@ -31,6 +31,7 @@ const createNewLuckyDraw = catchAsync(async function (req, res, next) {
    const saveNewDraw = await luckySpinModel({
       spinName,
       spinItems,
+      enable,
    }).save();
 
    if (saveNewDraw) {
@@ -50,7 +51,7 @@ const createNewLuckyDraw = catchAsync(async function (req, res, next) {
 
 const updateSpinLuckyDraw = catchAsync(async function (req, res, next) {
    const { id } = req.query;
-   const { spinName, spinItems } = req.body;
+   const { spinName, spinItems, enable } = req.body;
 
    if (!id) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
@@ -72,7 +73,7 @@ const updateSpinLuckyDraw = catchAsync(async function (req, res, next) {
 
    const updateSpinItem = await luckySpinModel.updateOne(
       { _id: id },
-      { $set: { spinName, spinItems } }
+      { $set: { spinName, spinItems, enable } }
    );
 
    if (updateSpinItem.modifiedCount) {
@@ -157,6 +158,7 @@ const getSingleLuckyDraw = catchAsync(async function (req, res, next) {
             _id: 1,
             spinName: 1,
             createdAt: 1,
+            enable: 1,
             spinItems: {
                name: 1,
                icon: 1,
@@ -174,6 +176,7 @@ const getSingleLuckyDraw = catchAsync(async function (req, res, next) {
                _id: '$_id',
                spinName: '$spinName',
                createdAt: '$createdAt',
+               enable: '$enable',
             },
             spinItems: { $push: '$spinItems' },
          },
