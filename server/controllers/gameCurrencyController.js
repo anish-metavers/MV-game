@@ -1,6 +1,7 @@
 const { default: mongoose } = require('mongoose');
 const { catchAsync, httpStatusCodes, uploadToS3 } = require('../helper/helper');
 const currencyModel = require('../model/schema/currencySchema');
+const axios = require('axios');
 
 const getAllGameCurrency = catchAsync(async function (req, res, next) {
    // page number is required if we want to make a pagination.
@@ -299,6 +300,36 @@ const deleteSingleGameCurrency = catchAsync(async function (req, res, next) {
    });
 });
 
+const getAllGameCurrencyList = catchAsync(async function (req, res, next) {
+   const findAllgamesCurrency = await currencyModel.aggregate([
+      {
+         $project: {
+            _id: 0,
+            currencyName: 1,
+            currencyType: 1,
+            currencyId: '$_id',
+         },
+      },
+   ]);
+
+   const getCryptoCurrency = await axios.get(
+      `${process.env.CRYPTO_PAYMENT_SERVER}/testnet/get-coins`
+   );
+
+   if (findAllgamesCurrency && !!getCryptoCurrency && getCryptoCurrency?.data) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         items: findAllgamesCurrency.concat(getCryptoCurrency?.data),
+      });
+   }
+
+   return res.status(httpStatusCodes.INTERNAL_SERVER).json({
+      error: true,
+      message: 'Internal server error',
+   });
+});
+
 module.exports = {
    insertGamesCurrency,
    deleteSingleGameCurrency,
@@ -306,4 +337,5 @@ module.exports = {
    getSingleGameCurrency,
    updateSingleGameCurrency,
    getAllCurrencyList,
+   getAllGameCurrencyList,
 };

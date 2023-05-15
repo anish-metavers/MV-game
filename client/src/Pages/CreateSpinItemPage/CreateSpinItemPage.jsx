@@ -19,6 +19,8 @@ import {
    createNewLuckyDrawLoadingSelector,
    singleDrawInfoSelector,
    updateSingleDrawInfoLoadingSelector,
+   allGameCurrencyListSelector,
+   // allGameCurrencyListLoadingSelector,
 } from './Spin.Selector';
 import {
    showPickerPopUpHandler,
@@ -35,6 +37,8 @@ import { useCookies } from 'react-cookie';
 import useAdmin from '../../Hooks/useAdmin';
 import { removeSingleDrawInfo } from '../../App/Features/LuckyDraw/LuckyDrawSlice';
 import { Switch } from 'antd';
+import { getGameCurrency } from '../../App/Features/Games/GameActions';
+import MenuItem from '@mui/material/MenuItem';
 
 const schema = yup.object({
    spinName: yup.string().required(),
@@ -52,6 +56,7 @@ function CreateSpinItemPage() {
          spinItems: [],
          selectedPickedItem: '',
          enable: false,
+         spinIcon: '',
       },
       resolver: yupResolver(schema),
    });
@@ -76,6 +81,7 @@ function CreateSpinItemPage() {
    const updateSingleDrawInfoLoading = useSelector(
       updateSingleDrawInfoLoadingSelector
    );
+   const allGameCurrencyList = useSelector(allGameCurrencyListSelector);
 
    const addNewSpinItemHandler = function () {
       const spinName = getValues('spinName');
@@ -84,13 +90,26 @@ function CreateSpinItemPage() {
          return message.error('Spin name is reuqired to add new items.');
       }
 
-      append({ name: '', price: '', level: '', icon: '' });
+      append({
+         name: '',
+         price: '',
+         level: '',
+         icon: '',
+         selectedCurrency: '',
+         currencyType: '',
+      });
    };
 
    const pickedImageHander = function (index) {
       dispatch(showPickerPopUpHandler(true));
       setValue('selectedPickedItem', index);
    };
+
+   /** ------------------- when we want to store spin draw icon --------- */
+   const picIcon = function () {
+      dispatch(showPickerPopUpHandler(true));
+   };
+   /** ------------------- when we want to store spin draw icon --------- */
 
    const onSubmit = function (data) {
       if (!isAdmin)
@@ -135,10 +154,15 @@ function CreateSpinItemPage() {
          setValue('spinName', singleDrawInfo?.item?.item?.spinName);
          setValue('spinItems', singleDrawInfo?.item?.spinItems);
          setValue('enable', singleDrawInfo?.item?.item?.enable);
+         setValue('spinIcon', singleDrawInfo?.item?.item?.spinIcon);
       }
    }, [singleDrawInfo, isAdmin]);
 
    useEffect(() => {
+      if (!allGameCurrencyList) {
+         dispatch(getGameCurrency());
+      }
+
       return () => {
          dispatch(removeSingleDrawInfo());
       };
@@ -192,7 +216,7 @@ function CreateSpinItemPage() {
                            </p>
                         )}
                      </div>
-                     <div>
+                     <div className="flex items-center space-x-2">
                         <Controller
                            name="enable"
                            control={control}
@@ -205,13 +229,31 @@ function CreateSpinItemPage() {
                               />
                            )}
                         />
+                        <p className="text-gray-300">Enable</p>
+                        {/* {!!spinItems.icon && (
+                              <div className="selected_image_div shadow">
+                                 <img src={item.icon} alt="selected image" />
+                              </div>
+                           )} */}
+                        {/* <div className="image_picker">
+                           <CgColorPicker
+                              className="text-gray-200 text-xl cursor-pointer"
+                              onClick={picIcon}
+                           />
+                        </div> */}
+                        {/* <div>
+                           <VscClose
+                              className="text-red-500 text-xl cursor-pointer"
+                              onClick={() => removeItemHandler(index)}
+                           />
+                        </div> */}
                      </div>
                      {fields.map((item, index) => (
                         <div
                            key={index}
                            className="flex items-center space-x-3 py-2"
                         >
-                           <Controller
+                           {/* <Controller
                               name={`spinItems.${index}.name`}
                               control={control}
                               render={({ field: { onChange, value } }) => (
@@ -224,7 +266,7 @@ function CreateSpinItemPage() {
                                     type={'text'}
                                  />
                               )}
-                           />
+                           /> */}
                            <Controller
                               name={`spinItems.${index}.price`}
                               control={control}
@@ -237,7 +279,7 @@ function CreateSpinItemPage() {
                                     variant="outlined"
                                     type={'number'}
                                     required
-                                    inputProps={{ min: 0, step: '0.000001' }}
+                                    inputProps={{ min: 0, step: '0.0001' }}
                                  />
                               )}
                            />
@@ -257,6 +299,54 @@ function CreateSpinItemPage() {
                                  />
                               )}
                            />
+                           {!!allGameCurrencyList &&
+                              allGameCurrencyList?.success &&
+                              !!allGameCurrencyList?.items &&
+                              allGameCurrencyList?.items.length && (
+                                 <Controller
+                                    name={`spinItems.${index}.selectedCurrency`}
+                                    control={control}
+                                    render={({
+                                       field: { onChange, value },
+                                    }) => (
+                                       <TextField
+                                          className="w-full"
+                                          select
+                                          label="Select"
+                                          onChange={(event) => {
+                                             const findSelectedCr =
+                                                allGameCurrencyList?.items.find(
+                                                   (el) =>
+                                                      el?.currencyId ===
+                                                      event.target.value
+                                                );
+                                             setValue(
+                                                `spinItems.${index}.currencyType`,
+                                                findSelectedCr?.currencyType
+                                             );
+                                             setValue(
+                                                `spinItems.${index}.name`,
+                                                findSelectedCr?.currencyName
+                                             );
+                                             onChange(event);
+                                          }}
+                                          required
+                                          value={value || ''}
+                                       >
+                                          {allGameCurrencyList?.items.map(
+                                             (option) => (
+                                                <MenuItem
+                                                   key={option?.currencyId}
+                                                   value={option.currencyId}
+                                                >
+                                                   {option.currencyName}
+                                                </MenuItem>
+                                             )
+                                          )}
+                                       </TextField>
+                                    )}
+                                 />
+                              )}
                            {!!item.icon && (
                               <div className="selected_image_div shadow">
                                  <img src={item.icon} alt="selected image" />

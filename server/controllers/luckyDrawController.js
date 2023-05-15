@@ -155,7 +155,6 @@ const getSingleLuckyDraw = catchAsync(async function (req, res, next) {
       { $unwind: '$spinItems' },
       {
          $project: {
-            _id: 1,
             spinName: 1,
             createdAt: 1,
             enable: 1,
@@ -166,7 +165,8 @@ const getSingleLuckyDraw = catchAsync(async function (req, res, next) {
                price: {
                   $convert: { input: '$spinItems.price', to: 'string' },
                },
-               _id: 1,
+               selectedCurrency: 1,
+               currencyType: 1,
             },
          },
       },

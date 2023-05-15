@@ -355,3 +355,20 @@ export const getAllCurrencyList = createAsyncThunk(
       }
    }
 );
+
+export const getGameCurrency = createAsyncThunk(
+   'gamecurrency/getGameCurrency',
+   async (_, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(
+            '/game-currency/get-game-currency-list'
+         );
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);

@@ -4,6 +4,8 @@ const mediaReducer = (state) => state.media;
 
 const luckyDrawReducer = (state) => state.LuckyDraw;
 
+const gameReudcer = (state) => state.games;
+
 export const showPickerPopUpSelector = createSelector(
    [mediaReducer],
    (mediaSlice) => mediaSlice.showPickerPopUp
@@ -27,4 +29,14 @@ export const singleDrawInfoSelector = createSelector(
 export const updateSingleDrawInfoLoadingSelector = createSelector(
    [luckyDrawReducer],
    (luckyDrawSlice) => luckyDrawSlice.updateSingleDrawInfoLoading
+);
+
+export const allGameCurrencyListSelector = createSelector(
+   [gameReudcer],
+   (gameSlice) => gameSlice.allGameCurrencyList
+);
+
+export const allGameCurrencyListLoadingSelector = createSelector(
+   [gameReudcer],
+   (gameSlice) => gameSlice.allGameCurrencyListLoading
 );
