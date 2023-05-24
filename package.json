@@ -12,7 +12,8 @@
       "client-build": "npm run build --prefix client",
       "client-dep-uninstall": "npm uninstall --prefix client",
       "server-dep-uninstall": "npm uninstall --prefix server",
-      "watch": "npm run server & npm run client"
+      "watch": "npm run server & npm run client",
+      "rm-build": "npm run rm-build --prefix server"
    },
    "keywords": [],
    "author": "",
