@@ -37,6 +37,8 @@ import FiatWithdrawTransactionPage from './Pages/FiatWithdrawTransactionPage/Fia
 import SpinDrawPage from './Pages/SpinDrawPage/SpinDrawPage';
 import CreateSpinItemPage from './Pages/CreateSpinItemPage/CreateSpinItemPage';
 import UploadImagesPage from './Pages/UploadImagesPage/UploadImagesPage';
+import LotteryDrawPage from './Pages/LotteryDrawPage/LotteryDrawPage';
+import EditLotteryPollPage from './Pages/EditLotteryPollPage/EditLotteryPollPage';
 
 const darkTheme = createTheme({
    palette: {
@@ -162,6 +164,11 @@ function App() {
                      element={<CreateSpinItemPage />}
                   />
                   <Route path="/upload-images" element={<UploadImagesPage />} />
+                  <Route path="/lottery-draw" element={<LotteryDrawPage />} />
+                  <Route
+                     path="/lottery-draw/edit/:id"
+                     element={<EditLotteryPollPage />}
+                  />
                </Route>
                <Route path="/dashboard/auth/login" element={<LoginPage />} />
             </Routes>

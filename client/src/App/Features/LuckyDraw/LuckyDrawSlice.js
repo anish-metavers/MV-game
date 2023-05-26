@@ -4,6 +4,9 @@ import {
    getAllLuckyDraw,
    getSingleLuckyDraw,
    updateSpinLuckyDraw,
+   getAllLotteryPoll,
+   getSingleLuckyDrawPoll,
+   updateLuckyDrawPollResult,
 } from './LuckyDrawActions';
 
 const INIATAL_STATE = {
@@ -19,6 +22,15 @@ const INIATAL_STATE = {
    updateSingleDrawInfo: null,
    updateSingleDrawInfoLoading: false,
    updateSpinLuckyDrawError: null,
+   allLotteryPoll: null,
+   allLotteryPollLoading: false,
+   allLotteryPollError: null,
+   singleLotteryPoll: null,
+   singleLotteryPollLoading: false,
+   singleLotteryPollError: null,
+   lotteryPollUpdatedInfo: null,
+   lotteryPollUpdateLoading: false,
+   lotteryPollUpdateError: null,
 };
 
 const luckyDrawSlice = createSlice({
@@ -97,6 +109,57 @@ const luckyDrawSlice = createSlice({
             state.updateSingleDrawInfo = action.payload?.data;
             state.updateSingleDrawInfoLoading = false;
             state.updateSpinLuckyDrawError = null;
+         });
+
+      bulder
+         .addCase(getAllLotteryPoll.pending, (state) => {
+            state.allLotteryPoll = null;
+            state.allLotteryPollLoading = true;
+            state.allLotteryPollError = null;
+         })
+         .addCase(getAllLotteryPoll.rejected, (state, action) => {
+            state.allLotteryPoll = null;
+            state.allLotteryPollLoading = false;
+            state.allLotteryPollError = action.error?.message;
+         })
+         .addCase(getAllLotteryPoll.fulfilled, (state, action) => {
+            state.allLotteryPoll = action.payload?.data;
+            state.allLotteryPollLoading = false;
+            state.allLotteryPollError = null;
+         });
+
+      bulder
+         .addCase(getSingleLuckyDrawPoll.pending, (state) => {
+            state.singleLotteryPoll = null;
+            state.singleLotteryPollLoading = true;
+            state.singleLotteryPollError = null;
+         })
+         .addCase(getSingleLuckyDrawPoll.rejected, (state, action) => {
+            state.singleLotteryPoll = null;
+            state.singleLotteryPollLoading = false;
+            state.singleLotteryPollError = action.error?.message;
+         })
+         .addCase(getSingleLuckyDrawPoll.fulfilled, (state, action) => {
+            state.singleLotteryPoll = action.payload?.data;
+            state.singleLotteryPollLoading = false;
+            state.singleLotteryPollError = null;
+         });
+
+      bulder
+         .addCase(updateLuckyDrawPollResult.pending, (state) => {
+            state.lotteryPollUpdatedInfo = null;
+            state.lotteryPollUpdateLoading = true;
+            state.lotteryPollUpdateError = null;
+         })
+         .addCase(updateLuckyDrawPollResult.rejected, (state, action) => {
+            state.lotteryPollUpdatedInfo = null;
+            state.lotteryPollUpdateLoading = false;
+            state.lotteryPollUpdateError = action.error?.message;
+         })
+         .addCase(updateLuckyDrawPollResult.fulfilled, (state, action) => {
+            state.lotteryPollUpdatedInfo = action.payload?.data;
+            state.lotteryPollUpdateLoading = false;
+            state.lotteryPollUpdateError = null;
          });
    },
 });

@@ -70,3 +70,56 @@ export const getSingleLuckyDraw = createAsyncThunk(
       }
    }
 );
+
+export const getAllLotteryPoll = createAsyncThunk(
+   'luckyDraw/getAllLotteryPoll',
+   async (_, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(
+            '/lucky-draw/get-all-lottery-poll'
+         );
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getSingleLuckyDrawPoll = createAsyncThunk(
+   'luckyDraw/getSingleLuckyDrawPoll',
+   async ({ gameId }, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(
+            `/lucky-draw/get-single-lucky-draw-poll?gameId=${gameId}`
+         );
+
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const updateLuckyDrawPollResult = createAsyncThunk(
+   'luckyDraw/updateLuckyDrawPollResult',
+   async (data, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.patch(
+            '/lucky-draw/update-lucky-draw-poll-result',
+            data
+         );
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);

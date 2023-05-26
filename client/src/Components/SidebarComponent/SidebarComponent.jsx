@@ -23,6 +23,7 @@ import { VscSymbolArray } from '@react-icons/all-files/vsc/VscSymbolArray';
 import { AiOutlineTransaction } from '@react-icons/all-files/ai/AiOutlineTransaction';
 import { ImSpinner10 } from '@react-icons/all-files/im/ImSpinner10';
 import { ImImages } from '@react-icons/all-files/im/ImImages';
+import { GiRolledCloth } from '@react-icons/all-files/gi/GiRolledCloth';
 
 function SidebarComponent() {
    const auth = useSelector(authSelector);
@@ -135,6 +136,11 @@ function SidebarComponent() {
                   icon={<ImSpinner10 />}
                   heading={'Spin'}
                   link={'spin-draw'}
+               />
+               <IconListComponent
+                  icon={<GiRolledCloth />}
+                  heading={'Lottery lucky draw'}
+                  link={'lottery-draw'}
                />
             </DashboardSidebarTabComponent>
          </styled.sclDiv>

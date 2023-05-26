@@ -5,6 +5,7 @@ const {
    checkIsValidId,
 } = require('../helper/helper');
 const luckySpinModel = require('../model/schema/luckySpinSchema');
+const lotteryPollModel = require('../model/schema/lotteryGameSchema');
 
 const createNewLuckyDraw = catchAsync(async function (req, res, next) {
    const { spinName, spinItems, enable } = req.body;
@@ -207,9 +208,123 @@ const getSingleLuckyDraw = catchAsync(async function (req, res, next) {
    });
 });
 
+const getAllLotteryPoll = catchAsync(async function (req, res, next) {
+   const lotteryPolls = await lotteryPollModel.aggregate([
+      { $sort: { createdAt: -1 } },
+      {
+         $project: {
+            gameId: 1,
+            lotteryPollResultTime: 1,
+            lotteryPollResult: 1,
+            lotteryPollResultShow: 1,
+            createdAt: 1,
+         },
+      },
+   ]);
+
+   if (lotteryPolls) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         items: lotteryPolls,
+      });
+   }
+
+   return res.status(httpStatusCodes.BAD_REQUEST).json({
+      success: false,
+      error: true,
+      message: 'No document found!',
+   });
+});
+
+const getSingleLuckyDrawPoll = catchAsync(async function (req, res, next) {
+   const { gameId } = req.query;
+
+   if (!gameId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Game id is reuqired',
+      });
+   }
+
+   const isValidId = checkIsValidId(gameId);
+
+   if (!isValidId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Selected is not valid id please check.',
+      });
+   }
+
+   const findPoll = await lotteryPollModel.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(gameId) } },
+   ]);
+
+   const data = findPoll?.[0];
+
+   if (data) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         item: data,
+      });
+   }
+
+   return res.status(httpStatusCodes.BAD_REQUEST).json({
+      success: false,
+      error: true,
+      message: 'No document found!',
+   });
+});
+
+const updateLuckyDrawPollResult = catchAsync(async function (req, res, next) {
+   const { gameId, optionalNumbers, jackpotBall } = req.body;
+
+   const isValidId = checkIsValidId(gameId);
+
+   if (!isValidId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Selected is not valid id please check.',
+      });
+   }
+
+   const findAndUpdateResult = await lotteryPollModel.updateOne(
+      { _id: gameId },
+      {
+         $set: {
+            lotteryPollResult: {
+               luckyNumbers: optionalNumbers,
+               jackpotBallNumber: jackpotBall,
+            },
+         },
+      }
+   );
+
+   if (findAndUpdateResult?.modifiedCount) {
+      return res.status(httpStatusCodes.CREATED).json({
+         success: true,
+         error: false,
+         message: 'Result updated',
+      });
+   }
+
+   return res.status(httpStatusCodes.BAD_REQUEST).json({
+      success: false,
+      error: true,
+      message: 'Already updated',
+   });
+});
+
 module.exports = {
    createNewLuckyDraw,
    updateSpinLuckyDraw,
    getAllLuckyDraw,
    getSingleLuckyDraw,
+   getAllLotteryPoll,
+   getSingleLuckyDrawPoll,
+   updateLuckyDrawPollResult,
 };
