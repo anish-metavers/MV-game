@@ -4,8 +4,11 @@ const {
    httpStatusCodes,
    checkIsValidId,
 } = require('../helper/helper');
+
 const luckySpinModel = require('../model/schema/luckySpinSchema');
 const lotteryPollModel = require('../model/schema/lotteryGameSchema');
+const authModel = require('../model/schema/authSchema');
+const lotteryPollUsersModel = require('../model/schema/lotteryPollUsersSchema');
 
 const createNewLuckyDraw = catchAsync(async function (req, res, next) {
    const { spinName, spinItems, enable } = req.body;
@@ -319,6 +322,112 @@ const updateLuckyDrawPollResult = catchAsync(async function (req, res, next) {
    });
 });
 
+const getSingleLotteryDrawUsersList = catchAsync(async function (
+   req,
+   res,
+   next
+) {
+   const { gameId, filter, page } = req.query;
+
+   if (!gameId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Game id is reuqired',
+      });
+   }
+
+   const isValidId = checkIsValidId(gameId);
+
+   if (!isValidId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Selected is not valid id please check.',
+      });
+   }
+
+   const DOCUMENT_LIMIT = 10;
+
+   const findLotteryPollData = await lotteryPollUsersModel.aggregate([
+      { $match: { lotteryGameId: mongoose.Types.ObjectId(gameId) } },
+      {
+         $project: {
+            createdAt: 1,
+            item: {
+               $cond: {
+                  if: { $eq: [filter, 'participate'] },
+                  then: '$lotteryParticipateUsers',
+                  else: '$winners',
+               },
+            },
+         },
+      },
+      { $addFields: { numberOfDocuments: { $size: '$item' } } },
+      { $unwind: { path: '$item', preserveNullAndEmptyArrays: true } },
+      { $sort: { 'item.createdAt': -1 } },
+      { $skip: page * DOCUMENT_LIMIT },
+      { $limit: DOCUMENT_LIMIT },
+      {
+         $lookup: {
+            from: 'auths',
+            localField: 'item.userId',
+            foreignField: '_id',
+            as: 'user',
+         },
+      },
+      { $unwind: { path: '$user', preserveNullAndEmptyArrays: true } },
+      {
+         $project: {
+            'item.numberOfTickets': 1,
+            'item.lotteryPollNumbers': 1,
+            'item.price': {
+               $convert: {
+                  input: '$item.price',
+                  to: 'string',
+               },
+            },
+            'item.isUsed': 1,
+            'item.refundTicket': 1,
+            'item._id': 1,
+            'item.createdAt': 1,
+            'user.name': 1,
+            'user.avatar': 1,
+            numberOfDocuments: 1,
+         },
+      },
+      {
+         $group: {
+            _id: { _id: '$_id', numberOfDocuments: '$numberOfDocuments' },
+            lotteryPollData: {
+               $push: {
+                  items: '$item',
+                  user: '$user',
+               },
+            },
+         },
+      },
+      { $project: { lotteryPoll: '$_id', _id: 0, lotteryPollData: 1 } },
+   ]);
+
+   const data = findLotteryPollData?.[0];
+
+   if (!data) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Not found',
+      });
+   }
+
+   return res.status(httpStatusCodes.OK).json({
+      success: true,
+      error: false,
+      lotteryPollData: data,
+      page: +page,
+   });
+});
+
 module.exports = {
    createNewLuckyDraw,
    updateSpinLuckyDraw,
@@ -327,4 +436,5 @@ module.exports = {
    getAllLotteryPoll,
    getSingleLuckyDrawPoll,
    updateLuckyDrawPollResult,
+   getSingleLotteryDrawUsersList,
 };

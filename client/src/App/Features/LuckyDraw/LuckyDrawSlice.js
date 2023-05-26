@@ -7,6 +7,7 @@ import {
    getAllLotteryPoll,
    getSingleLuckyDrawPoll,
    updateLuckyDrawPollResult,
+   getSingleLotteryDrawUsersList,
 } from './LuckyDrawActions';
 
 const INIATAL_STATE = {
@@ -31,6 +32,9 @@ const INIATAL_STATE = {
    lotteryPollUpdatedInfo: null,
    lotteryPollUpdateLoading: false,
    lotteryPollUpdateError: null,
+   singleLotteryPollUsers: null,
+   singleLotteryPollUsersLoading: false,
+   singleLotteryPollUsersError: null,
 };
 
 const luckyDrawSlice = createSlice({
@@ -160,6 +164,23 @@ const luckyDrawSlice = createSlice({
             state.lotteryPollUpdatedInfo = action.payload?.data;
             state.lotteryPollUpdateLoading = false;
             state.lotteryPollUpdateError = null;
+         });
+
+      bulder
+         .addCase(getSingleLotteryDrawUsersList.pending, (state) => {
+            state.singleLotteryPollUsers = null;
+            state.singleLotteryPollUsersLoading = true;
+            state.singleLotteryPollUsersError = null;
+         })
+         .addCase(getSingleLotteryDrawUsersList.rejected, (state, action) => {
+            state.singleLotteryPollUsers = null;
+            state.singleLotteryPollUsersLoading = false;
+            state.singleLotteryPollUsersError = action.error?.message;
+         })
+         .addCase(getSingleLotteryDrawUsersList.fulfilled, (state, action) => {
+            state.singleLotteryPollUsers = action.payload?.data;
+            state.singleLotteryPollUsersLoading = false;
+            state.singleLotteryPollUsersError = null;
          });
    },
 });

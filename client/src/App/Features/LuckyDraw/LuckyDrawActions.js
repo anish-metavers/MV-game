@@ -123,3 +123,21 @@ export const updateLuckyDrawPollResult = createAsyncThunk(
       }
    }
 );
+
+export const getSingleLotteryDrawUsersList = createAsyncThunk(
+   'luckyDraw/getSingleLotteryDrawUsersList',
+   async ({ gameId, filter, page }, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(
+            `/lucky-draw/get-single-lucky-draw-users-lists?gameId=${gameId}&filter=${filter}&page=${page}`
+         );
+
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);

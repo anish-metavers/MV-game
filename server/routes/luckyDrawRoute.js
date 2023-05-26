@@ -24,6 +24,11 @@ router.get(
    varifyJwtToken,
    drawController.getSingleLuckyDrawPoll
 );
+router.get(
+   '/get-single-lucky-draw-users-lists',
+   varifyJwtToken,
+   drawController.getSingleLotteryDrawUsersList
+);
 
 // API => POST
 router.post(

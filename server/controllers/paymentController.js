@@ -161,18 +161,8 @@ const getSinglePaymentCurrencyOption = catchAsync(async function (
          $project: {
             name: 1,
             description: 1,
-            min: {
-               $convert: {
-                  input: '$min',
-                  to: 'string',
-               },
-            },
-            max: {
-               $convert: {
-                  input: '$max',
-                  to: 'string',
-               },
-            },
+            min: { $convert: { input: '$min', to: 'string' } },
+            max: { $convert: { input: '$max', to: 'string' } },
             vipOnly: 1,
             icon: 1,
             updatedAt: 1,

@@ -213,4 +213,14 @@ export const div = styled.div`
       padding: 0.5rem 1rem;
       background-color: var(--primary-color);
    }
+
+   .tab_button {
+      background-color: var(--dark-blue-cl);
+      opacity: 0.6;
+   }
+
+   .tab_button_active {
+      background-color: var(--light-gray-cl);
+      opacity: 1;
+   }
 `;

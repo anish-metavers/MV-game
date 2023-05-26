@@ -16,6 +16,7 @@ import { getSingleLuckyDrawPoll } from '../../App/Features/LuckyDraw/LuckyDrawAc
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import dayjs from 'dayjs';
 import LotteryPollBallsComponent from '../../Components/LotteryPollBallsComponent/LotteryPollBallsComponent';
+import SingleLotteryPollTabComponent from '../../Components/SingleLotteryPollTabComponent/SingleLotteryPollTabComponent';
 
 function EditLotteryPollPage() {
    const [cookie] = useCookies();
@@ -107,6 +108,9 @@ function EditLotteryPollPage() {
                            </p>
                         </div>
                      </div>
+                     <div className="py-5">
+                        <SingleLotteryPollTabComponent />
+                     </div>
                      <div className="mt-5">
                         <p className="mb-2 text-gray-500 font-medium">
                            Lucky draw result numbers
@@ -122,15 +126,6 @@ function EditLotteryPollPage() {
                            }
                         />
                      </div>
-                     {/* {singleLotteryPoll?.item?.winners &&
-                     singleLotteryPoll?.item?.winners?.length ? (
-                        <div className="wn_div gal_div"></div>
-                     ) : null}
-                     {singleLotteryPoll?.item?.lotteryParticipateUsers &&
-                     singleLotteryPoll?.item?.lotteryParticipateUsers
-                        ?.length ? (
-                        <div className="wn_div gal_div"></div>
-                     ) : null} */}
                   </Fragment>
                ) : !singleLotteryPollLoading ? (
                   <p className="text-sm text-gray-300">
