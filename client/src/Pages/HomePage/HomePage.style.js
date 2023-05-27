@@ -8,7 +8,7 @@ export const div = styled.div`
 `;
 
 export const sidebarDiv = styled.div`
-   width: 30%;
+   width: 25%;
    height: 100%;
    border-right: 1px solid var(--smooth-gray-sl-cl);
 `;

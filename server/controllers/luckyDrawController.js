@@ -488,7 +488,11 @@ const getUserTicketLuckyNumbersCount = catchAsync(async function (
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
-         items: findDocuments,
+         items: findDocuments?.[0]?.name
+            ? findDocuments
+            : new Array(36)
+                 .fill(0)
+                 .map((_, idx) => ({ name: idx + 1, count: 0 })),
       });
    }
 
@@ -536,7 +540,11 @@ const getUserTicketJackpotNumbersCount = catchAsync(async function (
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
-         items: findDocuments,
+         items: findDocuments?.[0]?.name
+            ? findDocuments
+            : new Array(10)
+                 .fill(0)
+                 .map((_, idx) => ({ name: idx + 1, count: 0 })),
       });
    }
 
