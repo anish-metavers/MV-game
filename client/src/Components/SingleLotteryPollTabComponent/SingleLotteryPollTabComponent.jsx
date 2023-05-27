@@ -1,12 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import * as styled from './SingleLotteryPollTabComponent.style';
 import CustomButtonComponent from '../CustomButtonComponent/CustomButtonComponent';
 import LotteryPollUsersListComponent from '../LotteryPollUsersListComponent/LotteryPollUsersListComponent';
-import { useDispatch } from 'react-redux';
-import { getSingleLotteryDrawUsersList } from '../../App/Features/LuckyDraw/LuckyDrawActions';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
-import { useParams } from 'react-router';
 
 const tabsAr = [
    { name: 'Participate List', value: 'participate' },
@@ -15,31 +10,11 @@ const tabsAr = [
 
 function SingleLotteryPollTabComponent() {
    const [ActiveTab, setActiveTab] = useState('participate');
-   const [Page, setPage] = useState(0);
-
-   const [Cookie] = useCookies();
-   const [isAdmin] = useAdmin(Cookie);
-   const params = useParams();
-   const id = params?.id;
-
-   const dispatch = useDispatch();
 
    const tabHandler = function (value) {
       if (ActiveTab === value) return;
       setActiveTab(value);
    };
-
-   useEffect(() => {
-      if (ActiveTab && !!isAdmin && id) {
-         dispatch(
-            getSingleLotteryDrawUsersList({
-               gameId: id,
-               filter: ActiveTab,
-               page: Page,
-            })
-         );
-      }
-   }, [isAdmin, Page]);
 
    return (
       <styled.div>
@@ -58,7 +33,9 @@ function SingleLotteryPollTabComponent() {
             ))}
          </div>
          <div className="result_div mt-4">
-            <LotteryPollUsersListComponent />
+            {ActiveTab === 'participate' ? (
+               <LotteryPollUsersListComponent />
+            ) : null}
          </div>
       </styled.div>
    );

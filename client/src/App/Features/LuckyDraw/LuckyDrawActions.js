@@ -141,3 +141,37 @@ export const getSingleLotteryDrawUsersList = createAsyncThunk(
       }
    }
 );
+
+export const getUserTicketLuckyNumbersCount = createAsyncThunk(
+   'luckyDraw/getUserTicketLuckyNumbersCount',
+   async ({ gameId }, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(
+            `/lucky-draw/get-single-lottery-poll-users-lucky-numbers?gameId=${gameId}`
+         );
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getUserTicketJackpotNumbersCount = createAsyncThunk(
+   'luckyDraw/getUserTicketJackpotNumbersCount',
+   async ({ gameId }, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(
+            `/lucky-draw/get-single-lottery-poll-users-jackpot-numbers?gameId=${gameId}`
+         );
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);

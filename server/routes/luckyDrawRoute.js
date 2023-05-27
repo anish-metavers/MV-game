@@ -29,6 +29,16 @@ router.get(
    varifyJwtToken,
    drawController.getSingleLotteryDrawUsersList
 );
+router.get(
+   '/get-single-lottery-poll-users-lucky-numbers',
+   varifyJwtToken,
+   drawController.getUserTicketLuckyNumbersCount
+);
+router.get(
+   '/get-single-lottery-poll-users-jackpot-numbers',
+   varifyJwtToken,
+   drawController.getUserTicketJackpotNumbersCount
+);
 
 // API => POST
 router.post(

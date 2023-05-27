@@ -8,6 +8,8 @@ import {
    getSingleLuckyDrawPoll,
    updateLuckyDrawPollResult,
    getSingleLotteryDrawUsersList,
+   getUserTicketLuckyNumbersCount,
+   getUserTicketJackpotNumbersCount,
 } from './LuckyDrawActions';
 
 const INIATAL_STATE = {
@@ -35,6 +37,12 @@ const INIATAL_STATE = {
    singleLotteryPollUsers: null,
    singleLotteryPollUsersLoading: false,
    singleLotteryPollUsersError: null,
+   userLuckyNumbers: null,
+   userLuckyNumbersLoading: false,
+   userLuckyNumbersError: null,
+   userJackpotNumbers: null,
+   userJackpotNumbersLoading: false,
+   userJackpotNumbersError: null,
 };
 
 const luckyDrawSlice = createSlice({
@@ -182,6 +190,46 @@ const luckyDrawSlice = createSlice({
             state.singleLotteryPollUsersLoading = false;
             state.singleLotteryPollUsersError = null;
          });
+
+      bulder
+         .addCase(getUserTicketLuckyNumbersCount.pending, (state) => {
+            state.userLuckyNumbers = null;
+            state.userLuckyNumbersLoading = true;
+            state.userLuckyNumbersError = null;
+         })
+         .addCase(getUserTicketLuckyNumbersCount.rejected, (state, action) => {
+            state.userLuckyNumbers = null;
+            state.userLuckyNumbersLoading = false;
+            state.userLuckyNumbersError = action.error?.message;
+         })
+         .addCase(getUserTicketLuckyNumbersCount.fulfilled, (state, action) => {
+            state.userLuckyNumbers = action.payload?.data;
+            state.userLuckyNumbersLoading = false;
+            state.userLuckyNumbersError = null;
+         });
+
+      bulder
+         .addCase(getUserTicketJackpotNumbersCount.pending, (state) => {
+            state.userJackpotNumbers = null;
+            state.userJackpotNumbersLoading = true;
+            state.userJackpotNumbersError = null;
+         })
+         .addCase(
+            getUserTicketJackpotNumbersCount.rejected,
+            (state, action) => {
+               state.userJackpotNumbers = null;
+               state.userJackpotNumbersLoading = false;
+               state.userJackpotNumbersError = action.error?.message;
+            }
+         )
+         .addCase(
+            getUserTicketJackpotNumbersCount.fulfilled,
+            (state, action) => {
+               state.userJackpotNumbers = action.payload?.data;
+               state.userJackpotNumbersLoading = false;
+               state.userJackpotNumbersError = null;
+            }
+         );
    },
 });
 

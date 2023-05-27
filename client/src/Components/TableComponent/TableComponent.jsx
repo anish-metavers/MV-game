@@ -32,7 +32,7 @@ function TableComponent({
                <thead>
                   <tr>
                      {row.map((el) => (
-                        <th key={el.id}>{el.heading}</th>
+                        <th key={el.id || el?.heading}>{el.heading}</th>
                      ))}
                   </tr>
                </thead>

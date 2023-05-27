@@ -347,7 +347,7 @@ const getSingleLotteryDrawUsersList = catchAsync(async function (
       });
    }
 
-   const DOCUMENT_LIMIT = 10;
+   const DOCUMENT_LIMIT = 30;
 
    const findLotteryPollData = await lotteryPollUsersModel.aggregate([
       { $match: { lotteryGameId: mongoose.Types.ObjectId(gameId) } },
@@ -382,9 +382,15 @@ const getSingleLotteryDrawUsersList = catchAsync(async function (
             'item.numberOfTickets': 1,
             'item.lotteryPollNumbers': 1,
             'item.price': {
-               $convert: {
-                  input: '$item.price',
-                  to: 'string',
+               $cond: {
+                  if: { $eq: [{ $type: '$item.price' }, 'missing'] },
+                  then: '$$REMOVE',
+                  else: {
+                     $convert: {
+                        input: '$item.price',
+                        to: 'string',
+                     },
+                  },
                },
             },
             'item.isUsed': 1,
@@ -401,8 +407,16 @@ const getSingleLotteryDrawUsersList = catchAsync(async function (
             _id: { _id: '$_id', numberOfDocuments: '$numberOfDocuments' },
             lotteryPollData: {
                $push: {
-                  items: '$item',
-                  user: '$user',
+                  $cond: {
+                     if: {
+                        $ne: [{ $ifNull: ['$item.price', null] }, null],
+                     },
+                     then: {
+                        items: '$item',
+                        user: '$user',
+                     },
+                     else: '$$REMOVE',
+                  },
                },
             },
          },
@@ -423,8 +437,113 @@ const getSingleLotteryDrawUsersList = catchAsync(async function (
    return res.status(httpStatusCodes.OK).json({
       success: true,
       error: false,
-      lotteryPollData: data,
+      item: data,
       page: +page,
+      totalPages: Math.ceil(
+         data?.lotteryPoll?.numberOfDocuments / DOCUMENT_LIMIT - 1
+      ),
+   });
+});
+
+const getUserTicketLuckyNumbersCount = catchAsync(async function (
+   req,
+   res,
+   next
+) {
+   const { gameId } = req.query;
+
+   if (!gameId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Game id is reuqired',
+      });
+   }
+
+   const findDocuments = await lotteryPollUsersModel.aggregate([
+      { $match: { lotteryGameId: mongoose.Types.ObjectId(gameId) } },
+      {
+         $unwind: {
+            path: '$lotteryParticipateUsers',
+            preserveNullAndEmptyArrays: true,
+         },
+      },
+      {
+         $unwind: {
+            path: '$lotteryParticipateUsers.lotteryPollNumbers.luckyNumbers',
+            preserveNullAndEmptyArrays: true,
+         },
+      },
+      {
+         $group: {
+            _id: '$lotteryParticipateUsers.lotteryPollNumbers.luckyNumbers',
+            count: { $sum: 1 },
+         },
+      },
+      { $project: { _id: 0, name: '$_id', count: 1 } },
+      { $sort: { name: 1 } },
+   ]);
+
+   if (findDocuments) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         items: findDocuments,
+      });
+   }
+
+   return res.status(httpStatusCodes.BAD_REQUEST).json({
+      success: false,
+      error: true,
+      message: 'Not found',
+   });
+});
+
+const getUserTicketJackpotNumbersCount = catchAsync(async function (
+   req,
+   res,
+   next
+) {
+   const { gameId } = req.query;
+
+   if (!gameId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Game id is reuqired',
+      });
+   }
+
+   const findDocuments = await lotteryPollUsersModel.aggregate([
+      { $match: { lotteryGameId: mongoose.Types.ObjectId(gameId) } },
+      {
+         $unwind: {
+            path: '$lotteryParticipateUsers',
+            preserveNullAndEmptyArrays: true,
+         },
+      },
+      {
+         $group: {
+            _id: '$lotteryParticipateUsers.lotteryPollNumbers.jackpotBallNumber',
+            count: { $sum: 1 },
+         },
+      },
+      { $project: { _id: 0, name: '$_id', count: 1 } },
+      { $sort: { name: 1 } },
+   ]);
+
+   if (findDocuments) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         items: findDocuments,
+      });
+   }
+
+   return res.status(httpStatusCodes.BAD_REQUEST).json({
+      success: false,
+      error: true,
+      message: 'Not found',
    });
 });
 
@@ -437,4 +556,6 @@ module.exports = {
    getSingleLuckyDrawPoll,
    updateLuckyDrawPollResult,
    getSingleLotteryDrawUsersList,
+   getUserTicketLuckyNumbersCount,
+   getUserTicketJackpotNumbersCount,
 };
