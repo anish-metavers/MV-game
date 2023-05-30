@@ -22,7 +22,8 @@ function LotteryPollCardsComponent() {
          )}
          {!!allLotteryPoll &&
          allLotteryPoll?.success &&
-         allLotteryPoll?.items ? (
+         allLotteryPoll?.items &&
+         !!allLotteryPoll?.items.length ? (
             <div className="lottery_Card_div mt-5">
                {allLotteryPoll?.items.map((el) => (
                   <LotteryCardComponent data={el} key={el?._id} />
