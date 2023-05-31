@@ -7,21 +7,14 @@ import TableComponent from '../../Components/TableComponent/TableComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import useAdmin from '../../Hooks/useAdmin';
-import {
-   getAllUserRoles,
-   deleteUserRole,
-} from '../../App/Features/Admin/adminActions';
+import { getAllUserRoles, deleteUserRole } from '../../App/Features/Admin/adminActions';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import { useNavigate } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 import { MenuItem } from '@mui/material';
 import dayjs from 'dayjs';
 import { Popconfirm } from 'antd';
-import {
-   rolesSelector,
-   getRolesLoadingSelector,
-   getRolesErrorSelector,
-} from './UserRole.Selector';
+import { rolesSelector, getRolesLoadingSelector, getRolesErrorSelector } from './UserRole.Selector';
 
 function UserRolePage() {
    const [cookie] = useCookies();
@@ -77,18 +70,12 @@ function UserRolePage() {
                ipsam sed dolorem error odit quia, deserunt quasi!
                Doloribus!`}
                menu={true}
-               innerProps={
-                  <MenuItem onClick={CreateUserRoleHandler}>
-                     Create users roles
-                  </MenuItem>
-               }
+               innerProps={<MenuItem onClick={CreateUserRoleHandler}>Create users roles</MenuItem>}
             />
             <styled.contentDiv className="mt-5">
                <div className="mt-5">
                   {!!getRolesLoading ? <SpinnerComponent /> : null}
-                  {!!getRolesError ? (
-                     <p className="text-sm error_cl">{getRolesError}</p>
-                  ) : null}
+                  {!!getRolesError ? <p className="text-sm error_cl">{getRolesError}</p> : null}
                   {!!roles && roles?.success && roles?.roles ? (
                      <TableComponent
                         row={ROW}
@@ -96,46 +83,22 @@ function UserRolePage() {
                         nextHandler={NextPageHandler}
                         prevHandler={PrevPageHandler}
                         disablePrevbtn={+page === 0 ? true : false}
-                        disableNextbtn={
-                           +page >= roles?.totalPages ? true : false
-                        }
+                        disableNextbtn={+page >= roles?.totalPages ? true : false}
                      >
                         {roles?.roles.map((el) => (
                            <tr key={el?._id}>
                               <td>{el?._id}</td>
                               <td>{el?.roleName}</td>
-                              <td>
-                                 {dayjs(el?.createdAt).format(
-                                    'DD MMMM YYYY m:h:ss A'
-                                 )}
-                              </td>
-                              <td>
-                                 {el?.updatedAt
-                                    ? dayjs(el?.updatedAt).format(
-                                         'DD MMMM YYYY h:m:ss A'
-                                      )
-                                    : '--- ---'}
-                              </td>
+                              <td>{dayjs(el?.createdAt).format('DD MMMM YYYY m:h:ss A')}</td>
+                              <td>{el?.updatedAt ? dayjs(el?.updatedAt).format('DD MMMM YYYY h:m:ss A') : '--- ---'}</td>
                               {el?.default ? (
                                  <td>Default roles</td>
                               ) : (
                                  <td className="flex items-center space-x-2">
-                                    <Popconfirm
-                                       title="Delete the task"
-                                       description="Are you sure to delete this task?"
-                                       okText="Yes"
-                                       cancelText="No"
-                                       onConfirm={() =>
-                                          DeleteRolesHandler(el._id)
-                                       }
-                                    >
-                                       <p className="text-red-500 font-medium">
-                                          Delete
-                                       </p>
+                                    <Popconfirm title="Delete the task" description="Are you sure to delete this task?" okText="Yes" cancelText="No" onConfirm={() => DeleteRolesHandler(el._id)}>
+                                       <p className="text-red-500 font-medium">Delete</p>
                                     </Popconfirm>
-                                    <p onClick={() => EditRoleHandler(el._id)}>
-                                       Edit
-                                    </p>
+                                    <p onClick={() => EditRoleHandler(el._id)}>Edit</p>
                                  </td>
                               )}
                            </tr>

@@ -43,12 +43,7 @@ const getSingleGameCurrency = catchAsync(async function (req, res, next) {
 
    const findCurrencyDocument = await currencyModel.aggregate([
       { $match: { _id: mongoose.Types.ObjectId(id) } },
-      {
-         $unwind: {
-            path: '$paymentOptions',
-            preserveNullAndEmptyArrays: true,
-         },
-      },
+      { $unwind: { path: '$paymentOptions', preserveNullAndEmptyArrays: true } },
       {
          $lookup: {
             from: 'walletpaymentoptions',
@@ -57,12 +52,7 @@ const getSingleGameCurrency = catchAsync(async function (req, res, next) {
             as: 'paymentOptions.payment',
          },
       },
-      {
-         $unwind: {
-            path: '$paymentOptions.payment',
-            preserveNullAndEmptyArrays: true,
-         },
-      },
+      { $unwind: { path: '$paymentOptions.payment', preserveNullAndEmptyArrays: true } },
       {
          $project: {
             _id: 1,
@@ -106,10 +96,7 @@ const getSingleGameCurrency = catchAsync(async function (req, res, next) {
 });
 
 const getAllCurrencyList = catchAsync(async function (req, res, next) {
-   const allCurrency = await currencyModel.find(
-      {},
-      { currencyName: 1, icon: 1 }
-   );
+   const allCurrency = await currencyModel.find({}, { currencyName: 1, icon: 1 });
 
    if (allCurrency) {
       return res.status(httpStatusCodes.OK).json({
@@ -261,10 +248,7 @@ const updateSingleGameCurrency = catchAsync(async function (req, res, next) {
       insertData.paymentOptions = selectedPaymentMethods;
    }
 
-   const findAndUpdateDocument = await currencyModel.updateOne(
-      { _id: id },
-      { $set: insertData }
-   );
+   const findAndUpdateDocument = await currencyModel.updateOne({ _id: id }, { $set: insertData });
 
    if (!!findAndUpdateDocument?.modifiedCount) {
       return res.status(httpStatusCodes.OK).json({
@@ -301,20 +285,9 @@ const deleteSingleGameCurrency = catchAsync(async function (req, res, next) {
 });
 
 const getAllGameCurrencyList = catchAsync(async function (req, res, next) {
-   const findAllgamesCurrency = await currencyModel.aggregate([
-      {
-         $project: {
-            _id: 0,
-            currencyName: 1,
-            currencyType: 1,
-            currencyId: '$_id',
-         },
-      },
-   ]);
+   const findAllgamesCurrency = await currencyModel.aggregate([{ $project: { _id: 0, currencyName: 1, currencyType: 1, currencyId: '$_id' } }]);
 
-   const getCryptoCurrency = await axios.get(
-      `${process.env.CRYPTO_PAYMENT_SERVER}/testnet/get-coins`
-   );
+   const getCryptoCurrency = await axios.get(`${process.env.CRYPTO_PAYMENT_SERVER}/testnet/get-coins`);
 
    if (findAllgamesCurrency && !!getCryptoCurrency && getCryptoCurrency?.data) {
       return res.status(httpStatusCodes.OK).json({

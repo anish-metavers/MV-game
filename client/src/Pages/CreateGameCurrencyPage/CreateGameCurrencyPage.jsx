@@ -14,11 +14,7 @@ import CustomButtonComponent from '../../Components/CustomButtonComponent/Custom
 import JoditEditor from 'jodit-react';
 import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-   inertNewGameCurrency,
-   updateSingleGameCurrency,
-   getSingleGameCurrency,
-} from '../../App/Features/Games/GameActions';
+import { inertNewGameCurrency, updateSingleGameCurrency, getSingleGameCurrency } from '../../App/Features/Games/GameActions';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import { removeCurrencyInfo } from '../../App/Features/Games/GameSlice';
@@ -78,14 +74,10 @@ function CreateGameCurrencyPage() {
    const singleGameCurrency = useSelector(singleGameCurrencySelector);
    const singleGameCurrencyError = useSelector(singleGameCurrencyErrorSelector);
    const updateGameCurrency = useSelector(updateGameCurrencySelector);
-   const updateGameCurrencyLoading = useSelector(
-      updateGameCurrencyLoadingSelector
-   );
+   const updateGameCurrencyLoading = useSelector(updateGameCurrencyLoadingSelector);
    const updateGameCurrencyError = useSelector(updateGameCurrencyErrorSelector);
    const paymentOptionsList = useSelector(paymentOptionsListSelector);
-   const paymentOptionsListLoading = useSelector(
-      paymentOptionsListLoadingSelector
-   );
+   const paymentOptionsListLoading = useSelector(paymentOptionsListLoadingSelector);
    const paymentOptionsListError = useSelector(paymentOptionsListErrorSelector);
 
    const imageHandler = function (event) {
@@ -128,20 +120,12 @@ function CreateGameCurrencyPage() {
    }, [params?.id, isAdmin]);
 
    useEffect(() => {
-      if (
-         !!singleGameCurrency &&
-         singleGameCurrency?.success &&
-         !!singleGameCurrency?.currency &&
-         singleGameCurrency?.currency?.length
-      ) {
+      if (!!singleGameCurrency && singleGameCurrency?.success && !!singleGameCurrency?.currency && singleGameCurrency?.currency?.length) {
          const currencyData = singleGameCurrency?.currency[0]?._id;
          setValue('description', currencyData?.description);
          setValue('currencyName', currencyData?.currencyName);
          // setValue('locked', currencyData?.locked);
-         setValue(
-            'paymentOptions',
-            singleGameCurrency?.currency[0]?.paymentOptions
-         );
+         setValue('paymentOptions', singleGameCurrency?.currency[0]?.paymentOptions);
          setContent(currencyData?.metaDescription);
          setPrevImage(currencyData?.icon);
       }
@@ -162,11 +146,7 @@ function CreateGameCurrencyPage() {
          <div className="container_div">
             <PageHeadingComponent
                showSubHeadingCM={true}
-               subHeading={
-                  params?.id
-                     ? 'Update Game Currency'
-                     : 'Create New Game Currency'
-               }
+               subHeading={params?.id ? 'Update Game Currency' : 'Create New Game Currency'}
                pageName={'Game Currency'}
                para={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a.`}
             />
@@ -191,11 +171,7 @@ function CreateGameCurrencyPage() {
                                  shrink: true,
                               }}
                            />
-                           {errors?.currencyName?.message ? (
-                              <p className="text-sm error_cl">
-                                 {errors?.currencyName?.message}
-                              </p>
-                           ) : null}
+                           {errors?.currencyName?.message ? <p className="text-sm error_cl">{errors?.currencyName?.message}</p> : null}
                         </div>
                         {/* <div className="w-full">
                            <Controller
@@ -244,10 +220,7 @@ function CreateGameCurrencyPage() {
                                     value={value?.toString() || ''}
                                  >
                                     {CurrencyType.map((option) => (
-                                       <MenuItem
-                                          key={option.value}
-                                          value={option.value}
-                                       >
+                                       <MenuItem key={option.value} value={option.value}>
                                           {option.value}
                                        </MenuItem>
                                     ))}
@@ -256,18 +229,9 @@ function CreateGameCurrencyPage() {
                            />
                         </div>
                         <div className="w-full mt-4 md:mt-0">
-                           {!!paymentOptionsListLoading ? (
-                              <SpinnerComponent />
-                           ) : null}
-                           {!!paymentOptionsListError ? (
-                              <p className="text-sm error_cl">
-                                 {paymentOptionsListError}
-                              </p>
-                           ) : null}
-                           {!!paymentOptionsList &&
-                           paymentOptionsList?.success &&
-                           paymentOptionsList?.items &&
-                           paymentOptionsList?.items.length ? (
+                           {!!paymentOptionsListLoading ? <SpinnerComponent /> : null}
+                           {!!paymentOptionsListError ? <p className="text-sm error_cl">{paymentOptionsListError}</p> : null}
+                           {!!paymentOptionsList && paymentOptionsList?.success && paymentOptionsList?.items && paymentOptionsList?.items.length ? (
                               <Controller
                                  name="paymentOptions"
                                  control={control}
@@ -299,25 +263,10 @@ function CreateGameCurrencyPage() {
                            }}
                         />
                         <div className="space_div">
-                           <label className="text-gray-400 font-medium">
-                              Meta Description
-                           </label>
-                           <p className="mt-2 text-gray-400">
-                              A meta description tag generally informs and
-                              interests users with a short, relevant summary of
-                              what a particular page is about.
-                           </p>
+                           <label className="text-gray-400 font-medium">Meta Description</label>
+                           <p className="mt-2 text-gray-400">A meta description tag generally informs and interests users with a short, relevant summary of what a particular page is about.</p>
                            <div>
-                              <JoditEditor
-                                 className="mt-3"
-                                 ref={editor}
-                                 value={content}
-                                 tabIndex={1}
-                                 onChange={(newContent) =>
-                                    setContent(newContent)
-                                 }
-                                 config={{ theme: 'dark' }}
-                              />
+                              <JoditEditor className="mt-3" ref={editor} value={content} tabIndex={1} onChange={(newContent) => setContent(newContent)} config={{ theme: 'dark' }} />
                            </div>
                         </div>
                      </div>
@@ -331,46 +280,18 @@ function CreateGameCurrencyPage() {
                         icon={<AiFillFileImage className="text-gray-500" />}
                      />
                      <div className="flex">
-                        <CustomButtonComponent
-                           type={'submit'}
-                           btnCl={'Publish mt-5'}
-                           isLoading={
-                              params?.id
-                                 ? updateGameCurrencyLoading
-                                 : uploadCurrencyLoading
-                           }
-                        >
+                        <CustomButtonComponent type={'submit'} btnCl={'Publish mt-5'} isLoading={params?.id ? updateGameCurrencyLoading : uploadCurrencyLoading}>
                            <img src="/images/done.svg" />
                            {params?.id ? <p>Update</p> : <p>Publish</p>}
                         </CustomButtonComponent>
                      </div>
                   </Box>
                   <div className="mt-4">
-                     {!!updateGameCurrency ? (
-                        <p className="text-gray-300">
-                           {updateGameCurrency?.message}
-                        </p>
-                     ) : null}
-                     {!!uploadCurrencyError ? (
-                        <p className="text-sm error_cl">
-                           {uploadCurrencyError}
-                        </p>
-                     ) : null}
-                     {!!uploadCurrencyInfo ? (
-                        <p className="text-gray-300">
-                           {uploadCurrencyInfo?.message}
-                        </p>
-                     ) : null}
-                     {!!singleGameCurrencyError ? (
-                        <p className="text-sm error_cl">
-                           {singleGameCurrencyError}
-                        </p>
-                     ) : null}
-                     {!!updateGameCurrencyError ? (
-                        <p className="text-sm error_cl">
-                           {updateGameCurrencyError}
-                        </p>
-                     ) : null}
+                     {!!updateGameCurrency ? <p className="text-gray-300">{updateGameCurrency?.message}</p> : null}
+                     {!!uploadCurrencyError ? <p className="text-sm error_cl">{uploadCurrencyError}</p> : null}
+                     {!!uploadCurrencyInfo ? <p className="text-gray-300">{uploadCurrencyInfo?.message}</p> : null}
+                     {!!singleGameCurrencyError ? <p className="text-sm error_cl">{singleGameCurrencyError}</p> : null}
+                     {!!updateGameCurrencyError ? <p className="text-sm error_cl">{updateGameCurrencyError}</p> : null}
                   </div>
                </form>
             </div>

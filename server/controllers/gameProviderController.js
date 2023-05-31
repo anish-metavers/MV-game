@@ -49,10 +49,7 @@ const getSingleGameProvider = catchAsync(async function (req, res, next) {
       });
    }
 
-   const gameProvider = await gameProviderModel.findOne(
-      { _id: gameProviderId },
-      { games: 0, createdAt: 0 }
-   );
+   const gameProvider = await gameProviderModel.findOne({ _id: gameProviderId }, { games: 0, createdAt: 0 });
 
    if (gameProvider) {
       return res.status(httpStatusCodes.OK).json({
@@ -127,15 +124,7 @@ const createNewGameProvider = catchAsync(async function (req, res, next) {
 });
 
 const updateGameProvider = catchAsync(async function (req, res, next) {
-   const {
-      providerName,
-      email,
-      phoneNumber,
-      description,
-      status,
-      _id,
-      profileTag,
-   } = req.body;
+   const { providerName, email, phoneNumber, description, status, _id, profileTag } = req.body;
 
    if (!providerName && !email) {
       return res.status(httpStatusCodes.INVALID_INPUT).json({

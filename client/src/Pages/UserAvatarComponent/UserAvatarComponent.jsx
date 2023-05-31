@@ -9,10 +9,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-   getAllAvatars,
-   uploadGameAvatar,
-} from '../../App/Features/Admin/adminActions';
+import { getAllAvatars, uploadGameAvatar } from '../../App/Features/Admin/adminActions';
 import { removeAvatarInfo } from '../../App/Features/Admin/adminSlice';
 import ImagePrevComponent from '../../Components/ImagePrevComponent/ImagePrevComponent';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
@@ -73,28 +70,14 @@ function UserAvatarComponent() {
       <styled.div>
          <NavbarComponent />
          <div className="container_div">
-            <PageHeadingComponent
-               pageName={'Avatar upload'}
-               heading={'File Upload'}
-            />
+            <PageHeadingComponent pageName={'Avatar upload'} heading={'File Upload'} />
             <div className="mt-5">
                <div className="flex">
                   <div>
-                     <ImageUploadComponent
-                        icon={<BsCloudUpload />}
-                        width={400}
-                        height={400}
-                        onChange={ImageHandler}
-                        accept={'image/*'}
-                        preview={AvatarPreview}
-                     />
+                     <ImageUploadComponent icon={<BsCloudUpload />} width={400} height={400} onChange={ImageHandler} accept={'image/*'} preview={AvatarPreview} />
                   </div>
                   <div className="content_div mx-4">
-                     <p className="text-gray-400">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Voluptas eum sit sequi nihil necessitatibus doloribus
-                        sed odit! Nisi, atque obcaecati!
-                     </p>
+                     <p className="text-gray-400">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas eum sit sequi nihil necessitatibus doloribus sed odit! Nisi, atque obcaecati!</p>
                      <div className="mt-4">
                         <form onSubmit={handleSubmit(onSubmit)}>
                            <Box
@@ -107,57 +90,21 @@ function UserAvatarComponent() {
                               noValidate
                               autoComplete="off"
                            >
-                              <TextField
-                                 label="Description"
-                                 multiline
-                                 rows={5}
-                                 {...register('description')}
-                              />
+                              <TextField label="Description" multiline rows={5} {...register('description')} />
                               <div className="mt-2 flex items-center">
-                                 <CustomButtonComponent
-                                    text={'Upload'}
-                                    btnCl={'Publish'}
-                                    type={'submit'}
-                                    isLoading={gameAvatarUploadLoading}
-                                 />
+                                 <CustomButtonComponent text={'Upload'} btnCl={'Publish'} type={'submit'} isLoading={gameAvatarUploadLoading} />
                                  {/* <p className="mx-4 text-gray-400 cursor-pointer hover:text-sky-800">
                                     Cancel
                                  </p> */}
                               </div>
                               <div className="image_prev_div mt-4 rounded shadow">
-                                 {!!gameAvatarError ? (
-                                    <p className="text-sm error_cl">
-                                       {gameAvatarError}
-                                    </p>
-                                 ) : null}
-                                 {!!gameAvatarLoading ? (
-                                    <SpinnerComponent />
-                                 ) : null}
-                                 {!!gameAvatar && gameAvatar?.success
-                                    ? gameAvatar?.avatars.map((el) => (
-                                         <ImagePrevComponent
-                                            key={el._id}
-                                            data={el}
-                                         />
-                                      ))
-                                    : null}
+                                 {!!gameAvatarError ? <p className="text-sm error_cl">{gameAvatarError}</p> : null}
+                                 {!!gameAvatarLoading ? <SpinnerComponent /> : null}
+                                 {!!gameAvatar && gameAvatar?.success ? gameAvatar?.avatars.map((el) => <ImagePrevComponent key={el._id} data={el} />) : null}
                               </div>
-                              {!!gameAvatarUploadInfo &&
-                              gameAvatarUploadInfo?.success ? (
-                                 <p className="mt-2">
-                                    {gameAvatarUploadInfo?.message}
-                                 </p>
-                              ) : null}
-                              {!!Error ? (
-                                 <p className="text-sm error_cl mt-2">
-                                    {Error}
-                                 </p>
-                              ) : null}
-                              {!!gameAvatarUploadError ? (
-                                 <p className="text-sm error_cl mt-2">
-                                    {gameAvatarUploadError}
-                                 </p>
-                              ) : null}
+                              {!!gameAvatarUploadInfo && gameAvatarUploadInfo?.success ? <p className="mt-2">{gameAvatarUploadInfo?.message}</p> : null}
+                              {!!Error ? <p className="text-sm error_cl mt-2">{Error}</p> : null}
+                              {!!gameAvatarUploadError ? <p className="text-sm error_cl mt-2">{gameAvatarUploadError}</p> : null}
                            </Box>
                         </form>
                      </div>

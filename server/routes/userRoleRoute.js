@@ -5,38 +5,16 @@ const { varifyJwtToken } = require('../middlewares/jwtValidator');
 const userRolesController = require('../controllers/userRolesController');
 
 // API => GET
-router.get(
-   '/get-all-user-rools',
-   varifyJwtToken,
-   userRolesController.getAllUserRoles
-);
-router.get(
-   '/get-single-user-role',
-   varifyJwtToken,
-   userRolesController.getSingleUserRole
-);
+router.get('/get-all-user-rools', varifyJwtToken, userRolesController.getAllUserRoles);
+router.get('/get-single-user-role', varifyJwtToken, userRolesController.getSingleUserRole);
 
 // API => POST
-router.post(
-   '/insert-new-user-role',
-   varifyJwtToken,
-   userRoleValidator,
-   userRolesController.insertNewUsersRole
-);
+router.post('/insert-new-user-role', varifyJwtToken, userRoleValidator, userRolesController.insertNewUsersRole);
 
 // API => PATCH
-router.patch(
-   '/update-single-role',
-   varifyJwtToken,
-   userRoleValidator,
-   userRolesController.updateSingleRole
-);
+router.patch('/update-single-role', varifyJwtToken, userRoleValidator, userRolesController.updateSingleRole);
 
 // API => DELETE
-router.delete(
-   '/delete-single-role',
-   varifyJwtToken,
-   userRolesController.deleteUserSingleRole
-);
+router.delete('/delete-single-role', varifyJwtToken, userRolesController.deleteUserSingleRole);
 
 module.exports = router;

@@ -13,13 +13,7 @@ import { GiGamepad } from '@react-icons/all-files/gi/GiGamepad';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { MenuItem } from '@mui/material';
-import {
-   getGameProvidersList,
-   insertNewGame,
-   getSingleGameInfo,
-   updateSingleGame,
-   getAllGamesCategroy,
-} from '../../App/Features/Games/GameActions';
+import { getGameProvidersList, insertNewGame, getSingleGameInfo, updateSingleGame, getAllGamesCategroy } from '../../App/Features/Games/GameActions';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
@@ -88,9 +82,7 @@ function UploadGamesPage() {
    const updateGameLoading = useSelector(updateGameLoadingSelector);
    const updateGameError = useSelector(updateGameErrorSelector);
    const allGamesCategorys = useSelector(allGamesCategorysSelector);
-   const allGamesCategorysLoading = useSelector(
-      allGamesCategorysLoadingSelector
-   );
+   const allGamesCategorysLoading = useSelector(allGamesCategorysLoadingSelector);
    const allGamesCategorysError = useSelector(allGamesCategorysErrorSelector);
 
    const imageHandler = function (event) {
@@ -118,9 +110,7 @@ function UploadGamesPage() {
       formData.append('gameBitcontroller', data?.gameBitcontroller);
 
       if (data?.gameCategory) {
-         const gameCategoryAr = allGamesCategorys?.categorys.find(
-            (el) => el._id === data?.gameCategory
-         );
+         const gameCategoryAr = allGamesCategorys?.categorys.find((el) => el._id === data?.gameCategory);
 
          formData.append('gameCategoryName', gameCategoryAr?.name);
       }
@@ -152,9 +142,7 @@ function UploadGamesPage() {
    }, [isAdmin]);
 
    const getSingleGameInfoHandler = async function () {
-      const gameResponse = await dispatch(
-         getSingleGameInfo({ gameId: params?.id })
-      );
+      const gameResponse = await dispatch(getSingleGameInfo({ gameId: params?.id }));
 
       if (gameResponse?.payload?.data && gameResponse?.payload?.data?.success) {
          const data = gameResponse?.payload?.data;
@@ -209,56 +197,22 @@ function UploadGamesPage() {
                            <Controller
                               name="name"
                               control={control}
-                              render={({ field: { onChange, value } }) => (
-                                 <TextField
-                                    onChange={onChange}
-                                    value={value || ''}
-                                    className="w-full"
-                                    label="Game Name"
-                                    required
-                                    variant="outlined"
-                                 />
-                              )}
+                              render={({ field: { onChange, value } }) => <TextField onChange={onChange} value={value || ''} className="w-full" label="Game Name" required variant="outlined" />}
                            />
-                           {!!errors?.name?.message ? (
-                              <p className="text-sm error_cl">
-                                 {errors?.name?.message}
-                              </p>
-                           ) : null}
+                           {!!errors?.name?.message ? <p className="text-sm error_cl">{errors?.name?.message}</p> : null}
                         </div>
                         <div className="w-full">
                            <Controller
                               name="by"
                               control={control}
-                              render={({ field: { onChange, value } }) => (
-                                 <TextField
-                                    className="w-full"
-                                    label="Game By"
-                                    required
-                                    value={value || ''}
-                                    onChange={onChange}
-                                    variant="outlined"
-                                 />
-                              )}
+                              render={({ field: { onChange, value } }) => <TextField className="w-full" label="Game By" required value={value || ''} onChange={onChange} variant="outlined" />}
                            />
-                           {!!errors?.by?.message ? (
-                              <p className="text-sm error_cl">
-                                 {errors?.by?.message}
-                              </p>
-                           ) : null}
+                           {!!errors?.by?.message ? <p className="text-sm error_cl">{errors?.by?.message}</p> : null}
                         </div>
                         <div className="w-full">
-                           {!!allGamesCategorysError ? (
-                              <p className="text-sm error_cl">
-                                 {allGamesCategorysError}
-                              </p>
-                           ) : null}
-                           {!!allGamesCategorysLoading ? (
-                              <SpinnerComponent />
-                           ) : null}
-                           {!!allGamesCategorys &&
-                           !!allGamesCategorys?.categorys &&
-                           allGamesCategorys?.categorys.length ? (
+                           {!!allGamesCategorysError ? <p className="text-sm error_cl">{allGamesCategorysError}</p> : null}
+                           {!!allGamesCategorysLoading ? <SpinnerComponent /> : null}
+                           {!!allGamesCategorys && !!allGamesCategorys?.categorys && allGamesCategorys?.categorys.length ? (
                               <Controller
                                  name="gameCategory"
                                  control={control}
@@ -269,25 +223,17 @@ function UploadGamesPage() {
                                        className="w-full"
                                        value={value}
                                        name="data"
-                                       onChange={(e) =>
-                                          onChange(e.target.value)
-                                       }
+                                       onChange={(e) => onChange(e.target.value)}
                                        required
                                        InputLabelProps={{
                                           shrink: true,
                                        }}
                                     >
-                                       {allGamesCategorys?.categorys.map(
-                                          (option) => (
-                                             <MenuItem
-                                                key={option._id}
-                                                value={option._id}
-                                                name={option.name}
-                                             >
-                                                {option.name}
-                                             </MenuItem>
-                                          )
-                                       )}
+                                       {allGamesCategorys?.categorys.map((option) => (
+                                          <MenuItem key={option._id} value={option._id} name={option.name}>
+                                             {option.name}
+                                          </MenuItem>
+                                       ))}
                                     </TextField>
                                  )}
                               />
@@ -310,10 +256,7 @@ function UploadGamesPage() {
                                     }}
                                  >
                                     {Status.map((option) => (
-                                       <MenuItem
-                                          key={option.values}
-                                          value={option.values}
-                                       >
+                                       <MenuItem key={option.values} value={option.values}>
                                           {option.values}
                                        </MenuItem>
                                     ))}
@@ -326,35 +269,18 @@ function UploadGamesPage() {
                               <SpinnerComponent />
                            </div>
                         ) : null}
-                        {!!gameProvidersList &&
-                        gameProvidersList?.success &&
-                        gameProvidersList?.response ? (
+                        {!!gameProvidersList && gameProvidersList?.success && gameProvidersList?.response ? (
                            <Controller
                               name="gameProvider"
                               control={control}
                               render={({ field: { onChange, value } }) => (
                                  <div className="w-full">
-                                    <TextField
-                                       className="w-full"
-                                       id="outlined-select-currency"
-                                       select
-                                       required
-                                       label="Game provider"
-                                       value={value}
-                                       onChange={(event) =>
-                                          onChange(event.target.value)
-                                       }
-                                    >
-                                       {gameProvidersList?.response.map(
-                                          (option) => (
-                                             <MenuItem
-                                                key={option._id}
-                                                value={option._id}
-                                             >
-                                                {option.providerName}
-                                             </MenuItem>
-                                          )
-                                       )}
+                                    <TextField className="w-full" id="outlined-select-currency" select required label="Game provider" value={value} onChange={(event) => onChange(event.target.value)}>
+                                       {gameProvidersList?.response.map((option) => (
+                                          <MenuItem key={option._id} value={option._id}>
+                                             {option.providerName}
+                                          </MenuItem>
+                                       ))}
                                     </TextField>
                                  </div>
                               )}
@@ -364,98 +290,38 @@ function UploadGamesPage() {
                      <Controller
                         name="description"
                         control={control}
-                        render={({ field: { onChange, value } }) => (
-                           <TextField
-                              label="Game Description"
-                              multiline
-                              rows={7}
-                              onChange={onChange}
-                              value={value}
-                           />
-                        )}
+                        render={({ field: { onChange, value } }) => <TextField label="Game Description" multiline rows={7} onChange={onChange} value={value} />}
                      />
                      <Controller
                         name="url"
                         control={control}
-                        render={({ field: { onChange, value } }) => (
-                           <TextField
-                              value={value || ''}
-                              onChange={onChange}
-                              className="w-full"
-                              label="Game embed url"
-                              required
-                              variant="outlined"
-                           />
-                        )}
+                        render={({ field: { onChange, value } }) => <TextField value={value || ''} onChange={onChange} className="w-full" label="Game embed url" required variant="outlined" />}
                      />
-                     {!!errors?.url?.message ? (
-                        <p className="text-sm error_cl">
-                           {errors?.url?.message}
-                        </p>
-                     ) : null}
+                     {!!errors?.url?.message ? <p className="text-sm error_cl">{errors?.url?.message}</p> : null}
                      <Controller
                         name="urlMobile"
                         control={control}
-                        render={({ field: { onChange, value } }) => (
-                           <TextField
-                              value={value || ''}
-                              onChange={onChange}
-                              className="w-full"
-                              label="Game embed url mobile"
-                              variant="outlined"
-                           />
-                        )}
+                        render={({ field: { onChange, value } }) => <TextField value={value || ''} onChange={onChange} className="w-full" label="Game embed url mobile" variant="outlined" />}
                      />
                      <div>
                         <label className="text-gray-400">About this game</label>
                         <div className="mt-2">
-                           <Controller
-                              name="aboutGame"
-                              control={control}
-                              render={({ field: { onChange, value } }) => (
-                                 <QuillComponent
-                                    onChange={onChange}
-                                    value={value}
-                                 />
-                              )}
-                           />
+                           <Controller name="aboutGame" control={control} render={({ field: { onChange, value } }) => <QuillComponent onChange={onChange} value={value} />} />
                         </div>
                      </div>
                      <div className="flex pt-3">
                         <div>
-                           <p className="text-gray-400">
-                              Will the game have a bit controller ?
-                           </p>
-                           <Controller
-                              name="gameBitcontroller"
-                              control={control}
-                              render={({ field: { onChange, value } }) => (
-                                 <Switch onChange={onChange} checked={value} />
-                              )}
-                           />
+                           <p className="text-gray-400">Will the game have a bit controller ?</p>
+                           <Controller name="gameBitcontroller" control={control} render={({ field: { onChange, value } }) => <Switch onChange={onChange} checked={value} />} />
                         </div>
                      </div>
                      <div className="flex space_div">
                         <div>
-                           <ImageUploadComponent
-                              icon={<GiGamepad />}
-                              width={400}
-                              label={'Game Image'}
-                              height={400}
-                              onChange={imageHandler}
-                              preview={GameImagePreview}
-                              accept={'image/*'}
-                           />
+                           <ImageUploadComponent icon={<GiGamepad />} width={400} label={'Game Image'} height={400} onChange={imageHandler} preview={GameImagePreview} accept={'image/*'} />
                         </div>
                      </div>
                      <div className="flex">
-                        <CustomButtonComponent
-                           type={'submit'}
-                           btnCl={'Publish mt-5'}
-                           isLoading={
-                              params?.id ? updateGameLoading : insertGameLoading
-                           }
-                        >
+                        <CustomButtonComponent type={'submit'} btnCl={'Publish mt-5'} isLoading={params?.id ? updateGameLoading : insertGameLoading}>
                            <img src="/images/done.svg" />
                            {params?.id ? <p>Update</p> : <p>Publish</p>}
                         </CustomButtonComponent>
@@ -463,24 +329,12 @@ function UploadGamesPage() {
                   </Box>
                </form>
             </div>
-            {!!updateGameinfo && updateGameinfo?.success ? (
-               <p className="text-gray-400">{updateGameinfo?.message}</p>
-            ) : null}
-            {!!updateGameinfo && !updateGameinfo?.success ? (
-               <p className="text-sm error_cl">{updateGameinfo?.message}</p>
-            ) : null}
-            {!!insertGameInfo ? (
-               <p className="text-gray-400">{insertGameInfo?.message}</p>
-            ) : null}
-            {!!gameProvidersError ? (
-               <p className="text-sm error_cl">{gameProvidersError}</p>
-            ) : null}
-            {!!insertGameError ? (
-               <p className="text-sm error_cl">{insertGameError}</p>
-            ) : null}
-            {!!updateGameError ? (
-               <p className="text-sm error_cl">{updateGameError}</p>
-            ) : null}
+            {!!updateGameinfo && updateGameinfo?.success ? <p className="text-gray-400">{updateGameinfo?.message}</p> : null}
+            {!!updateGameinfo && !updateGameinfo?.success ? <p className="text-sm error_cl">{updateGameinfo?.message}</p> : null}
+            {!!insertGameInfo ? <p className="text-gray-400">{insertGameInfo?.message}</p> : null}
+            {!!gameProvidersError ? <p className="text-sm error_cl">{gameProvidersError}</p> : null}
+            {!!insertGameError ? <p className="text-sm error_cl">{insertGameError}</p> : null}
+            {!!updateGameError ? <p className="text-sm error_cl">{updateGameError}</p> : null}
          </div>
       </styled.div>
    );
