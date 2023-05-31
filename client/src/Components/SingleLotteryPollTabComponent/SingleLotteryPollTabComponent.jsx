@@ -23,19 +23,14 @@ function SingleLotteryPollTabComponent() {
                <CustomButtonComponent
                   key={el?.name}
                   text={el?.name}
-                  btnCl={
-                     ActiveTab === el?.value
-                        ? 'tab_button_active tab_button'
-                        : 'tab_button'
-                  }
+                  btnCl={ActiveTab === el?.value ? 'tab_button_active tab_button' : 'tab_button'}
                   onClick={() => tabHandler(el?.value)}
                />
             ))}
          </div>
          <div className="result_div mt-4">
-            {ActiveTab === 'participate' ? (
-               <LotteryPollUsersListComponent />
-            ) : null}
+            {ActiveTab === 'participate' ? <LotteryPollUsersListComponent filter={ActiveTab} /> : null}
+            {ActiveTab === 'winners' ? <LotteryPollUsersListComponent filter={ActiveTab} /> : null}
          </div>
       </styled.div>
    );

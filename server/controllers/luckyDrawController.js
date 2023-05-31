@@ -1,9 +1,5 @@
 const { default: mongoose } = require('mongoose');
-const {
-   catchAsync,
-   httpStatusCodes,
-   checkIsValidId,
-} = require('../helper/helper');
+const { catchAsync, httpStatusCodes, checkIsValidId } = require('../helper/helper');
 
 const luckySpinModel = require('../model/schema/luckySpinSchema');
 const lotteryPollModel = require('../model/schema/lotteryGameSchema');
@@ -75,10 +71,7 @@ const updateSpinLuckyDraw = catchAsync(async function (req, res, next) {
       });
    }
 
-   const updateSpinItem = await luckySpinModel.updateOne(
-      { _id: id },
-      { $set: { spinName, spinItems, enable } }
-   );
+   const updateSpinItem = await luckySpinModel.updateOne({ _id: id }, { $set: { spinName, spinItems, enable } });
 
    if (updateSpinItem.modifiedCount) {
       return res.status(httpStatusCodes.OK).json({
@@ -261,9 +254,7 @@ const getSingleLuckyDrawPoll = catchAsync(async function (req, res, next) {
       });
    }
 
-   const findPoll = await lotteryPollModel.aggregate([
-      { $match: { _id: mongoose.Types.ObjectId(gameId) } },
-   ]);
+   const findPoll = await lotteryPollModel.aggregate([{ $match: { _id: mongoose.Types.ObjectId(gameId) } }]);
 
    const data = findPoll?.[0];
 
@@ -322,11 +313,7 @@ const updateLuckyDrawPollResult = catchAsync(async function (req, res, next) {
    });
 });
 
-const getSingleLotteryDrawUsersList = catchAsync(async function (
-   req,
-   res,
-   next
-) {
+const getSingleLotteryDrawUsersList = catchAsync(async function (req, res, next) {
    const { gameId, filter, page } = req.query;
 
    if (!gameId) {
@@ -439,17 +426,11 @@ const getSingleLotteryDrawUsersList = catchAsync(async function (
       error: false,
       item: data,
       page: +page,
-      totalPages: Math.ceil(
-         data?.lotteryPoll?.numberOfDocuments / DOCUMENT_LIMIT - 1
-      ),
+      totalPages: Math.ceil(data?.lotteryPoll?.numberOfDocuments / DOCUMENT_LIMIT - 1),
    });
 });
 
-const getUserTicketLuckyNumbersCount = catchAsync(async function (
-   req,
-   res,
-   next
-) {
+const getUserTicketLuckyNumbersCount = catchAsync(async function (req, res, next) {
    const { gameId } = req.query;
 
    if (!gameId) {
@@ -488,11 +469,7 @@ const getUserTicketLuckyNumbersCount = catchAsync(async function (
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
-         items: findDocuments?.[0]?.name
-            ? findDocuments
-            : new Array(36)
-                 .fill(0)
-                 .map((_, idx) => ({ name: idx + 1, count: 0 })),
+         items: findDocuments?.[0]?.name ? findDocuments : new Array(36).fill(0).map((_, idx) => ({ name: idx + 1, count: 0 })),
       });
    }
 
@@ -503,11 +480,7 @@ const getUserTicketLuckyNumbersCount = catchAsync(async function (
    });
 });
 
-const getUserTicketJackpotNumbersCount = catchAsync(async function (
-   req,
-   res,
-   next
-) {
+const getUserTicketJackpotNumbersCount = catchAsync(async function (req, res, next) {
    const { gameId } = req.query;
 
    if (!gameId) {
@@ -540,11 +513,7 @@ const getUserTicketJackpotNumbersCount = catchAsync(async function (
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
-         items: findDocuments?.[0]?.name
-            ? findDocuments
-            : new Array(10)
-                 .fill(0)
-                 .map((_, idx) => ({ name: idx + 1, count: 0 })),
+         items: findDocuments?.[0]?.name ? findDocuments : new Array(10).fill(0).map((_, idx) => ({ name: idx + 1, count: 0 })),
       });
    }
 

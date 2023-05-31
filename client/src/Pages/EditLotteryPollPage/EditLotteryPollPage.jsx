@@ -27,9 +27,7 @@ function EditLotteryPollPage() {
 
    const auth = useSelector(authSelector);
    const singleLotteryPoll = useSelector(singleLotteryPollSelector);
-   const singleLotteryPollLoading = useSelector(
-      singleLotteryPollLoadingSelector
-   );
+   const singleLotteryPollLoading = useSelector(singleLotteryPollLoadingSelector);
    const singleLotteryPollError = useSelector(singleLotteryPollErrorSelector);
 
    useEffect(() => {
@@ -54,58 +52,38 @@ function EditLotteryPollPage() {
             />
             <div className="mt-4">
                {!!singleLotteryPollLoading && <SpinnerComponent />}
-               {!!singleLotteryPollError && (
-                  <p className="text-sm error_cl">{singleLotteryPollError}</p>
-               )}
-               {!!singleLotteryPoll &&
-               singleLotteryPoll?.success &&
-               singleLotteryPoll?.item ? (
+               {!!singleLotteryPollError && <p className="text-sm error_cl">{singleLotteryPollError}</p>}
+               {!!singleLotteryPoll && singleLotteryPoll?.success && singleLotteryPoll?.item ? (
                   <Fragment>
                      <div className="gal_div">
                         <div className="box_div space-x-2">
                            <div className="hd">
-                              <h5 className="text-gray-100 font-medium">
-                                 Game Id
-                              </h5>
+                              <h5 className="text-gray-100 font-medium">Game Id</h5>
+                           </div>
+                           <p className="text-gray-300 font-semibold">{singleLotteryPoll?.item?.gameId}</p>
+                        </div>
+                        <div className="box_div space-x-2">
+                           <div className="hd">
+                              <h5 className="text-gray-100 font-medium">Lottery poll result time</h5>
                            </div>
                            <p className="text-gray-300 font-semibold">
-                              {singleLotteryPoll?.item?.gameId}
+                              {dayjs(singleLotteryPoll?.item?.lotteryPollResultTime).format('MMM DD hh:mm:ss A')}
                            </p>
                         </div>
                         <div className="box_div space-x-2">
                            <div className="hd">
-                              <h5 className="text-gray-100 font-medium">
-                                 Lottery poll result time
-                              </h5>
+                              <h5 className="text-gray-100 font-medium">Lottery poll result show</h5>
                            </div>
                            <p className="text-gray-300 font-semibold">
-                              {dayjs(
-                                 singleLotteryPoll?.item?.lotteryPollResultTime
-                              ).format('MMM DD hh:mm:ss A')}
+                              {singleLotteryPoll?.item?.lotteryPollResultShow ? 'Yes' : 'No'}
                            </p>
                         </div>
                         <div className="box_div space-x-2">
                            <div className="hd">
-                              <h5 className="text-gray-100 font-medium">
-                                 Lottery poll result show
-                              </h5>
+                              <h5 className="text-gray-100 font-medium">Lottery poll created time</h5>
                            </div>
                            <p className="text-gray-300 font-semibold">
-                              {singleLotteryPoll?.item?.lotteryPollResultShow
-                                 ? 'Yes'
-                                 : 'No'}
-                           </p>
-                        </div>
-                        <div className="box_div space-x-2">
-                           <div className="hd">
-                              <h5 className="text-gray-100 font-medium">
-                                 Lottery poll created time
-                              </h5>
-                           </div>
-                           <p className="text-gray-300 font-semibold">
-                              {dayjs(singleLotteryPoll?.item?.createdAt).format(
-                                 'MMM DD hh:mm:ss A'
-                              )}
+                              {dayjs(singleLotteryPoll?.item?.createdAt).format('MMM DD hh:mm:ss A')}
                            </p>
                         </div>
                      </div>
@@ -116,25 +94,15 @@ function EditLotteryPollPage() {
                         <LotteryParticipateUserGraphComponent />
                      </div>
                      <div className="mb-4 mt-4">
-                        <p className="mb-2 text-gray-500 font-medium">
-                           Lucky draw result numbers
-                        </p>
+                        <p className="mb-2 text-gray-500 font-medium">Lucky draw result numbers</p>
                         <LotteryPollBallsComponent
-                           jackpotBallNumber={
-                              singleLotteryPoll?.item?.lotteryPollResult
-                                 ?.jackpotBallNumber
-                           }
-                           luckyNumbers={
-                              singleLotteryPoll?.item?.lotteryPollResult
-                                 ?.luckyNumbers
-                           }
+                           jackpotBallNumber={singleLotteryPoll?.item?.lotteryPollResult?.jackpotBallNumber}
+                           luckyNumbers={singleLotteryPoll?.item?.lotteryPollResult?.luckyNumbers}
                         />
                      </div>
                   </Fragment>
                ) : !singleLotteryPollLoading ? (
-                  <p className="text-sm text-gray-300">
-                     Lottery poll is not found!
-                  </p>
+                  <p className="text-sm text-gray-300">Lottery poll is not found!</p>
                ) : null}
             </div>
          </div>

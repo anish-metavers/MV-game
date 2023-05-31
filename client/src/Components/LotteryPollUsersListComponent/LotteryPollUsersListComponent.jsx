@@ -25,7 +25,7 @@ const ROW = [
    { heading: 'Created at' },
 ];
 
-function LotteryPollUsersListComponent() {
+function LotteryPollUsersListComponent({ filter }) {
    const [Page, setPage] = useState(0);
 
    const [Cookie] = useCookies();
@@ -36,12 +36,8 @@ function LotteryPollUsersListComponent() {
    const id = params?.id;
 
    const singleLotteryPollUsers = useSelector(singleLotteryPollUsersSelector);
-   const singleLotteryPollUsersLoading = useSelector(
-      singleLotteryPollUsersLoadingSelector
-   );
-   const singleLotteryPollUsersError = useSelector(
-      singleLotteryPollUsersErrorSelector
-   );
+   const singleLotteryPollUsersLoading = useSelector(singleLotteryPollUsersLoadingSelector);
+   const singleLotteryPollUsersError = useSelector(singleLotteryPollUsersErrorSelector);
 
    const nextPageHandler = function () {
       setPage((prev) => prev + 1);
@@ -56,7 +52,7 @@ function LotteryPollUsersListComponent() {
          dispatch(
             getSingleLotteryDrawUsersList({
                gameId: id,
-               filter: 'participate',
+               filter: filter,
                page: Page,
             })
          );
@@ -70,9 +66,7 @@ function LotteryPollUsersListComponent() {
                <SpinnerComponent />
             </div>
          )}
-         {!!singleLotteryPollUsersError && (
-            <p className="text-sm error_cl">{singleLotteryPollUsersError}</p>
-         )}
+         {!!singleLotteryPollUsersError && <p className="text-sm error_cl">{singleLotteryPollUsersError}</p>}
 
          {!!singleLotteryPollUsers &&
          singleLotteryPollUsers?.success &&
@@ -84,9 +78,7 @@ function LotteryPollUsersListComponent() {
                nextAndPrev={true}
                prevHandler={prevPageHandler}
                disablePrevbtn={Page === 0 ? true : false}
-               disableNextbtn={
-                  Page >= singleLotteryPollUsers?.totalPages ? true : false
-               }
+               disableNextbtn={Page >= singleLotteryPollUsers?.totalPages ? true : false}
                tableWidth={1400}
             >
                {singleLotteryPollUsers?.item?.lotteryPollData.map((el, idx) => (

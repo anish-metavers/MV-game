@@ -2,10 +2,7 @@ import React, { useEffect } from 'react';
 import * as styled from './LotteryPollBallsComponent.style';
 import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-   authSelector,
-   lotteryPollUpdateLoadingSelector,
-} from './Lottery.Selector';
+import { authSelector, lotteryPollUpdateLoadingSelector } from './Lottery.Selector';
 import { useForm, Controller } from 'react-hook-form';
 import CustomButtonComponent from '../CustomButtonComponent/CustomButtonComponent';
 import { message } from 'antd';
@@ -31,9 +28,7 @@ function LotteryPollBallsComponent({ jackpotBallNumber, luckyNumbers }) {
    const params = useParams();
    const dispatch = useDispatch();
 
-   const lotteryPollUpdateLoading = useSelector(
-      lotteryPollUpdateLoadingSelector
-   );
+   const lotteryPollUpdateLoading = useSelector(lotteryPollUpdateLoadingSelector);
    const auth = useSelector(authSelector);
 
    const lotterySelectedBallsHandler = function (number, type) {
@@ -61,8 +56,7 @@ function LotteryPollBallsComponent({ jackpotBallNumber, luckyNumbers }) {
    const submitHandler = function () {
       if (!params && !params?.id) return message.error('Game id is required!');
 
-      if (!isAdmin)
-         return message.error('You have no access to use this feature!');
+      if (!isAdmin) return message.error('You have no access to use this feature!');
 
       const optionalNumbers = getValues('digitsOptionalNumbers');
       const jackpotBall = getValues('jackpotBallNumber');
@@ -110,33 +104,19 @@ function LotteryPollBallsComponent({ jackpotBallNumber, luckyNumbers }) {
                   <div>
                      <styled.ballsDiv className="mt-4 mb-4">
                         <div className="mb-2 px-2">
-                           <p className="text-gray-400 text-sm font-medium">
-                              5 digits optional
-                           </p>
+                           <p className="text-gray-400 text-sm font-medium">5 digits optional</p>
                         </div>
                         <div className="grid_div" grid={9}>
                            {digitalBalls.map((el, idx) => (
-                              <div
-                                 className="p-1"
-                                 key={el + idx + 'digitsOptional'}
-                              >
+                              <div className="p-1" key={el + idx + 'digitsOptional'}>
                                  <div className="digital_ball_div">
                                     <Controller
                                        name="digitsOptionalNumbers"
                                        control={control}
                                        render={({ field: { value } }) => (
                                           <button
-                                             className={
-                                                value.includes(el)
-                                                   ? 'active_ball ball'
-                                                   : 'ball'
-                                             }
-                                             onClick={() =>
-                                                lotterySelectedBallsHandler(
-                                                   el,
-                                                   'digitsOptional'
-                                                )
-                                             }
+                                             className={value.includes(el) ? 'active_ball ball' : 'ball'}
+                                             onClick={() => lotterySelectedBallsHandler(el, 'digitsOptional')}
                                           >
                                              <p>{el}</p>
                                           </button>
@@ -148,9 +128,7 @@ function LotteryPollBallsComponent({ jackpotBallNumber, luckyNumbers }) {
                         </div>
                         <div className="mt-4 pt-3">
                            <div className="my-2 px-2">
-                              <p className="text-gray-400 text-sm font-medium">
-                                 1 Jackpot Ball
-                              </p>
+                              <p className="text-gray-400 text-sm font-medium">1 Jackpot Ball</p>
                            </div>
                            <div className="jackpot_balls">
                               <Controller
@@ -161,17 +139,8 @@ function LotteryPollBallsComponent({ jackpotBallNumber, luckyNumbers }) {
                                        <div className="p-1" key={el + idx}>
                                           <div className="digital_ball_div">
                                              <button
-                                                className={
-                                                   el == value
-                                                      ? 'jackpot_active_ball ball jc'
-                                                      : 'ball jc'
-                                                }
-                                                onClick={() =>
-                                                   lotterySelectedBallsHandler(
-                                                      el,
-                                                      'jackpotBall'
-                                                   )
-                                                }
+                                                className={el == value ? 'jackpot_active_ball ball jc' : 'ball jc'}
+                                                onClick={() => lotterySelectedBallsHandler(el, 'jackpotBall')}
                                              >
                                                 <p>{el}</p>
                                              </button>
@@ -183,9 +152,7 @@ function LotteryPollBallsComponent({ jackpotBallNumber, luckyNumbers }) {
                            </div>
                         </div>
                      </styled.ballsDiv>
-                     <p className="text-sm text-green-500 px-2 text-center">
-                        Please choose 6 numbers to save the lottery result
-                     </p>
+                     <p className="text-sm text-green-500 px-2 text-center">Please choose 6 numbers to save the lottery result</p>
                      <div className="mt-4 mb-4 flex items-center justify-center">
                         <CustomButtonComponent
                            text={'Set lottery result numbers'}

@@ -9,7 +9,7 @@ function LotteryTicketBallsComponent({ show, numbers, uniqueKey }) {
          {ballsAr.map((el, index) => (
             <styled.ballsDiv
                key={uniqueKey + index || index}
-               show={show.includes(index + 1)}
+               show={show.includes(numbers?.[index + 1])}
                className={index === 5 ? '_last_ball opacity-100' : null}
                jackpotBall={index === 5 ? true : false}
             >

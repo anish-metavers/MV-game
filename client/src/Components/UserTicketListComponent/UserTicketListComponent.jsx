@@ -3,22 +3,18 @@ import * as styled from './UserTicketListComponent.style';
 import LotteryTicketBallsComponent from '../LotteryTicketBallsComponent copy/LotteryTicketBallsComponent';
 import { useForm, Controller } from 'react-hook-form';
 import dayjs from 'dayjs';
+import { singleLotteryPollSelector } from './UserTicketList.Selector';
+import { useSelector } from 'react-redux';
 
-function UserTicketListComponent({
-   user,
-   lotteryPollNumbers,
-   isUsed,
-   numberOfTickets,
-   price,
-   refundTicket,
-   createdAt,
-   _id,
-}) {
-   const { setValue, control } = useForm({
+function UserTicketListComponent({ user, lotteryPollNumbers, isUsed, numberOfTickets, price, refundTicket, createdAt, _id }) {
+   const { setValue, control, getValues } = useForm({
       defaultValues: {
          lotteryNumbers: {},
+         matches: [],
       },
    });
+
+   const singleLotteryPoll = useSelector(singleLotteryPollSelector);
 
    useEffect(() => {
       const { luckyNumbers, jackpotBallNumber } = lotteryPollNumbers;
@@ -34,6 +30,25 @@ function UserTicketListComponent({
       }
 
       setValue('lotteryNumbers', luckyNumbersObject);
+      const lotteryPollResult = singleLotteryPoll?.item?.lotteryPollResult;
+
+      if (!!lotteryPollResult && lotteryPollResult?.luckyNumbers && !!luckyNumbers && luckyNumbers?.length) {
+         const matchesAr = [];
+
+         for (let i = 0; i < luckyNumbers.length; i++) {
+            const indexOf = lotteryPollResult?.luckyNumbers.indexOf(luckyNumbers[i]);
+
+            if (indexOf >= 0) {
+               matchesAr.push(luckyNumbers[i]);
+            }
+         }
+
+         if (jackpotBallNumber === lotteryPollResult?.jackpotBallNumber) {
+            matchesAr.push(lotteryPollResult?.jackpotBallNumber);
+         }
+
+         setValue('matches', matchesAr);
+      }
    }, []);
 
    return (
@@ -52,11 +67,7 @@ function UserTicketListComponent({
                control={control}
                render={({ field: { value } }) => (
                   <div className="flex items-center text-gray-900">
-                     <LotteryTicketBallsComponent
-                        show={[1, 2, 3, 4, 5, 6]}
-                        numbers={value}
-                        uniqueKey={_id}
-                     />
+                     <LotteryTicketBallsComponent show={getValues('matches')} numbers={value} uniqueKey={_id} />
                   </div>
                )}
             />

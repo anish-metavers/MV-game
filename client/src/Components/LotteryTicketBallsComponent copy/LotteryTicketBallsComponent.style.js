@@ -19,14 +19,11 @@ export const ballsDiv = styled.div`
    display: flex;
    align-items: center;
    justify-content: center;
-   background-image: ${(props) =>
-      props.jackpotBall
-         ? 'url("/images/jackpot_ball.webp")'
-         : `url('/images/ball.webp')`};
+   background-image: ${(props) => (props.jackpotBall ? 'url("/images/jackpot_ball.webp")' : `url('/images/ball.webp')`)};
    background-position: center;
    background-size: contain;
    border-radius: 50%;
-   opacity: ${(props) => (props?.show ? 1 : 0.4)};
+   opacity: ${(props) => (props?.show ? 1 : 0.2)};
    font-size: 12px;
    font-weight: 700;
 `;
