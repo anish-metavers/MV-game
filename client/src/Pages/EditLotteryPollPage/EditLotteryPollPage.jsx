@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useRef } from 'react';
 import * as styled from './EditLotteryPollPage.style';
 import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
 import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHeadingComponent';
@@ -22,19 +22,49 @@ import LotteryParticipateUserGraphComponent from '../../Components/LotteryPartic
 function EditLotteryPollPage() {
    const [cookie] = useCookies();
    const [isAdmin] = useAdmin(cookie);
+
    const params = useParams();
    const dispatch = useDispatch();
+   const timerRef = useRef(null);
 
    const auth = useSelector(authSelector);
    const singleLotteryPoll = useSelector(singleLotteryPollSelector);
    const singleLotteryPollLoading = useSelector(singleLotteryPollLoadingSelector);
    const singleLotteryPollError = useSelector(singleLotteryPollErrorSelector);
 
+   function updateCountdown(countdownTime) {
+      const currentTime = new Date().getTime();
+      const remainingTime = new Date(countdownTime).getTime() - currentTime;
+
+      if (remainingTime <= 0) {
+         return (timerRef.current.textContent = 'Lottery ended');
+         // dispatch(getResultLotteryPoll());
+         // return dispatch(getTodayLotteryPoll());
+      }
+
+      let hours = Math.floor((remainingTime % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+      let minutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
+      let seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
+
+      timerRef.current.textContent = `${hours}h : ${minutes}m : ${seconds}s`;
+   }
+
    useEffect(() => {
       if (!!auth && auth?.user && auth?.user?._id && isAdmin) {
          dispatch(getSingleLuckyDrawPoll({ gameId: params?.id }));
       }
    }, [auth, isAdmin]);
+
+   useEffect(() => {
+      let interval;
+      if (!!singleLotteryPoll && singleLotteryPoll?.success && singleLotteryPoll?.item) {
+         interval = setInterval(() => {
+            updateCountdown(singleLotteryPoll?.item?.lotteryPollResultTime);
+         }, 1000);
+      }
+
+      return () => clearInterval(interval);
+   }, [singleLotteryPoll]);
 
    return (
       <styled.div>
@@ -84,6 +114,13 @@ function EditLotteryPollPage() {
                            </div>
                            <p className="text-gray-300 font-semibold">
                               {dayjs(singleLotteryPoll?.item?.createdAt).format('MMM DD hh:mm:ss A')}
+                           </p>
+                        </div>
+                     </div>
+                     <div className="pt-5 pb-3">
+                        <div className="timer_div">
+                           <p ref={timerRef} className="text-gray-400 font-medium text-xl">
+                              00h:00m:00s
                            </p>
                         </div>
                      </div>

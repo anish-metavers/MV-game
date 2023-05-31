@@ -5,6 +5,14 @@ export const div = styled.div`
       margin-top: 1rem;
    }
 
+   .timer_div {
+      padding: 1rem;
+      border-radius: 5px;
+      width: max-content;
+      background-color: var(--smooth-gray-md-cl);
+      border: 1px solid var(--smooth-gray-cl);
+   }
+
    .gal_div {
       padding: 1.2rem;
       border-radius: 5px;

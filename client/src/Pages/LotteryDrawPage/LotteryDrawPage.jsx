@@ -7,6 +7,7 @@ import { getAllLotteryPoll } from '../../App/Features/LuckyDraw/LuckyDrawActions
 import LotteryPollCardsComponent from '../../Components/LotteryPollCardsComponent/LotteryPollCardsComponent';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
+import { removeLotteryPollInfo } from '../../App/Features/LuckyDraw/LuckyDrawSlice';
 
 function LotteryDrawPage() {
    const dispatch = useDispatch();
@@ -15,9 +16,15 @@ function LotteryDrawPage() {
 
    useEffect(() => {
       if (isAdmin) {
-         dispatch(getAllLotteryPoll());
+         dispatch(getAllLotteryPoll({ page: 0 }));
       }
    }, [isAdmin]);
+
+   useEffect(() => {
+      return () => {
+         dispatch(removeLotteryPollInfo());
+      };
+   }, []);
 
    return (
       <styled.div>

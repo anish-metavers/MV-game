@@ -43,6 +43,7 @@ const INIATAL_STATE = {
    userJackpotNumbers: null,
    userJackpotNumbersLoading: false,
    userJackpotNumbersError: null,
+   loadMoreLotteryPollTickets: false,
 };
 
 const luckyDrawSlice = createSlice({
@@ -52,6 +53,11 @@ const luckyDrawSlice = createSlice({
       removeSingleDrawInfo: (state) => {
          state.singleDrawInfo = null;
          state.singleDrawError = null;
+      },
+      removeLotteryPollInfo: (state) => {
+         state.allLotteryPoll = null;
+         state.allLotteryPollError = null;
+         state.allLotteryPollLoading = false;
       },
    },
    extraReducers: (bulder) => {
@@ -125,17 +131,29 @@ const luckyDrawSlice = createSlice({
 
       bulder
          .addCase(getAllLotteryPoll.pending, (state) => {
-            state.allLotteryPoll = null;
+            // state.allLotteryPoll = null;
             state.allLotteryPollLoading = true;
             state.allLotteryPollError = null;
+            state.loadMoreLotteryPollTickets = true;
          })
          .addCase(getAllLotteryPoll.rejected, (state, action) => {
             state.allLotteryPoll = null;
             state.allLotteryPollLoading = false;
             state.allLotteryPollError = action.error?.message;
+            state.loadMoreLotteryPollTickets = false;
          })
          .addCase(getAllLotteryPoll.fulfilled, (state, action) => {
-            state.allLotteryPoll = action.payload?.data;
+            if (state.allLotteryPoll?.success && state.allLotteryPoll?.items && state.allLotteryPoll?.items.length) {
+               state.allLotteryPoll = {
+                  ...state.allLotteryPoll,
+                  items: [...state.allLotteryPoll?.items, ...action.payload?.data?.items],
+                  page: state.allLotteryPoll?.page + 1,
+               };
+            } else {
+               state.allLotteryPoll = action.payload?.data;
+            }
+
+            state.loadMoreLotteryPollTickets = false;
             state.allLotteryPollLoading = false;
             state.allLotteryPollError = null;
          });
@@ -214,25 +232,19 @@ const luckyDrawSlice = createSlice({
             state.userJackpotNumbersLoading = true;
             state.userJackpotNumbersError = null;
          })
-         .addCase(
-            getUserTicketJackpotNumbersCount.rejected,
-            (state, action) => {
-               state.userJackpotNumbers = null;
-               state.userJackpotNumbersLoading = false;
-               state.userJackpotNumbersError = action.error?.message;
-            }
-         )
-         .addCase(
-            getUserTicketJackpotNumbersCount.fulfilled,
-            (state, action) => {
-               state.userJackpotNumbers = action.payload?.data;
-               state.userJackpotNumbersLoading = false;
-               state.userJackpotNumbersError = null;
-            }
-         );
+         .addCase(getUserTicketJackpotNumbersCount.rejected, (state, action) => {
+            state.userJackpotNumbers = null;
+            state.userJackpotNumbersLoading = false;
+            state.userJackpotNumbersError = action.error?.message;
+         })
+         .addCase(getUserTicketJackpotNumbersCount.fulfilled, (state, action) => {
+            state.userJackpotNumbers = action.payload?.data;
+            state.userJackpotNumbersLoading = false;
+            state.userJackpotNumbersError = null;
+         });
    },
 });
 
-export const { removeSingleDrawInfo } = luckyDrawSlice.actions;
+export const { removeSingleDrawInfo, removeLotteryPollInfo } = luckyDrawSlice.actions;
 
 export default luckyDrawSlice.reducer;

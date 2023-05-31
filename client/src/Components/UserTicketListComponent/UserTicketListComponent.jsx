@@ -62,15 +62,22 @@ function UserTicketListComponent({ user, lotteryPollNumbers, isUsed, numberOfTic
             <p className="font-semibold">{user?.name}</p>
          </td>
          <td>
-            <Controller
-               name="lotteryNumbers"
-               control={control}
-               render={({ field: { value } }) => (
-                  <div className="flex items-center text-gray-900">
-                     <LotteryTicketBallsComponent show={getValues('matches')} numbers={value} uniqueKey={_id} />
+            <div className="flex items-center space-x-2">
+               <Controller
+                  name="lotteryNumbers"
+                  control={control}
+                  render={({ field: { value } }) => (
+                     <div className="flex items-center text-gray-900">
+                        <LotteryTicketBallsComponent show={getValues('matches')} numbers={value} uniqueKey={_id} />
+                     </div>
+                  )}
+               />
+               {!!refundTicket ? (
+                  <div className="ic">
+                     <img src="/images/refund-ticket.svg" alt="" />
                   </div>
-               )}
-            />
+               ) : null}
+            </div>
          </td>
          <td>
             <p className="ont-semibold">x{numberOfTickets}</p>

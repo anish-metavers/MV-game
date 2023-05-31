@@ -205,8 +205,22 @@ const getSingleLuckyDraw = catchAsync(async function (req, res, next) {
 });
 
 const getAllLotteryPoll = catchAsync(async function (req, res, next) {
+   const { page } = req.query;
+
+   if (!page) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Page number is reuqired',
+      });
+   }
+
+   const DOCUMENT_LIMIT = 9;
+   const countDocuments = await lotteryPollModel.countDocuments();
    const lotteryPolls = await lotteryPollModel.aggregate([
       { $sort: { createdAt: -1 } },
+      { $skip: page * DOCUMENT_LIMIT },
+      { $limit: DOCUMENT_LIMIT },
       {
          $project: {
             gameId: 1,
@@ -223,6 +237,9 @@ const getAllLotteryPoll = catchAsync(async function (req, res, next) {
          success: true,
          error: false,
          items: lotteryPolls,
+         totalDocuments: countDocuments,
+         totalPages: Math.ceil(countDocuments / DOCUMENT_LIMIT - 1),
+         page: +page,
       });
    }
 
