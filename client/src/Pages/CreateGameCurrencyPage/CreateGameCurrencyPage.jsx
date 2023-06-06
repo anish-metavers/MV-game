@@ -120,7 +120,12 @@ function CreateGameCurrencyPage() {
    }, [params?.id, isAdmin]);
 
    useEffect(() => {
-      if (!!singleGameCurrency && singleGameCurrency?.success && !!singleGameCurrency?.currency && singleGameCurrency?.currency?.length) {
+      if (
+         !!singleGameCurrency &&
+         singleGameCurrency?.success &&
+         !!singleGameCurrency?.currency &&
+         singleGameCurrency?.currency?.length
+      ) {
          const currencyData = singleGameCurrency?.currency[0]?._id;
          setValue('description', currencyData?.description);
          setValue('currencyName', currencyData?.currencyName);
@@ -145,7 +150,6 @@ function CreateGameCurrencyPage() {
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               showSubHeadingCM={true}
                subHeading={params?.id ? 'Update Game Currency' : 'Create New Game Currency'}
                pageName={'Game Currency'}
                para={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a.`}
@@ -171,7 +175,9 @@ function CreateGameCurrencyPage() {
                                  shrink: true,
                               }}
                            />
-                           {errors?.currencyName?.message ? <p className="text-sm error_cl">{errors?.currencyName?.message}</p> : null}
+                           {errors?.currencyName?.message ? (
+                              <p className="text-sm error_cl">{errors?.currencyName?.message}</p>
+                           ) : null}
                         </div>
                         {/* <div className="w-full">
                            <Controller
@@ -231,7 +237,10 @@ function CreateGameCurrencyPage() {
                         <div className="w-full mt-4 md:mt-0">
                            {!!paymentOptionsListLoading ? <SpinnerComponent /> : null}
                            {!!paymentOptionsListError ? <p className="text-sm error_cl">{paymentOptionsListError}</p> : null}
-                           {!!paymentOptionsList && paymentOptionsList?.success && paymentOptionsList?.items && paymentOptionsList?.items.length ? (
+                           {!!paymentOptionsList &&
+                           paymentOptionsList?.success &&
+                           paymentOptionsList?.items &&
+                           paymentOptionsList?.items.length ? (
                               <Controller
                                  name="paymentOptions"
                                  control={control}
@@ -264,9 +273,19 @@ function CreateGameCurrencyPage() {
                         />
                         <div className="space_div">
                            <label className="text-gray-400 font-medium">Meta Description</label>
-                           <p className="mt-2 text-gray-400">A meta description tag generally informs and interests users with a short, relevant summary of what a particular page is about.</p>
+                           <p className="mt-2 text-gray-400">
+                              A meta description tag generally informs and interests users with a short, relevant summary of what
+                              a particular page is about.
+                           </p>
                            <div>
-                              <JoditEditor className="mt-3" ref={editor} value={content} tabIndex={1} onChange={(newContent) => setContent(newContent)} config={{ theme: 'dark' }} />
+                              <JoditEditor
+                                 className="mt-3"
+                                 ref={editor}
+                                 value={content}
+                                 tabIndex={1}
+                                 onChange={(newContent) => setContent(newContent)}
+                                 config={{ theme: 'dark' }}
+                              />
                            </div>
                         </div>
                      </div>
@@ -280,7 +299,11 @@ function CreateGameCurrencyPage() {
                         icon={<AiFillFileImage className="text-gray-500" />}
                      />
                      <div className="flex">
-                        <CustomButtonComponent type={'submit'} btnCl={'Publish mt-5'} isLoading={params?.id ? updateGameCurrencyLoading : uploadCurrencyLoading}>
+                        <CustomButtonComponent
+                           type={'submit'}
+                           btnCl={'Publish mt-5'}
+                           isLoading={params?.id ? updateGameCurrencyLoading : uploadCurrencyLoading}
+                        >
                            <img src="/images/done.svg" />
                            {params?.id ? <p>Update</p> : <p>Publish</p>}
                         </CustomButtonComponent>

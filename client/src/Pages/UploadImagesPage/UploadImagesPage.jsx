@@ -11,7 +11,6 @@ function UploadImagesPage() {
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               showSubHeadingCM={true}
                pageName={'media'}
                heading={`Media`}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.

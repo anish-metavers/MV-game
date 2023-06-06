@@ -11,6 +11,7 @@ const currencyModel = require('../model/schema/currencySchema');
 const userSettingModel = require('../model/schema/userSettingSchema');
 const userSocialNetworkSchema = require('../model/schema/userSocialNetworkSchema');
 const userHistoryModel = require('../model/schema/userHistorySchema');
+const userProgressModel = require('../model/schema/userProgressSchema');
 
 const getUserSingleAccount = catchAsync(async function (req, res, next) {
    const { userId } = req.query;
@@ -164,6 +165,18 @@ const createPlayerAccount = catchAsync(async function (req, res, next) {
                success: false,
                error: true,
                message: 'Someting worng with creating user history document.',
+            });
+         }
+
+         const createUserprogressDocument = await userProgressModel({
+            userId: _id,
+         }).save();
+
+         if (!createUserprogressDocument) {
+            return res.status(httpStatusCodes.BAD_REQUEST).json({
+               success: false,
+               error: true,
+               message: 'Someting worng with creating user progress document.',
             });
          }
 
@@ -327,9 +340,90 @@ const setAccountPassword = catchAsync(async function (req, res, next) {
    });
 });
 
+const getUserSingleAccountInformation = catchAsync(async function (req, res, next) {
+   const { userId } = req.query;
+
+   if (!userId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'User id is required',
+      });
+   }
+
+   const isValidId = checkIsValidId(userId);
+
+   if (!isValidId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Selected is not valid id please check.',
+      });
+   }
+
+   const userStatus = await authModel.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(userId) } },
+      { $unwind: { path: '$userRole', preserveNullAndEmptyArrays: true } },
+      {
+         $lookup: {
+            from: 'roles',
+            localField: 'userRole.roleId',
+            foreignField: '_id',
+            as: 'userRole',
+         },
+      },
+      { $unwind: { path: '$userRole', preserveNullAndEmptyArrays: true } },
+      {
+         $project: {
+            name: 1,
+            email: 1,
+            avatar: 1,
+            userId: 1,
+            userRole: {
+               roleName: 1,
+            },
+            active: 1,
+            createdAt: 1,
+         },
+      },
+      {
+         $group: {
+            _id: {
+               _id: '$_id',
+               name: '$name',
+               email: '$email',
+               avatar: '$avatar',
+               userId: '$userId',
+               active: '$active',
+               createdAt: '$createdAt',
+            },
+            roles: { $push: '$userRole' },
+         },
+      },
+      { $project: { _id: 0, item: '$_id', roles: 1 } },
+   ]);
+
+   const data = userStatus?.[0];
+
+   if (data) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         data: data,
+      });
+   }
+
+   return res.status(httpStatusCodes.BAD_REQUEST).json({
+      success: false,
+      error: true,
+      message: 'Account is not found!',
+   });
+});
+
 module.exports = {
    getUserSingleAccount,
    createPlayerAccount,
    updatePlayerAccount,
    setAccountPassword,
+   getUserSingleAccountInformation,
 };

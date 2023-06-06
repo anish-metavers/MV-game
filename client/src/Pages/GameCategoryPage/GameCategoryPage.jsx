@@ -27,11 +27,7 @@ function GameCategoryPage() {
       <styled.div>
          <NavbarComponent />
          <div className="container_div">
-            <PageHeadingComponent
-               pageName={'Game Category'}
-               subHeading={'All Games Category'}
-               showSubHeadingCM={true}
-            />
+            <PageHeadingComponent pageName={'Game Category'} subHeading={'All Games Category'} />
             <styled.categoryDiv className="mt-5 flex">
                <div className="w-5/12">
                   <PostNewCategoryComponent />

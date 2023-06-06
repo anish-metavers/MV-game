@@ -39,6 +39,10 @@ function UserPage() {
       navigation(`/players-accounts/edit/${userId}`);
    };
 
+   const profileHandler = function (id) {
+      navigation(`/player-status/show/${id}`);
+   };
+
    useEffect(() => {
       if (page && isAdmin) {
          dispatch(getAllUsers({ page: page }));
@@ -51,7 +55,6 @@ function UserPage() {
          <div className="container_div">
             <PageHeadingComponent
                pageName={'User'}
-               showSubHeadingCM={true}
                subHeading={'All Users'}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.
                Blanditiis, maiores perspiciatis. Est rerum, sit
@@ -77,7 +80,7 @@ function UserPage() {
                            <td>{el?.name}</td>
                            <td>{el?.email}</td>
                            <td>
-                              <div className="user_profile_div">
+                              <div className="user_profile_div" onClick={() => profileHandler(el?._id)}>
                                  <img src={el?.avatar} alt="" />
                               </div>
                            </td>

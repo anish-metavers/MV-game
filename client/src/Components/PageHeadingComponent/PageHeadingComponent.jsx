@@ -4,15 +4,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import { BsThreeDotsVertical } from '@react-icons/all-files/bs/BsThreeDotsVertical';
 
-function PageHeadingComponent({
-   pageName,
-   showSubHeadingCM,
-   subHeading,
-   para,
-   innerProps,
-   menu,
-   heading,
-}) {
+function PageHeadingComponent({ pageName, subHeading, para, innerProps, menu, heading }) {
    const [anchorEl, setAnchorEl] = useState(null);
    const open = Boolean(anchorEl);
    const handleClick = (event) => {
@@ -30,20 +22,16 @@ function PageHeadingComponent({
             <span className="mx-3 text-gray-300">/</span>
             <span className=" text-gray-300 font-medium">{pageName}</span>
          </div>
-         <h1 className="mt-2 text-3xl text-gray-300 font-semibold">
-            {!!heading ? heading : 'Welcome to Dashboard'}
-         </h1>
+         <h1 className="mt-2 text-3xl text-gray-300 font-semibold">{!!heading ? heading : 'Welcome to Dashboard'}</h1>
          <div className="flex items-center justify-between">
-            {showSubHeadingCM ? (
-               <div className="mt-5">
-                  {!!subHeading ? (
-                     <h1 className="text-xl font-medium text-gray-400">
-                        {subHeading}
-                     </h1>
-                  ) : null}
-                  <p className="mt-3 text-gray-400">{para}</p>
-               </div>
-            ) : null}
+            <div>
+               {!!subHeading && (
+                  <div className="mt-5">
+                     <h1 className="text-xl font-medium text-gray-400">{subHeading}</h1>
+                  </div>
+               )}
+               {!!para && <p className="mt-3 text-gray-400">{para}</p>}
+            </div>
             {menu ? (
                <div className="option_div">
                   <Button

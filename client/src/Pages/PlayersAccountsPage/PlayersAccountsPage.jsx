@@ -142,6 +142,9 @@ function PlayersAccountsPage() {
             <PageHeadingComponent
                pageName={'Players Accounts'}
                heading={!!param && param?.id ? 'Update players accounts' : 'Create players accounts'}
+               para={
+                  'Please Note: Please first manually verify player accounts by reviewing and approving required documents or identification proofs. then create the player account'
+               }
             />
             <div className="py-3">
                <form onSubmit={handleSubmit(createHandler)}>

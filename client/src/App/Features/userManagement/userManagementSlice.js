@@ -4,6 +4,7 @@ import {
    getUserSingleAccount,
    setPlayerAccountPassword,
    updatePlayerAccount,
+   getUserSingleAccountInformation,
 } from './userManagementActions';
 
 const INITAL_STATE = {
@@ -16,6 +17,9 @@ const INITAL_STATE = {
    singleUserAccountError: null,
    accountPasswordChangeLoading: false,
    accountPasswordChangeError: null,
+   userAccountInformation: null,
+   userAccountInformationLoading: false,
+   userAccountInformationError: null,
 };
 
 const userManagementSlice = createSlice({
@@ -101,6 +105,23 @@ const userManagementSlice = createSlice({
             state.singleUserAccountInfo = action.payload?.data;
             state.singleUserAccountLoading = false;
             state.singleUserAccountError = null;
+         });
+
+      bulder
+         .addCase(getUserSingleAccountInformation.pending, (state) => {
+            state.userAccountInformation = null;
+            state.userAccountInformationLoading = true;
+            state.userAccountInformationError = null;
+         })
+         .addCase(getUserSingleAccountInformation.rejected, (state, action) => {
+            state.userAccountInformation = null;
+            state.userAccountInformationLoading = false;
+            state.userAccountInformationError = action.error?.message;
+         })
+         .addCase(getUserSingleAccountInformation.fulfilled, (state, action) => {
+            state.userAccountInformation = action.payload?.data;
+            state.userAccountInformationLoading = false;
+            state.userAccountInformationError = null;
          });
 
       bulder

@@ -7,10 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
-import {
-   deletePaymentOptionsFiled,
-   getAllPaymentOptionFields,
-} from '../../App/Features/Payment/paymentActions';
+import { deletePaymentOptionsFiled, getAllPaymentOptionFields } from '../../App/Features/Payment/paymentActions';
 import {
    paymentOptionsFieldsSelector,
    paymentOptionsFieldsLoadingSelector,
@@ -41,12 +38,8 @@ function PaymentFiledsPage() {
    const [Page, setPage] = useState(0);
 
    const paymentOptionsFields = useSelector(paymentOptionsFieldsSelector);
-   const paymentOptionsFieldsLoading = useSelector(
-      paymentOptionsFieldsLoadingSelector
-   );
-   const paymentOptionsFieldsError = useSelector(
-      paymentOptionsFieldsErrorSelector
-   );
+   const paymentOptionsFieldsLoading = useSelector(paymentOptionsFieldsLoadingSelector);
+   const paymentOptionsFieldsError = useSelector(paymentOptionsFieldsErrorSelector);
 
    const CreateNewFiled = function () {
       navigation('/payment-fields/create');
@@ -84,71 +77,51 @@ function PaymentFiledsPage() {
                heading={'Payment Fields'}
                pageName={'Single order'}
                subHeading={'Fields'}
-               showSubHeadingCM={true}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.
                Blanditiis, maiores perspiciatis. Est rerum, sit
                voluptas molestias officia modi, provident earum ad
                ipsam sed dolorem error odit quia, deserunt quasi!
                Doloribus!`}
                menu={true}
-               innerProps={
-                  <MenuItem onClick={CreateNewFiled}>Add new currency</MenuItem>
-               }
+               innerProps={<MenuItem onClick={CreateNewFiled}>Add new currency</MenuItem>}
             />
             <div className="mt-5">
                {paymentOptionsFieldsLoading && <SpinnerComponent />}
-               {paymentOptionsFieldsError && (
-                  <p className="error_cl text-sm">
-                     {paymentOptionsFieldsError}
-                  </p>
+               {paymentOptionsFieldsError && <p className="error_cl text-sm">{paymentOptionsFieldsError}</p>}
+               {!!paymentOptionsFields && paymentOptionsFields?.success && paymentOptionsFields?.items && (
+                  <TableComponent
+                     row={ROW}
+                     nextHandler={NextPageHandler}
+                     nextAndPrev={true}
+                     prevHandler={PrevPageHandler}
+                     disablePrevbtn={Page === 0 ? true : false}
+                     disableNextbtn={Page >= paymentOptionsFields?.totalPages ? true : false}
+                     tableWidth={1200}
+                  >
+                     {paymentOptionsFields?.items.map((el) => (
+                        <tr key={el?._id}>
+                           <td>{el?.label}</td>
+                           <td>{el?.labelKey}</td>
+                           <td>{el?.fieldType}</td>
+                           <td>{el?.hide.toString()}</td>
+                           <td>{el?.readOnly.toString()}</td>
+                           <td>{dayjs(el?.createdAt).format('DD MMMM YY h:m:s A')}</td>
+                           <td className="flex items-center space-x-2">
+                              <BiMessageSquareEdit className=" cursor-pointer" onClick={() => EditHandler(el?._id)} />
+                              <Popconfirm
+                                 title="Delete the task"
+                                 description="Are you sure to delete this payment input?"
+                                 onConfirm={() => DeleteHandler(el?._id)}
+                                 okText="Yes"
+                                 cancelText="No"
+                              >
+                                 <MdDelete className="cursor-pointer" />
+                              </Popconfirm>
+                           </td>
+                        </tr>
+                     ))}
+                  </TableComponent>
                )}
-               {!!paymentOptionsFields &&
-                  paymentOptionsFields?.success &&
-                  paymentOptionsFields?.items && (
-                     <TableComponent
-                        row={ROW}
-                        nextHandler={NextPageHandler}
-                        nextAndPrev={true}
-                        prevHandler={PrevPageHandler}
-                        disablePrevbtn={Page === 0 ? true : false}
-                        disableNextbtn={
-                           Page >= paymentOptionsFields?.totalPages
-                              ? true
-                              : false
-                        }
-                        tableWidth={1200}
-                     >
-                        {paymentOptionsFields?.items.map((el) => (
-                           <tr key={el?._id}>
-                              <td>{el?.label}</td>
-                              <td>{el?.labelKey}</td>
-                              <td>{el?.fieldType}</td>
-                              <td>{el?.hide.toString()}</td>
-                              <td>{el?.readOnly.toString()}</td>
-                              <td>
-                                 {dayjs(el?.createdAt).format(
-                                    'DD MMMM YY h:m:s A'
-                                 )}
-                              </td>
-                              <td className="flex items-center space-x-2">
-                                 <BiMessageSquareEdit
-                                    className=" cursor-pointer"
-                                    onClick={() => EditHandler(el?._id)}
-                                 />
-                                 <Popconfirm
-                                    title="Delete the task"
-                                    description="Are you sure to delete this payment input?"
-                                    onConfirm={() => DeleteHandler(el?._id)}
-                                    okText="Yes"
-                                    cancelText="No"
-                                 >
-                                    <MdDelete className="cursor-pointer" />
-                                 </Popconfirm>
-                              </td>
-                           </tr>
-                        ))}
-                     </TableComponent>
-                  )}
             </div>
          </div>
       </styled.div>

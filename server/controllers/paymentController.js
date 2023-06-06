@@ -43,11 +43,7 @@ const getCurrencyPaymentOptions = catchAsync(async function (req, res, next) {
    });
 });
 
-const insertNewCurrencyPaymentOption = catchAsync(async function (
-   req,
-   res,
-   next
-) {
+const insertNewCurrencyPaymentOption = catchAsync(async function (req, res, next) {
    const { name, description, min, max, vipOnly, paymentFields } = req.body;
    const fields = JSON.parse(paymentFields);
    const selectedFields = fields.map((el) => ({ fieldId: el?._id }));
@@ -119,11 +115,7 @@ const insertNewCurrencyPaymentOption = catchAsync(async function (
    // }
 });
 
-const getSinglePaymentCurrencyOption = catchAsync(async function (
-   req,
-   res,
-   next
-) {
+const getSinglePaymentCurrencyOption = catchAsync(async function (req, res, next) {
    const { optionId } = req.query;
 
    if (!optionId) {
@@ -259,10 +251,7 @@ const updatePaymentOption = catchAsync(async function (req, res, next) {
 });
 
 const getAllPaymentOptionList = catchAsync(async function (req, res, next) {
-   const findAllPaymentOptions = await walletPaymentOptionModel.find(
-      {},
-      { name: 1 }
-   );
+   const findAllPaymentOptions = await walletPaymentOptionModel.find({}, { name: 1 });
 
    if (findAllPaymentOptions) {
       return res.status(httpStatusCodes.OK).json({
@@ -279,11 +268,7 @@ const getAllPaymentOptionList = catchAsync(async function (req, res, next) {
    });
 });
 
-const getAllFiatDepositTransactions = catchAsync(async function (
-   req,
-   res,
-   next
-) {
+const getAllFiatDepositTransactions = catchAsync(async function (req, res, next) {
    const { page } = req.query;
 
    if (!page) {
@@ -536,10 +521,7 @@ const getSinglePaymentOptionField = catchAsync(async function (req, res, next) {
       });
    }
 
-   const singlefield = await paymentOptionsFieldModel.findOne(
-      { _id: fieldId },
-      { __v: 0, createdAt: 0 }
-   );
+   const singlefield = await paymentOptionsFieldModel.findOne({ _id: fieldId }, { __v: 0, createdAt: 0 });
 
    if (singlefield) {
       return res.status(httpStatusCodes.OK).json({
@@ -567,10 +549,7 @@ const updatePaymentOptionField = catchAsync(async function (req, res, next) {
       });
    }
 
-   const updatePaymentField = await paymentOptionsFieldModel.updateOne(
-      { _id: fieldId },
-      { $set: req.body }
-   );
+   const updatePaymentField = await paymentOptionsFieldModel.updateOne({ _id: fieldId }, { $set: req.body });
 
    if (updatePaymentField?.modifiedCount) {
       return res.status(httpStatusCodes.OK).json({
@@ -587,11 +566,7 @@ const updatePaymentOptionField = catchAsync(async function (req, res, next) {
    });
 });
 
-const getAllPaymentOptionFieldsList = catchAsync(async function (
-   req,
-   res,
-   next
-) {
+const getAllPaymentOptionFieldsList = catchAsync(async function (req, res, next) {
    const findFieldLists = await paymentOptionsFieldModel.find({}, { label: 1 });
 
    if (findFieldLists) {
@@ -609,11 +584,7 @@ const getAllPaymentOptionFieldsList = catchAsync(async function (
    });
 });
 
-const getAllFiatWithdrawTransaction = catchAsync(async function (
-   req,
-   res,
-   next
-) {
+const getAllFiatWithdrawTransaction = catchAsync(async function (req, res, next) {
    const { page } = req.query;
 
    if (!page) {
@@ -681,11 +652,7 @@ const getAllFiatWithdrawTransaction = catchAsync(async function (
    });
 });
 
-const updateFiatWithdrawTransaction = catchAsync(async function (
-   req,
-   res,
-   next
-) {
+const updateFiatWithdrawTransaction = catchAsync(async function (req, res, next) {
    const { transactionId, type, actionUserId, upiRefNumber } = req.body;
 
    if (!upiRefNumber) {

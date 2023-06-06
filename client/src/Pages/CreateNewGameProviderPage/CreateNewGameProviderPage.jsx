@@ -56,15 +56,9 @@ function CreateNewGameProviderPage() {
    const param = useParams();
 
    const postNewGameProviderInfo = useSelector(postNewGameProviderInfoSelector);
-   const postNewGameProviderLoading = useSelector(
-      postNewGameProviderLoadingSelector
-   );
-   const postNewGameProviderError = useSelector(
-      postNewGameProviderErrorSelector
-   );
-   const postNewGameProviderInvalidErrors = useSelector(
-      postNewGameProviderInvalidErrorsSelector
-   );
+   const postNewGameProviderLoading = useSelector(postNewGameProviderLoadingSelector);
+   const postNewGameProviderError = useSelector(postNewGameProviderErrorSelector);
+   const postNewGameProviderInvalidErrors = useSelector(postNewGameProviderInvalidErrorsSelector);
 
    const ImageHandler = function (event) {
       const imageFile = event.target.files[0];
@@ -137,14 +131,7 @@ function CreateNewGameProviderPage() {
       <styled.div>
          <NavbarComponent />
          <div className="container_div">
-            <PageHeadingComponent
-               pageName={
-                  !!param && param?.id
-                     ? 'Edit game provider'
-                     : 'Create game providers'
-               }
-               showSubHeadingCM={true}
-            />
+            <PageHeadingComponent pageName={!!param && param?.id ? 'Edit game provider' : 'Create game providers'} />
             <form onSubmit={handleSubmit(onSubmit)}>
                <Box
                   sx={{
@@ -167,9 +154,7 @@ function CreateNewGameProviderPage() {
                            }}
                         />
                         {!!errors?.providerName?.message ? (
-                           <p className="text-sm error_cl">
-                              {errors?.providerName?.message}
-                           </p>
+                           <p className="text-sm error_cl">{errors?.providerName?.message}</p>
                         ) : null}
                      </div>
                      <div className="w-full">
@@ -184,11 +169,7 @@ function CreateNewGameProviderPage() {
                               shrink: true,
                            }}
                         />
-                        {!!errors?.email?.message ? (
-                           <p className="text-sm error_cl">
-                              {errors?.email?.message}
-                           </p>
-                        ) : null}
+                        {!!errors?.email?.message ? <p className="text-sm error_cl">{errors?.email?.message}</p> : null}
                      </div>
                      <Controller
                         name="phoneNumber"
@@ -259,27 +240,17 @@ function CreateNewGameProviderPage() {
                         isLoading={postNewGameProviderLoading}
                      />
                   </div>
-                  {!!postNewGameProviderInfo ? (
-                     <p className="text-gray-300">
-                        {postNewGameProviderInfo?.message}
-                     </p>
-                  ) : null}
-                  {!!postNewGameProviderError ? (
-                     <p className="text-sm error_cl">
-                        {postNewGameProviderError}
-                     </p>
-                  ) : null}
+                  {!!postNewGameProviderInfo ? <p className="text-gray-300">{postNewGameProviderInfo?.message}</p> : null}
+                  {!!postNewGameProviderError ? <p className="text-sm error_cl">{postNewGameProviderError}</p> : null}
                   {!!postNewGameProviderInvalidErrors &&
                   postNewGameProviderInvalidErrors?.error &&
                   postNewGameProviderInvalidErrors?.error.length ? (
                      <div>
-                        {postNewGameProviderInvalidErrors?.error.map(
-                           (el, index) => (
-                              <p className="text-sm error_cl" key={index}>
-                                 {el?.msg}
-                              </p>
-                           )
-                        )}
+                        {postNewGameProviderInvalidErrors?.error.map((el, index) => (
+                           <p className="text-sm error_cl" key={index}>
+                              {el?.msg}
+                           </p>
+                        ))}
                      </div>
                   ) : null}
                </Box>

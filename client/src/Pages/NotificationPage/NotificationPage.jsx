@@ -100,7 +100,6 @@ function NotificationPage() {
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               showSubHeadingCM={true}
                subHeading={'All system notification'}
                pageName={'Notification'}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.

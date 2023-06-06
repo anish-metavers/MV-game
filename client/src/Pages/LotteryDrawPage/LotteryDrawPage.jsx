@@ -31,7 +31,6 @@ function LotteryDrawPage() {
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               showSubHeadingCM={true}
                pageName={'Lottery draw'}
                heading={`Lottery draw`}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.

@@ -63,9 +63,7 @@ function CreatePaymentFieldsPage() {
          if (!editId) {
             response = await dispatch(createNewPaymentOptionField(data));
          } else {
-            response = await dispatch(
-               updatePaymentOptionField({ ...data, fieldId: editId })
-            );
+            response = await dispatch(updatePaymentOptionField({ ...data, fieldId: editId }));
          }
 
          const payload = response?.payload?.data;
@@ -82,9 +80,7 @@ function CreatePaymentFieldsPage() {
    };
 
    const fetchSingleField = async function () {
-      const response = await dispatch(
-         getSinglePaymentOptionField({ fieldId: editId })
-      );
+      const response = await dispatch(getSinglePaymentOptionField({ fieldId: editId }));
       const data = response?.payload?.data;
       if (data && data?.success && data?.item) {
          const { item } = data;
@@ -107,7 +103,6 @@ function CreatePaymentFieldsPage() {
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               showSubHeadingCM={true}
                heading={`Payment Fields ${editId && 'edit'}`}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.
                Blanditiis, maiores perspiciatis. Est rerum, sit
@@ -139,13 +134,9 @@ function CreatePaymentFieldsPage() {
                                  />
                               )}
                            />
-                           {!!errors &&
-                              errors?.label &&
-                              errors?.label?.message && (
-                                 <p className="text-sm error_cl">
-                                    {errors?.label?.message}
-                                 </p>
-                              )}
+                           {!!errors && errors?.label && errors?.label?.message && (
+                              <p className="text-sm error_cl">{errors?.label?.message}</p>
+                           )}
                         </div>
                         <div className="w-full">
                            <Controller
@@ -163,13 +154,9 @@ function CreatePaymentFieldsPage() {
                                  />
                               )}
                            />
-                           {!!errors &&
-                              errors?.labelKey &&
-                              errors?.labelKey?.message && (
-                                 <p className="text-sm error_cl">
-                                    {errors?.labelKey?.message}
-                                 </p>
-                              )}
+                           {!!errors && errors?.labelKey && errors?.labelKey?.message && (
+                              <p className="text-sm error_cl">{errors?.labelKey?.message}</p>
+                           )}
                         </div>
                         <div className="w-full">
                            <Controller
@@ -185,37 +172,20 @@ function CreatePaymentFieldsPage() {
                                     label="Field type"
                                  >
                                     {currencies.map((option) => (
-                                       <MenuItem
-                                          key={option.value}
-                                          value={option.value}
-                                       >
+                                       <MenuItem key={option.value} value={option.value}>
                                           {option.label}
                                        </MenuItem>
                                     ))}
                                  </TextField>
                               )}
                            />
-                           {!!errors &&
-                              errors?.fieldType &&
-                              errors?.fieldType?.message && (
-                                 <p className="text-sm error_cl">
-                                    {errors?.fieldType?.message}
-                                 </p>
-                              )}
+                           {!!errors && errors?.fieldType && errors?.fieldType?.message && (
+                              <p className="text-sm error_cl">{errors?.fieldType?.message}</p>
+                           )}
                         </div>
                      </div>
-                     <CheckBoxComponent
-                        heading={'Field hide'}
-                        name="hide"
-                        control={control}
-                        Controller={Controller}
-                     />
-                     <CheckBoxComponent
-                        heading={'Field read only'}
-                        name="readOnly"
-                        control={control}
-                        Controller={Controller}
-                     />
+                     <CheckBoxComponent heading={'Field hide'} name="hide" control={control} Controller={Controller} />
+                     <CheckBoxComponent heading={'Field read only'} name="readOnly" control={control} Controller={Controller} />
                   </Box>
                   <div className="flex mt-4">
                      <CustomButtonComponent

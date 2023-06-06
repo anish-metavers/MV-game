@@ -8,11 +8,7 @@ import { useCookies } from 'react-cookie';
 import useAdmin from '../../Hooks/useAdmin';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrencyPaymentOptions } from '../../App/Features/Payment/paymentActions';
-import {
-   currencyMethodsSelector,
-   currencyMethodsLoadingSelector,
-   currencyMethodsErrorSelector,
-} from './GameCurrency.Selector';
+import { currencyMethodsSelector, currencyMethodsLoadingSelector, currencyMethodsErrorSelector } from './GameCurrency.Selector';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import TableComponent from '../../Components/TableComponent/TableComponent';
 import dayjs from 'dayjs';
@@ -64,7 +60,6 @@ function GameCurrencyPaymentMethodsPage() {
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               showSubHeadingCM={true}
                subHeading={'All Payment Options'}
                pageName={'Currency Payment'}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -73,29 +68,19 @@ function GameCurrencyPaymentMethodsPage() {
                ipsam sed dolorem error odit quia, deserunt quasi!
                Doloribus!`}
                menu={true}
-               innerProps={
-                  <MenuItem onClick={CreateGameCurrencyPaymentHandler}>
-                     Add new currency
-                  </MenuItem>
-               }
+               innerProps={<MenuItem onClick={CreateGameCurrencyPaymentHandler}>Add new currency</MenuItem>}
             />
             <div>
-               {!!currencyMethodsError ? (
-                  <p className="text-sm error_cl">{currencyMethodsError}</p>
-               ) : null}
+               {!!currencyMethodsError ? <p className="text-sm error_cl">{currencyMethodsError}</p> : null}
                {!!currencyMethodsLoading ? <SpinnerComponent /> : null}
-               {!!currencyMethods &&
-               currencyMethods?.success &&
-               currencyMethods?.methods ? (
+               {!!currencyMethods && currencyMethods?.success && currencyMethods?.methods ? (
                   <TableComponent
                      row={ROW}
                      nextHandler={NextPageHandler}
                      nextAndPrev={true}
                      prevHandler={PrevPageHandler}
                      disablePrevbtn={+Page === 0 ? true : false}
-                     disableNextbtn={
-                        +Page >= currencyMethods?.totalPages ? true : false
-                     }
+                     disableNextbtn={+Page >= currencyMethods?.totalPages ? true : false}
                      tableWidth={1100}
                   >
                      {currencyMethods?.methods.map((el) => (
@@ -108,21 +93,9 @@ function GameCurrencyPaymentMethodsPage() {
                                  <img src={el?.icon} alt="" />
                               </div>
                            </td>
+                           <td>{dayjs(el?.spinTimePeriod).format('DD MMMM YYYY hh:mm:ss A')}</td>
                            <td>
-                              {dayjs(el?.spinTimePeriod).format(
-                                 'DD MMMM YYYY hh:mm:ss A'
-                              )}
-                           </td>
-                           <td>
-                              <p
-                                 onClick={() =>
-                                    navigation(
-                                       `/game-currency-payment/edit/${el?._id}`
-                                    )
-                                 }
-                              >
-                                 Edit
-                              </p>
+                              <p onClick={() => navigation(`/game-currency-payment/edit/${el?._id}`)}>Edit</p>
                            </td>
                         </tr>
                      ))}

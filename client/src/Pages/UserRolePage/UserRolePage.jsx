@@ -62,7 +62,6 @@ function UserRolePage() {
          <styled.container className="container_div">
             <PageHeadingComponent
                pageName={'User Roles'}
-               showSubHeadingCM={true}
                subHeading={'All Users Roles'}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.
                Blanditiis, maiores perspiciatis. Est rerum, sit
@@ -95,7 +94,13 @@ function UserRolePage() {
                                  <td>Default roles</td>
                               ) : (
                                  <td className="flex items-center space-x-2">
-                                    <Popconfirm title="Delete the task" description="Are you sure to delete this task?" okText="Yes" cancelText="No" onConfirm={() => DeleteRolesHandler(el._id)}>
+                                    <Popconfirm
+                                       title="Delete the task"
+                                       description="Are you sure to delete this task?"
+                                       okText="Yes"
+                                       cancelText="No"
+                                       onConfirm={() => DeleteRolesHandler(el._id)}
+                                    >
                                        <p className="text-red-500 font-medium">Delete</p>
                                     </Popconfirm>
                                     <p onClick={() => EditRoleHandler(el._id)}>Edit</p>

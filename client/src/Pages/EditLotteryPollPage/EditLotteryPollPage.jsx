@@ -71,7 +71,6 @@ function EditLotteryPollPage() {
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               showSubHeadingCM={true}
                pageName={'Edit lottery draw'}
                heading={`Edit lottery draw`}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.

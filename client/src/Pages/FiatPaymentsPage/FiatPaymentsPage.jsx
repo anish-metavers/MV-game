@@ -4,11 +4,7 @@ import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHead
 import * as styled from './FiatPaymentsPage.style';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllFiatDepositTransactions } from '../../App/Features/Payment/paymentActions';
-import {
-   fiatTransactionsSelector,
-   fiatTransactionsLoadingSelector,
-   fiatTransactionsErrorSelector,
-} from './FiatPayment.Selector';
+import { fiatTransactionsSelector, fiatTransactionsLoadingSelector, fiatTransactionsErrorSelector } from './FiatPayment.Selector';
 import { useCookies } from 'react-cookie';
 import useAdmin from '../../Hooks/useAdmin';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
@@ -58,7 +54,6 @@ function FiatPaymentsPage() {
             <PageHeadingComponent
                pageName={'Fiat payments'}
                subHeading={'All users fiat payments'}
-               showSubHeadingCM={true}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.
                Blanditiis, maiores perspiciatis. Est rerum, sit
                voluptas molestias officia modi, provident earum ad
@@ -66,43 +61,28 @@ function FiatPaymentsPage() {
                Doloribus!`}
             />
             <div className="mt-5">
-               {fiatTransactionsError && (
-                  <p className="text-sm error_cl">{fiatTransactionsError}</p>
-               )}
+               {fiatTransactionsError && <p className="text-sm error_cl">{fiatTransactionsError}</p>}
                {fiatTransactionsLoading && <SpinnerComponent />}
-               {!!fiatTransactions &&
-               fiatTransactions?.success &&
-               fiatTransactions?.transactions ? (
+               {!!fiatTransactions && fiatTransactions?.success && fiatTransactions?.transactions ? (
                   <TableComponent
                      row={ROW}
                      nextHandler={NextPageHandler}
                      nextAndPrev={true}
                      prevHandler={PrevPageHandler}
                      disablePrevbtn={Page === 0 ? true : false}
-                     disableNextbtn={
-                        Page >= fiatTransactions?.totalPages ? true : false
-                     }
+                     disableNextbtn={Page >= fiatTransactions?.totalPages ? true : false}
                      tableWidth={1200}
                   >
                      {fiatTransactions?.transactions.map((el) => (
                         <tr key={el?._id}>
                            <td>
-                              <div
-                                 className={`status ${el?.status.replaceAll(
-                                    ' ',
-                                    '-'
-                                 )}`}
-                              >
+                              <div className={`status ${el?.status.replaceAll(' ', '-')}`}>
                                  <p>{el?.status}</p>
                               </div>
                            </td>
                            <td>{el?.wayName}</td>
                            <td>{el?.orderId}</td>
-                           <td>
-                              {dayjs(el?.createdAt).format(
-                                 'DD MMMM YY h:m:s A'
-                              )}
-                           </td>
+                           <td>{dayjs(el?.createdAt).format('DD MMMM YY h:m:s A')}</td>
                            <td>{el?.amount}</td>
                            <td>
                               <div className="flex items-center justify-center">

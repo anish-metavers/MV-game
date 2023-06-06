@@ -35,12 +35,8 @@ function FiatWithdrawTransactionPage() {
    const navigation = useNavigate();
 
    const fiatWithdrawTransaction = useSelector(fiatWithdrawTransactionSelector);
-   const fiatWithdrawTransactionLoading = useSelector(
-      fiatWithdrawTransactionLoadingSelector
-   );
-   const fiatWithdrawTransactionError = useSelector(
-      fiatWithdrawTransactionErrorSelector
-   );
+   const fiatWithdrawTransactionLoading = useSelector(fiatWithdrawTransactionLoadingSelector);
+   const fiatWithdrawTransactionError = useSelector(fiatWithdrawTransactionErrorSelector);
 
    const NextPageHandler = function () {
       setPage((prevState) => prevState + 1);
@@ -61,7 +57,6 @@ function FiatWithdrawTransactionPage() {
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               showSubHeadingCM={true}
                heading={`Fiat withdraw transaction`}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.
                Blanditiis, maiores perspiciatis. Est rerum, sit
@@ -71,11 +66,7 @@ function FiatWithdrawTransactionPage() {
             />
             <div className="mt-5">
                {fiatWithdrawTransactionLoading && <SpinnerComponent />}
-               {fiatWithdrawTransactionError && (
-                  <p className="text-sm error_cl">
-                     {fiatWithdrawTransactionError}
-                  </p>
-               )}
+               {fiatWithdrawTransactionError && <p className="text-sm error_cl">{fiatWithdrawTransactionError}</p>}
                {!!fiatWithdrawTransaction &&
                fiatWithdrawTransaction?.success &&
                fiatWithdrawTransaction?.transactions &&
@@ -86,11 +77,7 @@ function FiatWithdrawTransactionPage() {
                      nextAndPrev={true}
                      prevHandler={PrevPageHandler}
                      disablePrevbtn={Page === 0 ? true : false}
-                     disableNextbtn={
-                        Page >= fiatWithdrawTransaction?.totalPages
-                           ? true
-                           : false
-                     }
+                     disableNextbtn={Page >= fiatWithdrawTransaction?.totalPages ? true : false}
                      tableWidth={1500}
                   >
                      {fiatWithdrawTransaction?.transactions.map((el) => (
@@ -103,12 +90,7 @@ function FiatWithdrawTransactionPage() {
                            </td>
                            <td>{el?.userId}</td>
                            <td>
-                              <div
-                                 className={`status ${el?.status.replaceAll(
-                                    ' ',
-                                    '-'
-                                 )}`}
-                              >
+                              <div className={`status ${el?.status.replaceAll(' ', '-')}`}>
                                  <p>{el?.status}</p>
                               </div>
                            </td>
@@ -128,9 +110,7 @@ function FiatWithdrawTransactionPage() {
                      ))}
                   </TableComponent>
                ) : (
-                  <p className="text-center text-gray-400">
-                     No withdraw transaction
-                  </p>
+                  <p className="text-center text-gray-400">No withdraw transaction</p>
                )}
             </div>
          </div>

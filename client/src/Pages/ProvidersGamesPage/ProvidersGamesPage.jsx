@@ -8,11 +8,7 @@ import { useCookies } from 'react-cookie';
 import { useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProvidersGames } from '../../App/Features/GameProviders/GameProvidersActions';
-import {
-   providerGamesListSelector,
-   providerGamesLoadingSelector,
-   providerGamesErrorSelector,
-} from './ProviderGame.Selector';
+import { providerGamesListSelector, providerGamesLoadingSelector, providerGamesErrorSelector } from './ProviderGame.Selector';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import { removeProviderGamesInfo } from '../../App/Features/GameProviders/GameProvidersSlice';
 import TabHeadingComponent from '../../Components/TabHeadingComponent/TabHeadingComponent';
@@ -59,20 +55,12 @@ function ProvidersGamesPage() {
          <div className="container_div">
             <div className="user_profile_bn_div"></div>
             {!!providerGamesLoading ? <SpinnerComponent /> : null}
-            {!!providerGamesError ? (
-               <p className="error_cl text-sm">{providerGamesError}</p>
-            ) : null}
-            {!!providerGamesList &&
-            providerGamesList?.success &&
-            providerGamesList?.provider ? (
+            {!!providerGamesError ? <p className="error_cl text-sm">{providerGamesError}</p> : null}
+            {!!providerGamesList && providerGamesList?.success && providerGamesList?.provider ? (
                <div>
-                  <TabHeadingComponent
-                     provider={providerGamesList?.provider[0]?._id}
-                  />
+                  <TabHeadingComponent provider={providerGamesList?.provider[0]?._id} />
                   <div>
-                     <UserProfileComponent
-                        user={providerGamesList?.provider[0]?._id}
-                     />
+                     <UserProfileComponent user={providerGamesList?.provider[0]?._id} />
                   </div>
                   <h5 className="mb-4 mx-2 font-medium text-gray-400 text-xl">
                      {providerGamesList?.provider[0]?._id?.providerName}
@@ -94,24 +82,14 @@ function ProvidersGamesPage() {
                      <div className="text-center">
                         {providerGamesList?.totalDocuments ? (
                            <div className="py-3 text-gray-300 font-bold">
-                              {providerGamesList?.provider[0]?.games.length} /{' '}
-                              {providerGamesList?.totalDocuments}
+                              {providerGamesList?.provider[0]?.games.length} / {providerGamesList?.totalDocuments}
                            </div>
                         ) : null}
-                        {providerGamesList?.provider[0]?.games.length &&
-                        providerGamesList?.provider[0]?.games[0]?.game ? (
-                           providerGamesList?.totalPages &&
-                           providerGamesList?.totalPages > +page ? (
-                              <CustomButtonComponent
-                                 btnCl={'large_sn_btn'}
-                                 text={'Load more'}
-                                 onClick={LoadMoreHandler}
-                              />
+                        {providerGamesList?.provider[0]?.games.length && providerGamesList?.provider[0]?.games[0]?.game ? (
+                           providerGamesList?.totalPages && providerGamesList?.totalPages > +page ? (
+                              <CustomButtonComponent btnCl={'large_sn_btn'} text={'Load more'} onClick={LoadMoreHandler} />
                            ) : (
-                              <CustomButtonComponent
-                                 btnCl={'large_sn_btn no_allow'}
-                                 text={'No more'}
-                              />
+                              <CustomButtonComponent btnCl={'large_sn_btn no_allow'} text={'No more'} />
                            )
                         ) : null}
                      </div>

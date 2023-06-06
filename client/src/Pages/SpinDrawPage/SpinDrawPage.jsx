@@ -8,10 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllLuckyDraw } from '../../App/Features/LuckyDraw/LuckyDrawActions';
 import { useCookies } from 'react-cookie';
 import useAdmin from '../../Hooks/useAdmin';
-import {
-   luckyDrawsSelector,
-   luckyDrawLoadingSelector,
-} from './SpinDraw.Selector';
+import { luckyDrawsSelector, luckyDrawLoadingSelector } from './SpinDraw.Selector';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import TableComponent from '../../Components/TableComponent/TableComponent';
 import dayjs from 'dayjs';
@@ -53,14 +50,9 @@ function SpinDrawPage() {
          <div className="container_div">
             <PageHeadingComponent
                pageName={'All spin items'}
-               showSubHeadingCM={true}
                para={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.`}
                menu={true}
-               innerProps={
-                  <MenuItem onClick={createSpinItemsHandler}>
-                     Create new spin item
-                  </MenuItem>
-               }
+               innerProps={<MenuItem onClick={createSpinItemsHandler}>Create new spin item</MenuItem>}
             />
             {!!luckyDrawLoading && <SpinnerComponent />}
             {!!luckyDraws && luckyDraws?.success && luckyDraws?.item ? (
@@ -71,25 +63,14 @@ function SpinDrawPage() {
                      nextAndPrev={true}
                      prevHandler={prevPageHandler}
                      disablePrevbtn={+Page === 0 ? true : false}
-                     disableNextbtn={
-                        +Page >= luckyDraws?.totalPages ? true : false
-                     }
+                     disableNextbtn={+Page >= luckyDraws?.totalPages ? true : false}
                   >
                      {luckyDraws?.item.map((el) => (
                         <tr key={el?._id}>
                            <td>{el?.spinName}</td>
+                           <td>{dayjs(el?.createdAt).format('DD MMM YYYY h:m:s A')}</td>
                            <td>
-                              {dayjs(el?.createdAt).format(
-                                 'DD MMM YYYY h:m:s A'
-                              )}
-                           </td>
-                           <td>
-                              <MdModeEdit
-                                 className="cursor-pointer"
-                                 onClick={() =>
-                                    navigation(`/spin/edit/${el?._id}`)
-                                 }
-                              />
+                              <MdModeEdit className="cursor-pointer" onClick={() => navigation(`/spin/edit/${el?._id}`)} />
                            </td>
                         </tr>
                      ))}

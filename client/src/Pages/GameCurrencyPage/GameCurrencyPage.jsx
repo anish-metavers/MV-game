@@ -62,7 +62,6 @@ function GameCurrencyPage() {
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               showSubHeadingCM={true}
                subHeading={'All currency'}
                pageName={'Game Currency'}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -97,7 +96,11 @@ function GameCurrencyPage() {
                                     </div>
                                  ) : null}
                               </td>
-                              <td style={{ width: '40%' }}>{el?.description?.length > 100 ? `${el?.description.slice(0, 100)}...` : el?.description.slice(0, 100)}</td>
+                              <td style={{ width: '40%' }}>
+                                 {el?.description?.length > 100
+                                    ? `${el?.description.slice(0, 100)}...`
+                                    : el?.description.slice(0, 100)}
+                              </td>
                               <td>{dayjs(el?.createdAt).format('DD MMMM YYYY m:h:ss A')}</td>
                               <td className="flex items-center space-x-2">
                                  {/* <Popconfirm

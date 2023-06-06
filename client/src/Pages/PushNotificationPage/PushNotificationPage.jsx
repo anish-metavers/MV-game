@@ -65,22 +65,16 @@ function PushNotificationPage() {
       setBtnLoading(true);
 
       if (params?.id) {
-         const response = await dispatch(
-            updateSingleNotification({ data, id: params?.id })
-         );
+         const response = await dispatch(updateSingleNotification({ data, id: params?.id }));
          notificationMessage(response);
       } else {
-         const response = await dispatch(
-            createNewSystemNotification({ data: data })
-         );
+         const response = await dispatch(createNewSystemNotification({ data: data }));
          notificationMessage(response);
       }
    };
 
    const fetchSingleNotification = async function () {
-      const response = await dispatch(
-         getSingleNotificationInfo({ notificationId: params?.id })
-      );
+      const response = await dispatch(getSingleNotificationInfo({ notificationId: params?.id }));
       const data = response?.payload?.data;
 
       if (data) {
@@ -102,10 +96,7 @@ function PushNotificationPage() {
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               showSubHeadingCM={true}
-               subHeading={`${
-                  params?.id ? 'Update' : 'Create'
-               } system notifications`}
+               subHeading={`${params?.id ? 'Update' : 'Create'} system notifications`}
                pageName={`notification / ${params?.id ? 'Update' : 'create'}`}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.
                Blanditiis, maiores perspiciatis. Est rerum, sit
@@ -133,22 +124,13 @@ function PushNotificationPage() {
                               />
                            )}
                         />
-                        {!!errors?.heading?.message ? (
-                           <p className="text-sm error_cl">
-                              {errors?.heading?.message}
-                           </p>
-                        ) : null}
+                        {!!errors?.heading?.message ? <p className="text-sm error_cl">{errors?.heading?.message}</p> : null}
                      </div>
                      <div>
                         <Controller
                            name="description"
                            control={control}
-                           render={({ field: { onChange, value } }) => (
-                              <QuillComponent
-                                 onChange={onChange}
-                                 value={value}
-                              />
-                           )}
+                           render={({ field: { onChange, value } }) => <QuillComponent onChange={onChange} value={value} />}
                         />
                      </div>
                   </Box>

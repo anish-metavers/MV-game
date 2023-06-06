@@ -13,7 +13,13 @@ import { GiGamepad } from '@react-icons/all-files/gi/GiGamepad';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { MenuItem } from '@mui/material';
-import { getGameProvidersList, insertNewGame, getSingleGameInfo, updateSingleGame, getAllGamesCategroy } from '../../App/Features/Games/GameActions';
+import {
+   getGameProvidersList,
+   insertNewGame,
+   getSingleGameInfo,
+   updateSingleGame,
+   getAllGamesCategroy,
+} from '../../App/Features/Games/GameActions';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
@@ -180,7 +186,6 @@ function UploadGamesPage() {
          <div className="container_div">
             <PageHeadingComponent
                pageName={'Games Upload'}
-               showSubHeadingCM={true}
                para={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.`}
             />
             <div className="mt-5 w-full">
@@ -197,7 +202,16 @@ function UploadGamesPage() {
                            <Controller
                               name="name"
                               control={control}
-                              render={({ field: { onChange, value } }) => <TextField onChange={onChange} value={value || ''} className="w-full" label="Game Name" required variant="outlined" />}
+                              render={({ field: { onChange, value } }) => (
+                                 <TextField
+                                    onChange={onChange}
+                                    value={value || ''}
+                                    className="w-full"
+                                    label="Game Name"
+                                    required
+                                    variant="outlined"
+                                 />
+                              )}
                            />
                            {!!errors?.name?.message ? <p className="text-sm error_cl">{errors?.name?.message}</p> : null}
                         </div>
@@ -205,7 +219,16 @@ function UploadGamesPage() {
                            <Controller
                               name="by"
                               control={control}
-                              render={({ field: { onChange, value } }) => <TextField className="w-full" label="Game By" required value={value || ''} onChange={onChange} variant="outlined" />}
+                              render={({ field: { onChange, value } }) => (
+                                 <TextField
+                                    className="w-full"
+                                    label="Game By"
+                                    required
+                                    value={value || ''}
+                                    onChange={onChange}
+                                    variant="outlined"
+                                 />
+                              )}
                            />
                            {!!errors?.by?.message ? <p className="text-sm error_cl">{errors?.by?.message}</p> : null}
                         </div>
@@ -275,7 +298,15 @@ function UploadGamesPage() {
                               control={control}
                               render={({ field: { onChange, value } }) => (
                                  <div className="w-full">
-                                    <TextField className="w-full" id="outlined-select-currency" select required label="Game provider" value={value} onChange={(event) => onChange(event.target.value)}>
+                                    <TextField
+                                       className="w-full"
+                                       id="outlined-select-currency"
+                                       select
+                                       required
+                                       label="Game provider"
+                                       value={value}
+                                       onChange={(event) => onChange(event.target.value)}
+                                    >
                                        {gameProvidersList?.response.map((option) => (
                                           <MenuItem key={option._id} value={option._id}>
                                              {option.providerName}
@@ -290,38 +321,77 @@ function UploadGamesPage() {
                      <Controller
                         name="description"
                         control={control}
-                        render={({ field: { onChange, value } }) => <TextField label="Game Description" multiline rows={7} onChange={onChange} value={value} />}
+                        render={({ field: { onChange, value } }) => (
+                           <TextField label="Game Description" multiline rows={7} onChange={onChange} value={value} />
+                        )}
                      />
                      <Controller
                         name="url"
                         control={control}
-                        render={({ field: { onChange, value } }) => <TextField value={value || ''} onChange={onChange} className="w-full" label="Game embed url" required variant="outlined" />}
+                        render={({ field: { onChange, value } }) => (
+                           <TextField
+                              value={value || ''}
+                              onChange={onChange}
+                              className="w-full"
+                              label="Game embed url"
+                              required
+                              variant="outlined"
+                           />
+                        )}
                      />
                      {!!errors?.url?.message ? <p className="text-sm error_cl">{errors?.url?.message}</p> : null}
                      <Controller
                         name="urlMobile"
                         control={control}
-                        render={({ field: { onChange, value } }) => <TextField value={value || ''} onChange={onChange} className="w-full" label="Game embed url mobile" variant="outlined" />}
+                        render={({ field: { onChange, value } }) => (
+                           <TextField
+                              value={value || ''}
+                              onChange={onChange}
+                              className="w-full"
+                              label="Game embed url mobile"
+                              variant="outlined"
+                           />
+                        )}
                      />
                      <div>
                         <label className="text-gray-400">About this game</label>
                         <div className="mt-2">
-                           <Controller name="aboutGame" control={control} render={({ field: { onChange, value } }) => <QuillComponent onChange={onChange} value={value} />} />
+                           <Controller
+                              name="aboutGame"
+                              control={control}
+                              render={({ field: { onChange, value } }) => <QuillComponent onChange={onChange} value={value} />}
+                           />
                         </div>
                      </div>
                      <div className="flex pt-3">
                         <div>
                            <p className="text-gray-400">Will the game have a bit controller ?</p>
-                           <Controller name="gameBitcontroller" control={control} render={({ field: { onChange, value } }) => <Switch onChange={onChange} checked={value} />} />
+                           <Controller
+                              name="gameBitcontroller"
+                              control={control}
+                              render={({ field: { onChange, value } }) => <Switch onChange={onChange} checked={value} />}
+                           />
                         </div>
                      </div>
                      <div className="flex space_div">
                         <div>
-                           <ImageUploadComponent icon={<GiGamepad />} width={400} label={'Game Image'} height={400} onChange={imageHandler} preview={GameImagePreview} accept={'image/*'} />
+                           <ImageUploadComponent
+                              icon={<GiGamepad />}
+                              width={400}
+                              label={'Game Image'}
+                              height={400}
+                              onChange={imageHandler}
+                              preview={GameImagePreview}
+                              accept={'image/*'}
+                           />
                         </div>
                      </div>
                      <div className="flex">
-                        <CustomButtonComponent type={'submit'} btnCl={'Publish mt-5'} isLoading={params?.id ? updateGameLoading : insertGameLoading}>
+                        <CustomButtonComponent
+                           type={'submit'}
+                           btnCl={'Publish mt-5'}
+                           isLoading={params?.id ? updateGameLoading : insertGameLoading}
+                        >
                            <img src="/images/done.svg" />
                            {params?.id ? <p>Update</p> : <p>Publish</p>}
                         </CustomButtonComponent>

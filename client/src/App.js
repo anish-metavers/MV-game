@@ -40,6 +40,7 @@ import UploadImagesPage from './Pages/UploadImagesPage/UploadImagesPage';
 import LotteryDrawPage from './Pages/LotteryDrawPage/LotteryDrawPage';
 import EditLotteryPollPage from './Pages/EditLotteryPollPage/EditLotteryPollPage';
 import PlayersAccountsPage from './Pages/PlayersAccountsPage/PlayersAccountsPage';
+import UserStatusPage from './Pages/UserStatusPage/UserStatusPage';
 
 const darkTheme = createTheme({
    palette: {
@@ -103,6 +104,7 @@ function App() {
                   <Route path="/users" element={<UserPage />} />
                   <Route path="/players-accounts/create" element={<PlayersAccountsPage />} />
                   <Route path="/players-accounts/edit/:id" element={<PlayersAccountsPage />} />
+                  <Route path="/player-status/show/:id" element={<UserStatusPage />} />
                </Route>
                <Route path="/dashboard/auth/login" element={<LoginPage />} />
             </Routes>

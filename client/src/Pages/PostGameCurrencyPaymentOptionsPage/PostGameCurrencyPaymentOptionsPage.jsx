@@ -74,19 +74,11 @@ function PostGameCurrencyPaymentOptionsPage() {
       resolver: yupResolver(Schema),
    });
 
-   const insertPaymentMethodError = useSelector(
-      insertPaymentMethodErrorSelector
-   );
+   const insertPaymentMethodError = useSelector(insertPaymentMethodErrorSelector);
    const insertPaymentMethodInfo = useSelector(insertPaymentMethodInfoSelector);
-   const insertPaymentMethodInfoLoading = useSelector(
-      insertPaymentMethodInfoLoadingSelector
-   );
-   const updatePaymentOptionError = useSelector(
-      updatePaymentOptionErrorSelector
-   );
-   const updatePaymentOptionLoading = useSelector(
-      updatePaymentOptionLoadingSelector
-   );
+   const insertPaymentMethodInfoLoading = useSelector(insertPaymentMethodInfoLoadingSelector);
+   const updatePaymentOptionError = useSelector(updatePaymentOptionErrorSelector);
+   const updatePaymentOptionLoading = useSelector(updatePaymentOptionLoadingSelector);
    const updatePaymentOptionInfo = useSelector(updatePaymentOptionInfoSelector);
    const paymentFields = useSelector(paymentFieldsSelector);
    const paymentFieldsLoading = useSelector(paymentFieldsLoadingSelector);
@@ -109,10 +101,7 @@ function PostGameCurrencyPaymentOptionsPage() {
       formData.append('max', data?.max);
       formData.append('vipOnly', data?.vipOnly);
       formData.append('image', data?.image);
-      formData.append(
-         'paymentFields',
-         JSON.stringify(data?.paymentOptionsFields)
-      );
+      formData.append('paymentFields', JSON.stringify(data?.paymentOptionsFields));
 
       return formData;
    };
@@ -138,9 +127,7 @@ function PostGameCurrencyPaymentOptionsPage() {
 
    const SinglePaymentOption = async function () {
       try {
-         const response = await dispatch(
-            getSinglePaymentCurrencyOption({ _id: params?.id })
-         );
+         const response = await dispatch(getSinglePaymentCurrencyOption({ _id: params?.id }));
          const data = response?.payload?.data;
 
          if (data && data?.method.length) {
@@ -178,12 +165,7 @@ function PostGameCurrencyPaymentOptionsPage() {
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               showSubHeadingCM={true}
-               subHeading={
-                  params?.id
-                     ? 'Update payment option'
-                     : 'Create new payment options'
-               }
+               subHeading={params?.id ? 'Update payment option' : 'Create new payment options'}
                pageName={'Currency Payment'}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.
                Blanditiis, maiores perspiciatis. Est rerum, sit
@@ -212,15 +194,8 @@ function PostGameCurrencyPaymentOptionsPage() {
                         </div>
                         <div className="w-full">
                            {paymentFieldsLoading && <SpinnerComponent />}
-                           {paymentFieldsError && (
-                              <p className="text-sm error_cl">
-                                 {paymentFieldsError}
-                              </p>
-                           )}
-                           {!!paymentFields &&
-                           paymentFields?.success &&
-                           paymentFields?.items &&
-                           paymentFields?.items.length ? (
+                           {paymentFieldsError && <p className="text-sm error_cl">{paymentFieldsError}</p>}
+                           {!!paymentFields && paymentFields?.success && paymentFields?.items && paymentFields?.items.length ? (
                               <Controller
                                  name="paymentOptionsFields"
                                  control={control}
@@ -263,11 +238,7 @@ function PostGameCurrencyPaymentOptionsPage() {
                                  shrink: true,
                               }}
                            />
-                           {!!errors?.min?.message ? (
-                              <p className="text-sm error_cl">
-                                 {errors?.min?.message}
-                              </p>
-                           ) : null}
+                           {!!errors?.min?.message ? <p className="text-sm error_cl">{errors?.min?.message}</p> : null}
                         </div>
                         <div className="w-full">
                            <TextField
@@ -281,17 +252,11 @@ function PostGameCurrencyPaymentOptionsPage() {
                                  shrink: true,
                               }}
                            />
-                           {!!errors?.max?.message ? (
-                              <p className="text-sm error_cl">
-                                 {errors?.max?.message}
-                              </p>
-                           ) : null}
+                           {!!errors?.max?.message ? <p className="text-sm error_cl">{errors?.max?.message}</p> : null}
                         </div>
                      </div>
                      <div className="flex items-center space-x-4">
-                        <p className="text-gray-200 text-sm font-medium mt-3">
-                           Vip only
-                        </p>
+                        <p className="text-gray-200 text-sm font-medium mt-3">Vip only</p>
                         <Controller
                            name="vipOnly"
                            control={control}
@@ -326,33 +291,16 @@ function PostGameCurrencyPaymentOptionsPage() {
                         type={'submit'}
                         text={params?.id ? 'Update' : 'Save'}
                         btnCl={'Publish mt-3'}
-                        isLoading={
-                           params?.id
-                              ? updatePaymentOptionLoading
-                              : insertPaymentMethodInfoLoading
-                        }
+                        isLoading={params?.id ? updatePaymentOptionLoading : insertPaymentMethodInfoLoading}
                      />
                   </div>
                   {!!updatePaymentOptionInfo ? (
-                     <p className="text-sm text-gray-300 mt-2">
-                        {updatePaymentOptionInfo?.message}
-                     </p>
+                     <p className="text-sm text-gray-300 mt-2">{updatePaymentOptionInfo?.message}</p>
                   ) : null}
-                  {!!insertPaymentMethodError ? (
-                     <p className="text-sm error_cl mt-2">
-                        {insertPaymentMethodError}
-                     </p>
-                  ) : null}
-                  {!!updatePaymentOptionError ? (
-                     <p className="text-sm error_cl mt-2">
-                        {updatePaymentOptionError}
-                     </p>
-                  ) : null}
-                  {!!insertPaymentMethodInfo &&
-                  insertPaymentMethodInfo?.success ? (
-                     <p className="text-sm text-gray-300 mt-2">
-                        {insertPaymentMethodInfo?.message}
-                     </p>
+                  {!!insertPaymentMethodError ? <p className="text-sm error_cl mt-2">{insertPaymentMethodError}</p> : null}
+                  {!!updatePaymentOptionError ? <p className="text-sm error_cl mt-2">{updatePaymentOptionError}</p> : null}
+                  {!!insertPaymentMethodInfo && insertPaymentMethodInfo?.success ? (
+                     <p className="text-sm text-gray-300 mt-2">{insertPaymentMethodInfo?.message}</p>
                   ) : null}
                </form>
             </div>

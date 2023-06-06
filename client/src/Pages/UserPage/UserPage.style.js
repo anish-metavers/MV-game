@@ -6,6 +6,7 @@ export const div = styled.div`
       height: 50px;
       border-radius: 50%;
       overflow: hidden;
+      cursor: pointer;
 
       img {
          width: 100%;

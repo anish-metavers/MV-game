@@ -54,3 +54,18 @@ export const setPlayerAccountPassword = createAsyncThunk(
       }
    }
 );
+
+export const getUserSingleAccountInformation = createAsyncThunk(
+   'userManagement/getUserAccountStatus',
+   async ({ userId }, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(`/userManagement/get-user-account-information?userId=${userId}`);
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
