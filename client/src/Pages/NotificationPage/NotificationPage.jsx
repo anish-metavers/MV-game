@@ -5,10 +5,7 @@ import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHead
 import { MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-   getAllSystemNotification,
-   deleteSingleNotification,
-} from '../../App/Features/Notification/notificationActions';
+import { getAllSystemNotification, deleteSingleNotification } from '../../App/Features/Notification/notificationActions';
 import { useCookies } from 'react-cookie';
 import useAdmin from '../../Hooks/useAdmin';
 import {
@@ -44,9 +41,7 @@ function NotificationPage() {
 
    const notificationError = useSelector(notificationErrorSelector);
    const systemNotifications = useSelector(systemNotificationsSelector);
-   const systemNotificationsLoading = useSelector(
-      systemNotificationsLoadingSelector
-   );
+   const systemNotificationsLoading = useSelector(systemNotificationsLoadingSelector);
 
    const NextPageHandler = function () {
       setPage((prevState) => prevState + 1);
@@ -112,17 +107,11 @@ function NotificationPage() {
                Blanditiis, maiores perspiciatis. Est rerum, sit
                voluptas molestias.`}
                menu={true}
-               innerProps={
-                  <MenuItem onClick={CreateNewNotification}>
-                     Create new notification
-                  </MenuItem>
-               }
+               innerProps={<MenuItem onClick={CreateNewNotification}>Create new notification</MenuItem>}
             />
             <div className="mt-5">
                {!!systemNotificationsLoading ? <SpinnerComponent /> : null}
-               {!!notificationError ? (
-                  <p className="text-sm error_cl">{notificationError}</p>
-               ) : null}
+               {!!notificationError ? <p className="text-sm error_cl">{notificationError}</p> : null}
                {!!systemNotifications &&
                systemNotifications?.success &&
                systemNotifications?.notifications &&
@@ -133,30 +122,16 @@ function NotificationPage() {
                      nextHandler={NextPageHandler}
                      prevHandler={PrevPageHandler}
                      disablePrevbtn={Page === 0 ? true : false}
-                     disableNextbtn={
-                        Page >= systemNotifications?.totalPages ? true : false
-                     }
+                     disableNextbtn={Page >= systemNotifications?.totalPages ? true : false}
                      tableWidth={'1000'}
                   >
                      {systemNotifications?.notifications.map((el) => (
                         <tr key={el?._id}>
                            <td>{el?.heading}</td>
-                           <td>
-                              {dayjs(el?.createdAt).format(
-                                 'DD MMMM YY hh:mm:ss A'
-                              )}
-                           </td>
-                           <td>
-                              {dayjs(el?.updatedAt).format(
-                                 'DD MMMM YY hh:mm:ss A'
-                              )}
-                           </td>
+                           <td>{dayjs(el?.createdAt).format('DD MMMM YY hh:mm:ss A')}</td>
+                           <td>{dayjs(el?.updatedAt).format('DD MMMM YY hh:mm:ss A')}</td>
                            <td className="flex items-center space-x-3 icon_box">
-                              <RiEditFill
-                                 onClick={() =>
-                                    navigation(`/notification/edit/${el?._id}`)
-                                 }
-                              />
+                              <RiEditFill onClick={() => navigation(`/notification/edit/${el?._id}`)} />
                               <Popconfirm
                                  title="Delete the task"
                                  description="Are you sure to delete this notification?"
@@ -169,9 +144,7 @@ function NotificationPage() {
                            </td>
                            <td>
                               <Switch
-                                 onChange={(checked) =>
-                                    PublishSystemNotification(el?._id, checked)
-                                 }
+                                 onChange={(checked) => PublishSystemNotification(el?._id, checked)}
                                  checkedChildren="Yes"
                                  unCheckedChildren="No"
                                  defaultChecked={el?.publish}
@@ -180,7 +153,11 @@ function NotificationPage() {
                         </tr>
                      ))}
                   </TableComponent>
-               ) : null}
+               ) : (
+                  <div className="text-center">
+                     <p className="text-gray-300 font-medium">No Notifications</p>
+                  </div>
+               )}
             </div>
          </div>
       </styled.div>

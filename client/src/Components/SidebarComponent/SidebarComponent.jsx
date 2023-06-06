@@ -24,6 +24,7 @@ import { AiOutlineTransaction } from '@react-icons/all-files/ai/AiOutlineTransac
 import { ImSpinner10 } from '@react-icons/all-files/im/ImSpinner10';
 import { ImImages } from '@react-icons/all-files/im/ImImages';
 import { GiRolledCloth } from '@react-icons/all-files/gi/GiRolledCloth';
+import { RiAccountPinBoxFill } from '@react-icons/all-files/ri/RiAccountPinBoxFill';
 
 function SidebarComponent() {
    const auth = useSelector(authSelector);
@@ -49,82 +50,25 @@ function SidebarComponent() {
          </div>
          <styled.sclDiv className="shadow">
             <DashboardSidebarTabComponent heading={'Dashboard'}>
-               <IconListComponent
-                  icon={<MdDashboard />}
-                  heading={'Dashboard'}
-                  link={'/'}
-               />
-               <IconListComponent
-                  icon={<FiLink />}
-                  heading={'Users Role'}
-                  link={'/user-roles?page=0'}
-               />
-               <IconListComponent
-                  icon={<HiOutlineCurrencyRupee />}
-                  heading={'Game Currency'}
-                  link={'/game-currency?page=0'}
-               />
-               <IconListComponent
-                  icon={<VscExtensions />}
-                  heading={'Game Category'}
-                  link={'/game-category?page=0'}
-               />
-               <IconListComponent
-                  icon={<RiGameFill />}
-                  heading={'Games'}
-                  link={'/games?page=0'}
-               />
-               <IconListComponent
-                  icon={<FiGitlab />}
-                  heading={'Avatar'}
-                  link={'/avatars'}
-               />
-               <IconListComponent
-                  icon={<FiUsers />}
-                  heading={'Users'}
-                  link={'/users?page=0'}
-               />
-               <IconListComponent
-                  icon={<SiNintendogamecube />}
-                  heading={'Games providers'}
-                  link={'/games/providers?page=0'}
-               />
-               <IconListComponent
-                  icon={<ImImages />}
-                  heading={'Images'}
-                  link={'/upload-images'}
-               />
+               <IconListComponent icon={<MdDashboard />} heading={'Dashboard'} link={'/'} />
+               <IconListComponent icon={<FiLink />} heading={'Users Role'} link={'/user-roles?page=0'} />
+               <IconListComponent icon={<HiOutlineCurrencyRupee />} heading={'Game Currency'} link={'/game-currency?page=0'} />
+               <IconListComponent icon={<VscExtensions />} heading={'Game Category'} link={'/game-category?page=0'} />
+               <IconListComponent icon={<RiGameFill />} heading={'Games'} link={'/games?page=0'} />
+               <IconListComponent icon={<FiGitlab />} heading={'Avatar'} link={'/avatars'} />
+               <IconListComponent icon={<SiNintendogamecube />} heading={'Games providers'} link={'/games/providers?page=0'} />
+               <IconListComponent icon={<ImImages />} heading={'Images'} link={'/upload-images'} />
             </DashboardSidebarTabComponent>
             <DashboardSidebarTabComponent heading={'Push Notification'}>
-               <IconListComponent
-                  icon={<RiNotificationBadgeFill />}
-                  heading={'Notification'}
-                  link={'notification'}
-               />
+               <IconListComponent icon={<RiNotificationBadgeFill />} heading={'Notification'} link={'notification'} />
             </DashboardSidebarTabComponent>
             <DashboardSidebarTabComponent heading={'Tools'}>
-               <IconListComponent
-                  icon={<AiOutlineFileProtect />}
-                  heading={'Export Game Data'}
-                  link={'/export/game/data'}
-               />
+               <IconListComponent icon={<AiOutlineFileProtect />} heading={'Export Game Data'} link={'/export/game/data'} />
             </DashboardSidebarTabComponent>
             <DashboardSidebarTabComponent heading={'Payment'}>
-               <IconListComponent
-                  icon={<VscSymbolArray />}
-                  heading={'Payment fields'}
-                  link={'/payment-fields'}
-               />
-               <IconListComponent
-                  icon={<VscSymbolMethod />}
-                  heading={'Game Currency Payment'}
-                  link={'/game-currency-payment'}
-               />
-               <IconListComponent
-                  icon={<MdPayment />}
-                  heading={'Fiat deposit payments'}
-                  link={'/fiat-deposit-payments'}
-               />
+               <IconListComponent icon={<VscSymbolArray />} heading={'Payment fields'} link={'/payment-fields'} />
+               <IconListComponent icon={<VscSymbolMethod />} heading={'Game Currency Payment'} link={'/game-currency-payment'} />
+               <IconListComponent icon={<MdPayment />} heading={'Fiat deposit payments'} link={'/fiat-deposit-payments'} />
                <IconListComponent
                   icon={<AiOutlineTransaction />}
                   heading={'Fiat withdraw transaction'}
@@ -132,16 +76,12 @@ function SidebarComponent() {
                />
             </DashboardSidebarTabComponent>
             <DashboardSidebarTabComponent heading={'Lucky Draw'}>
-               <IconListComponent
-                  icon={<ImSpinner10 />}
-                  heading={'Spin'}
-                  link={'spin-draw'}
-               />
-               <IconListComponent
-                  icon={<GiRolledCloth />}
-                  heading={'Lottery lucky draw'}
-                  link={'lottery-draw'}
-               />
+               <IconListComponent icon={<ImSpinner10 />} heading={'Spin'} link={'spin-draw'} />
+               <IconListComponent icon={<GiRolledCloth />} heading={'Lottery lucky draw'} link={'lottery-draw'} />
+            </DashboardSidebarTabComponent>
+            <DashboardSidebarTabComponent heading={'User management'}>
+               <IconListComponent icon={<FiUsers />} heading={'Users'} link={'/users?page=0'} />
+               <IconListComponent icon={<RiAccountPinBoxFill />} heading={'Player accounts'} link={'/players-accounts/create'} />
             </DashboardSidebarTabComponent>
          </styled.sclDiv>
       </styled.div>

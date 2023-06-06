@@ -39,6 +39,7 @@ import CreateSpinItemPage from './Pages/CreateSpinItemPage/CreateSpinItemPage';
 import UploadImagesPage from './Pages/UploadImagesPage/UploadImagesPage';
 import LotteryDrawPage from './Pages/LotteryDrawPage/LotteryDrawPage';
 import EditLotteryPollPage from './Pages/EditLotteryPollPage/EditLotteryPollPage';
+import PlayersAccountsPage from './Pages/PlayersAccountsPage/PlayersAccountsPage';
 
 const darkTheme = createTheme({
    palette: {
@@ -75,7 +76,6 @@ function App() {
                   <Route path="/games/create" element={<UploadGamesPage />} />
                   <Route path="/games/:id" element={<UploadGamesPage />} />
                   <Route path="/avatars" element={<UserAvatarComponent />} />
-                  <Route path="/users" element={<UserPage />} />
                   <Route path="/game-category" element={<GameCategoryPage />} />
                   <Route path="/export/game/data" element={<ExportGameDataPage />} />
                   <Route path="/games/providers" element={<GameProvidersPage />} />
@@ -100,6 +100,9 @@ function App() {
                   <Route path="/upload-images" element={<UploadImagesPage />} />
                   <Route path="/lottery-draw" element={<LotteryDrawPage />} />
                   <Route path="/lottery-draw/edit/:id" element={<EditLotteryPollPage />} />
+                  <Route path="/users" element={<UserPage />} />
+                  <Route path="/players-accounts/create" element={<PlayersAccountsPage />} />
+                  <Route path="/players-accounts/edit/:id" element={<PlayersAccountsPage />} />
                </Route>
                <Route path="/dashboard/auth/login" element={<LoginPage />} />
             </Routes>

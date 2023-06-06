@@ -10,13 +10,10 @@ import { useSearchParams } from 'react-router-dom';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import TableComponent from '../../Components/TableComponent/TableComponent';
 import dayjs from 'dayjs';
-import {
-   usersSelector,
-   userLoadingSelector,
-   userErrorsSelector,
-} from './User.Selector';
+import { usersSelector, userLoadingSelector, userErrorsSelector } from './User.Selector';
 import { ROW } from './UserTable';
 import { useNavigate } from 'react-router-dom';
+import { VscEdit } from '@react-icons/all-files/vsc/VscEdit';
 
 function UserPage() {
    const dispatch = useDispatch();
@@ -36,6 +33,10 @@ function UserPage() {
 
    const PrevPageHandler = function () {
       navigation(`?page=${+page - 1}`);
+   };
+
+   const editAccountHandler = function (userId) {
+      navigation(`/players-accounts/edit/${userId}`);
    };
 
    useEffect(() => {
@@ -59,9 +60,7 @@ function UserPage() {
                Doloribus!`}
             />
             <div className="mt-5">
-               {!!userErrors ? (
-                  <p className="text-sm error_cl">{userErrors}</p>
-               ) : null}
+               {!!userErrors ? <p className="text-sm error_cl">{userErrors}</p> : null}
                {userLoading ? <SpinnerComponent /> : null}
                {!!users && users?.success && users?.users ? (
                   <TableComponent
@@ -71,7 +70,7 @@ function UserPage() {
                      prevHandler={PrevPageHandler}
                      disablePrevbtn={+page === 0 ? true : false}
                      disableNextbtn={+page >= users?.totalPages ? true : false}
-                     tableWidth={2500}
+                     tableWidth={1400}
                   >
                      {users?.users.map((el) => (
                         <tr key={el?._id}>
@@ -83,28 +82,21 @@ function UserPage() {
                               </div>
                            </td>
                            <td>{el?.userId}</td>
-                           <td>{el?.statisticsHidden.toString()}</td>
-                           <td>{el?.privateChat.toString()}</td>
-                           <td>{el?.online.toString()}</td>
-                           <td>{el?.newFriendRequest.toString()}</td>
-                           <td>{el?.hideUser.toString()}</td>
-                           <td>{el?.active.toString()}</td>
-                           <td>{el?.level}</td>
-                           <td>{el?.todaySpin.toString()}</td>
+                           {/* <td>{!!el?.statisticsHidden && el?.statisticsHidden.toString()}</td>
+                           <td>{!!el?.privateChat && el?.privateChat.toString()}</td>
+                           <td>{!!el?.online && el?.online.toString()}</td>
+                           <td>{!!el?.newFriendRequest && el?.newFriendRequest.toString()}</td>
+                           <td>{!!el?.hideUser && el?.hideUser.toString()}</td>
+                           <td>{!!el?.active && el?.active.toString()}</td>
+                           <td>{!!el?.level && el?.level}</td>
+                           <td>{!!el?.todaySpin && el?.todaySpin.toString()}</td> */}
+                           <td>{dayjs(el?.createdAt).format('DD MMMM YYYY hh:mm:ss A')}</td>
+                           {/* <td>{dayjs(el?.spinTimePeriod).format('DD MMMM YYYY hh:mm:ss A')}</td> */}
+                           <td>{dayjs(el?.updatedAt).format('DD MMMM YYYY hh:mm:ss A')}</td>
                            <td>
-                              {dayjs(el?.createdAt).format(
-                                 'DD MMMM YYYY hh:mm:ss A'
-                              )}
-                           </td>
-                           <td>
-                              {dayjs(el?.spinTimePeriod).format(
-                                 'DD MMMM YYYY hh:mm:ss A'
-                              )}
-                           </td>
-                           <td>
-                              {dayjs(el?.updatedAt).format(
-                                 'DD MMMM YYYY hh:mm:ss A'
-                              )}
+                              <div>
+                                 <VscEdit className="cursor-pointer" onClick={() => editAccountHandler(el?._id)} />
+                              </div>
                            </td>
                         </tr>
                      ))}

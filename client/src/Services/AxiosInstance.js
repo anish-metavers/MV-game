@@ -7,9 +7,7 @@ const ADMIN_DASHBOARD_URL = process.env.REACT_APP_BACKEND_BASE_ADMIN_URL;
 const ADMIN_KEY = process.env.REACT_APP_ADMIN_SECRET_KEY;
 
 const getCookieValues = function () {
-   const cookieObj = new URLSearchParams(
-      document.cookie.replaceAll('&', '%26').replaceAll('; ', '&')
-   );
+   const cookieObj = new URLSearchParams(document.cookie.replaceAll('&', '%26').replaceAll('; ', '&'));
 
    return cookieObj;
 };
@@ -47,9 +45,7 @@ axiosInstance.interceptors.request.use(
             return req;
          } else {
             // request for the new token when the user token is expire.
-            axios.defaults.headers.common[
-               'Authorization'
-            ] = `Bearer ${refreshToken}`;
+            axios.defaults.headers.common['Authorization'] = `Bearer ${refreshToken}`;
 
             const accessTokenResponse = await axios.post(
                `${USER_API_ROUTE_URL}/auth/refresh-token?userId=${decodeAccessToken._id}`,
@@ -58,16 +54,11 @@ axiosInstance.interceptors.request.use(
                }
             );
 
-            if (
-               accessTokenResponse?.data &&
-               accessTokenResponse?.data?.success
-            ) {
+            if (accessTokenResponse?.data && accessTokenResponse?.data?.success) {
                document.cookie = `_mv_games_access_token=${accessTokenResponse?.data?.accessToken}`;
 
                // set new access token in headers.
-               req.headers[
-                  'Authorization'
-               ] = `Bearer ${accessTokenResponse?.data?.accessToken}`;
+               req.headers['Authorization'] = `Bearer ${accessTokenResponse?.data?.accessToken}`;
 
                return req;
             }

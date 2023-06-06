@@ -45,6 +45,7 @@ const INITAL_STATE = {
    gameStatusError: null,
    gameStatusFilterData: null,
    gameStatusFilterDataError: null,
+   showSetPasswordPopup: false,
 };
 
 const adminSlice = createSlice({
@@ -56,10 +57,12 @@ const adminSlice = createSlice({
          state.singleRole = null;
          state.newRoleInsertInfo = null;
       },
-
       removeAvatarInfo: (state) => {
          state.gameAvatarUploadInfo = null;
          state.gameAvatarUploadError = null;
+      },
+      showAndHidePwdPopupHandler: (state, action) => {
+         state.showSetPasswordPopup = action.payload;
       },
    },
    extraReducers: (bulder) => {
@@ -94,9 +97,7 @@ const adminSlice = createSlice({
             state.deleteSingleRoleLoading = false;
             state.roles = {
                ...state.roles,
-               roles: state.roles?.roles.filter(
-                  (el) => el._id !== action.payload?.data?.roleId
-               ),
+               roles: state.roles?.roles.filter((el) => el._id !== action.payload?.data?.roleId),
             };
          });
 
@@ -191,10 +192,7 @@ const adminSlice = createSlice({
             state.gameAvatarUploadError = null;
             state.gameAvatar = {
                ...state.gameAvatar,
-               avatars: [
-                  action.payload?.data?.avatar,
-                  ...state.gameAvatar?.avatars,
-               ],
+               avatars: [action.payload?.data?.avatar, ...state.gameAvatar?.avatars],
             };
          });
 
@@ -212,9 +210,7 @@ const adminSlice = createSlice({
             state.deleteSingleAvatarError = null;
             state.gameAvatar = {
                ...state.gameAvatar,
-               avatars: state.gameAvatar?.avatars.filter(
-                  (el) => el._id !== action.payload?.data?.id
-               ),
+               avatars: state.gameAvatar?.avatars.filter((el) => el._id !== action.payload?.data?.id),
             };
          });
 
@@ -264,6 +260,6 @@ const adminSlice = createSlice({
    },
 });
 
-export const { removeSingleRoleInfo, removeAvatarInfo } = adminSlice.actions;
+export const { removeSingleRoleInfo, removeAvatarInfo, showAndHidePwdPopupHandler } = adminSlice.actions;
 
 export default adminSlice.reducer;

@@ -10,11 +10,8 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { message } from 'antd';
 import { CgColorPicker } from '@react-icons/all-files/cg/CgColorPicker';
-import PicMediaImagesPopupComponent from '../PicMediaImagesPopupComponent/PicMediaImagesPopupComponent';
-import { AnimatePresence } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-   showPickerPopUpSelector,
    pickedImageSelector,
    createNewLuckyDrawLoadingSelector,
    singleDrawInfoSelector,
@@ -22,16 +19,9 @@ import {
    allGameCurrencyListSelector,
    // allGameCurrencyListLoadingSelector,
 } from './Spin.Selector';
-import {
-   showPickerPopUpHandler,
-   pickedImageHandler,
-} from '../../App/Features/Media/MediaSlice';
+import { showPickerPopUpHandler, pickedImageHandler } from '../../App/Features/Media/MediaSlice';
 import { VscClose } from '@react-icons/all-files/vsc/VscClose';
-import {
-   createNewLuckyDraw,
-   getSingleLuckyDraw,
-   updateSpinLuckyDraw,
-} from '../../App/Features/LuckyDraw/LuckyDrawActions';
+import { createNewLuckyDraw, getSingleLuckyDraw, updateSpinLuckyDraw } from '../../App/Features/LuckyDraw/LuckyDrawActions';
 import { useParams } from 'react-router';
 import { useCookies } from 'react-cookie';
 import useAdmin from '../../Hooks/useAdmin';
@@ -72,15 +62,10 @@ function CreateSpinItemPage() {
    const params = useParams();
    const paramId = params?.id;
 
-   const showPickerPopUp = useSelector(showPickerPopUpSelector);
    const pickedImage = useSelector(pickedImageSelector);
-   const createNewLuckyDrawLoading = useSelector(
-      createNewLuckyDrawLoadingSelector
-   );
+   const createNewLuckyDrawLoading = useSelector(createNewLuckyDrawLoadingSelector);
    const singleDrawInfo = useSelector(singleDrawInfoSelector);
-   const updateSingleDrawInfoLoading = useSelector(
-      updateSingleDrawInfoLoadingSelector
-   );
+   const updateSingleDrawInfoLoading = useSelector(updateSingleDrawInfoLoadingSelector);
    const allGameCurrencyList = useSelector(allGameCurrencyListSelector);
 
    const addNewSpinItemHandler = function () {
@@ -112,8 +97,7 @@ function CreateSpinItemPage() {
    /** ------------------- when we want to store spin draw icon --------- */
 
    const onSubmit = function (data) {
-      if (!isAdmin)
-         message.error('You have no permission to access this feature.');
+      if (!isAdmin) message.error('You have no permission to access this feature.');
 
       if (!!paramId) {
          return dispatch(updateSpinLuckyDraw({ data, id: paramId }));
@@ -130,9 +114,7 @@ function CreateSpinItemPage() {
       if (!!pickedImage) {
          const pickerIndex = getValues('selectedPickedItem');
          const stateArray = getValues('spinItems');
-         const updatedArray = stateArray.map((el, idx) =>
-            idx === pickerIndex ? { ...el, icon: pickedImage } : el
-         );
+         const updatedArray = stateArray.map((el, idx) => (idx === pickerIndex ? { ...el, icon: pickedImage } : el));
          setValue('spinItems', updatedArray);
          dispatch(pickedImageHandler({ pickedImage: null }));
       }
@@ -145,12 +127,7 @@ function CreateSpinItemPage() {
    }, [paramId, isAdmin]);
 
    useEffect(() => {
-      if (
-         !!isAdmin &&
-         !!singleDrawInfo &&
-         singleDrawInfo?.success &&
-         singleDrawInfo?.item
-      ) {
+      if (!!isAdmin && !!singleDrawInfo && singleDrawInfo?.success && singleDrawInfo?.item) {
          setValue('spinName', singleDrawInfo?.item?.item?.spinName);
          setValue('spinItems', singleDrawInfo?.item?.spinItems);
          setValue('enable', singleDrawInfo?.item?.item?.enable);
@@ -170,19 +147,10 @@ function CreateSpinItemPage() {
 
    return (
       <styled.div>
-         <AnimatePresence>
-            {!!showPickerPopUp && (
-               <PicMediaImagesPopupComponent
-                  close={() => dispatch(showPickerPopUpHandler(false))}
-               />
-            )}
-         </AnimatePresence>
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               pageName={
-                  !!paramId ? 'Update spin draw' : 'Create new spin item'
-               }
+               pageName={!!paramId ? 'Update spin draw' : 'Create new spin item'}
                showSubHeadingCM={true}
                para={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.`}
                menu={false}
@@ -211,9 +179,7 @@ function CreateSpinItemPage() {
                            )}
                         />
                         {!!errors && errors?.spinName?.message && (
-                           <p className="text-sm error_cl mt-2">
-                              {errors?.spinName?.message}
-                           </p>
+                           <p className="text-sm error_cl mt-2">{errors?.spinName?.message}</p>
                         )}
                      </div>
                      <div className="flex items-center space-x-2">
@@ -221,12 +187,7 @@ function CreateSpinItemPage() {
                            name="enable"
                            control={control}
                            render={({ field: { onChange, value } }) => (
-                              <Switch
-                                 onChange={onChange}
-                                 checked={value}
-                                 checkedChildren={'yes'}
-                                 unCheckedChildren={'No'}
-                              />
+                              <Switch onChange={onChange} checked={value} checkedChildren={'yes'} unCheckedChildren={'No'} />
                            )}
                         />
                         <p className="text-gray-300">Enable</p>
@@ -249,10 +210,7 @@ function CreateSpinItemPage() {
                         </div> */}
                      </div>
                      {fields.map((item, index) => (
-                        <div
-                           key={index}
-                           className="flex items-center space-x-3 py-2"
-                        >
+                        <div key={index} className="flex items-center space-x-3 py-2">
                            {/* <Controller
                               name={`spinItems.${index}.name`}
                               control={control}
@@ -306,43 +264,27 @@ function CreateSpinItemPage() {
                                  <Controller
                                     name={`spinItems.${index}.selectedCurrency`}
                                     control={control}
-                                    render={({
-                                       field: { onChange, value },
-                                    }) => (
+                                    render={({ field: { onChange, value } }) => (
                                        <TextField
                                           className="w-full"
                                           select
                                           label="Select"
                                           onChange={(event) => {
-                                             const findSelectedCr =
-                                                allGameCurrencyList?.items.find(
-                                                   (el) =>
-                                                      el?.currencyId ===
-                                                      event.target.value
-                                                );
-                                             setValue(
-                                                `spinItems.${index}.currencyType`,
-                                                findSelectedCr?.currencyType
+                                             const findSelectedCr = allGameCurrencyList?.items.find(
+                                                (el) => el?.currencyId === event.target.value
                                              );
-                                             setValue(
-                                                `spinItems.${index}.name`,
-                                                findSelectedCr?.currencyName
-                                             );
+                                             setValue(`spinItems.${index}.currencyType`, findSelectedCr?.currencyType);
+                                             setValue(`spinItems.${index}.name`, findSelectedCr?.currencyName);
                                              onChange(event);
                                           }}
                                           required
                                           value={value || ''}
                                        >
-                                          {allGameCurrencyList?.items.map(
-                                             (option) => (
-                                                <MenuItem
-                                                   key={option?.currencyId}
-                                                   value={option.currencyId}
-                                                >
-                                                   {option.currencyName}
-                                                </MenuItem>
-                                             )
-                                          )}
+                                          {allGameCurrencyList?.items.map((option) => (
+                                             <MenuItem key={option?.currencyId} value={option.currencyId}>
+                                                {option.currencyName}
+                                             </MenuItem>
+                                          ))}
                                        </TextField>
                                     )}
                                  />
@@ -367,20 +309,12 @@ function CreateSpinItemPage() {
                         </div>
                      ))}
                      <div className="flex items-center space-x-3">
-                        <CustomButtonComponent
-                           text={'Add new spin item'}
-                           btnCl={'Publish'}
-                           onClick={addNewSpinItemHandler}
-                        />
+                        <CustomButtonComponent text={'Add new spin item'} btnCl={'Publish'} onClick={addNewSpinItemHandler} />
                         <CustomButtonComponent
                            text={!!paramId ? 'Update' : 'Save'}
                            btnCl={'Publish'}
                            type={'submit'}
-                           isLoading={
-                              !!paramId
-                                 ? updateSingleDrawInfoLoading
-                                 : createNewLuckyDrawLoading
-                           }
+                           isLoading={!!paramId ? updateSingleDrawInfoLoading : createNewLuckyDrawLoading}
                         />
                      </div>
                   </Box>

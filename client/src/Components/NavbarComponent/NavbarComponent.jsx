@@ -11,8 +11,12 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { FiLogIn } from '@react-icons/all-files/fi/FiLogIn';
 import { useNavigate } from 'react-router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logOut } from '../../App/Features/Auth/authSlice';
+import PicMediaImagesPopupComponent from '../../Pages/PicMediaImagesPopupComponent/PicMediaImagesPopupComponent';
+import { AnimatePresence } from 'framer-motion';
+import { showPickerPopUpSelector } from './Navbar.Selector';
+import { showPickerPopUpHandler } from '../../App/Features/Media/MediaSlice';
 
 function NavbarComponent() {
    const [cookie, _, removeCookie] = useCookies();
@@ -21,6 +25,7 @@ function NavbarComponent() {
    const [anchorEl, setAnchorEl] = React.useState(null);
 
    const open = Boolean(anchorEl);
+   const showPickerPopUp = useSelector(showPickerPopUpSelector);
 
    const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
@@ -41,6 +46,9 @@ function NavbarComponent() {
 
    return (
       <styled.div className="shadow-sm flex items-center justify-between">
+         <AnimatePresence>
+            {!!showPickerPopUp && <PicMediaImagesPopupComponent close={() => dispatch(showPickerPopUpHandler(false))} />}
+         </AnimatePresence>
          {!!cookie && !!cookie?._mv_games_auth ? (
             <Fragment>
                <div className="flex items-center">

@@ -1,10 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import {
-   uploadBulkImages,
-   getAllUploadImages,
-   deleteMediaFiles,
-   replaceMediaImage,
-} from './MediaActions';
+import { uploadBulkImages, getAllUploadImages, deleteMediaFiles, replaceMediaImage } from './MediaActions';
 
 const INITAL_STATE = {
    uploadBulkImagesInfo: null,
@@ -41,6 +36,9 @@ const mediaSlice = createSlice({
       pickedImageHandler: (state, action) => {
          state.pickedImage = action.payload?.pickedImage;
       },
+      removePickedImage: (state) => {
+         state.pickedImage = null;
+      },
    },
    extraReducers: (bulder) => {
       bulder
@@ -57,10 +55,7 @@ const mediaSlice = createSlice({
          .addCase(uploadBulkImages.fulfilled, (state, action) => {
             state.mediaImages = {
                ...state.mediaImages,
-               images: [
-                  ...action.payload?.data?.images,
-                  ...state.mediaImages.images,
-               ],
+               images: [...action.payload?.data?.images, ...state.mediaImages.images],
             };
             state.uploadBulkImagesInfo = action.payload?.data;
             state.uploadBulkImagesLoading = false;
@@ -96,9 +91,7 @@ const mediaSlice = createSlice({
          .addCase(deleteMediaFiles.fulfilled, (state, action) => {
             state.mediaImages = {
                ...state.mediaImages,
-               images: state.mediaImages?.images.filter(
-                  (el) => el?.key !== action.payload?.data?.deleteObject
-               ),
+               images: state.mediaImages?.images.filter((el) => el?.key !== action.payload?.data?.deleteObject),
             };
             state.deleteFileLoading = false;
             state.deleteFileError = null;
@@ -119,10 +112,7 @@ const mediaSlice = createSlice({
                images: state.mediaImages?.images.map((el) =>
                   el?.key === action.payload?.data?.key
                      ? {
-                          key:
-                             action.payload?.data?.key +
-                             '?' +
-                             new Date().getTime(),
+                          key: action.payload?.data?.key + '?' + new Date().getTime(),
                           edit: true,
                        }
                      : el
@@ -135,11 +125,7 @@ const mediaSlice = createSlice({
    },
 });
 
-export const {
-   removeImagesInfo,
-   removeReplaceError,
-   pickedImageHandler,
-   showPickerPopUpHandler,
-} = mediaSlice.actions;
+export const { removeImagesInfo, removeReplaceError, pickedImageHandler, showPickerPopUpHandler, removePickedImage } =
+   mediaSlice.actions;
 
 export default mediaSlice.reducer;
