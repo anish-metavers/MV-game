@@ -62,6 +62,14 @@ function UserProfileCardComponent() {
                            </p>
                         </div>
                      </div>
+                     <div className="flex items-center mt-3">
+                        <div className="box_div">
+                           <h5 className="text-gray-300 font-medium">Created By</h5>
+                        </div>
+                        <div>
+                           <p className="text-gray-300">{userAccountInformation?.data?.item?.createdBy}</p>
+                        </div>
+                     </div>
                      {!!userAccountInformation?.data?.roles && userAccountInformation?.data?.roles.length && (
                         <div className="mt-5 pt-3">
                            <h4 className="text-gray-300 font-medium text-xl">Roles</h4>

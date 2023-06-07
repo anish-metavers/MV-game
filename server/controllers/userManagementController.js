@@ -198,6 +198,7 @@ const createPlayerAccount = catchAsync(async function (req, res, next) {
             ],
             walletId: createUserWallet._id,
             accountEnable,
+            createdBy: 'admin',
          });
 
          // save user information
@@ -384,6 +385,7 @@ const getUserSingleAccountInformation = catchAsync(async function (req, res, nex
             },
             active: 1,
             createdAt: 1,
+            createdBy: 1,
          },
       },
       {
@@ -396,6 +398,7 @@ const getUserSingleAccountInformation = catchAsync(async function (req, res, nex
                userId: '$userId',
                active: '$active',
                createdAt: '$createdAt',
+               createdBy: '$createdBy',
             },
             roles: { $push: '$userRole' },
          },

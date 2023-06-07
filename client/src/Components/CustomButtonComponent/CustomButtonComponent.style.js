@@ -48,11 +48,7 @@ export const div = styled.div`
       border-radius: 0.2em;
       color: rgb(255, 255, 255);
       padding: 0.9rem 3rem;
-      background: linear-gradient(
-         -230deg,
-         rgba(57, 125, 246, 1),
-         rgba(19, 69, 157, 1)
-      );
+      background: linear-gradient(-230deg, rgba(57, 125, 246, 1), rgba(19, 69, 157, 1));
    }
 
    .bg_none {
@@ -107,11 +103,7 @@ export const div = styled.div`
       left: 3.75rem;
       bottom: 0;
       background-color: rgb(255, 158, 106);
-      background-image: conic-gradient(
-         from 1turn,
-         rgb(172, 76, 25),
-         rgb(255, 158, 106)
-      );
+      background-image: conic-gradient(from 1turn, rgb(172, 76, 25), rgb(255, 158, 106));
       font-weight: 700;
       font-size: 17px;
       transition: all 0.2s ease;
@@ -133,29 +125,17 @@ export const div = styled.div`
 
    .lucky_spin_btn {
       background-color: rgb(255, 158, 106);
-      background-image: conic-gradient(
-         from 1turn,
-         rgb(172, 76, 25),
-         rgb(255, 158, 106)
-      ) !important;
+      background-image: conic-gradient(from 1turn, rgb(172, 76, 25), rgb(255, 158, 106)) !important;
    }
 
    .lucky2_spin_btn {
       background-color: rgb(224, 194, 17);
-      background-image: conic-gradient(
-         from 1turn,
-         rgb(213, 114, 16),
-         rgb(224, 194, 17)
-      ) !important;
+      background-image: conic-gradient(from 1turn, rgb(213, 114, 16), rgb(224, 194, 17)) !important;
    }
 
    .lucky3_spin_btn {
       background-color: rgb(180, 113, 255);
-      background-image: conic-gradient(
-         from 1turn,
-         rgb(148, 13, 255),
-         rgb(180, 113, 255)
-      ) !important;
+      background-image: conic-gradient(from 1turn, rgb(148, 13, 255), rgb(180, 113, 255)) !important;
    }
 
    .no_allow {
@@ -220,7 +200,17 @@ export const div = styled.div`
    }
 
    .tab_button_active {
-      background-color: var(--light-gray-cl);
+      background-color: var(--smooth-lg-sl-cl);
       opacity: 1;
+   }
+
+   .pagination_bt {
+      background-color: var(--model-bg-cl);
+      opacity: 1;
+   }
+
+   .not_allow {
+      cursor: no-drop;
+      opacity: 0.5;
    }
 `;

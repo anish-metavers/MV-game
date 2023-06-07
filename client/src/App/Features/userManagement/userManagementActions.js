@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from '../../../Services/AxiosInstance';
+import axiosInstance, { axiosClientInstance, cryptoPaymentServer } from '../../../Services/AxiosInstance';
 
 export const getUserSingleAccount = createAsyncThunk(
    'userManagement/getUserSingleAccount',
@@ -61,6 +61,130 @@ export const getUserSingleAccountInformation = createAsyncThunk(
       try {
          const response = await axiosInstance.get(`/userManagement/get-user-account-information?userId=${userId}`);
          return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getUserAllFiatCurrency = createAsyncThunk(
+   'userManagement/getUserAllFiatCurrency',
+   async ({ userId }, { rejectWithValue }) => {
+      try {
+         const allCurrencyResponse = await axiosClientInstance.get(`/payment/get-user-all-fiat-currency-info?userId=${userId}`);
+         return allCurrencyResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getUserFiatWithdrawTransactions = createAsyncThunk(
+   'userManagement/getUserFiatWithdrawTransactions',
+   async ({ page, userId }, { rejectWithValue }) => {
+      try {
+         const transactionResponse = await axiosClientInstance.get(
+            `/payment/get-user-fiat-withdraw-transaction?page=${page}&userId=${userId}`
+         );
+         return transactionResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getUserCryptoWithdrawTransactions = createAsyncThunk(
+   'userManagement/getUserCryptoWithdrawTransactions',
+   async ({ userId, page }, { rejectWithValue }) => {
+      try {
+         const cryptoTransaction = await cryptoPaymentServer.get(`/testnet/get-withdrawl-admin?userId=${userId}&page=${page}`);
+         return cryptoTransaction;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getUserCryptoDepositTransactions = createAsyncThunk(
+   'userManagement/getUserCryptoDepositTransactions',
+   async ({ userId, page }, { rejectWithValue }) => {
+      try {
+         const response = await cryptoPaymentServer.get(`/testnet/get-deposite-admin?userId=${userId}&page=${page}`);
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getUserSelectedCurrency = createAsyncThunk(
+   'userManagement/getUserSelectedCurrency',
+   async ({ userId }, { rejectWithValue }) => {
+      try {
+         const response = await axiosClientInstance.get(`/client/get-user-selected-currency?userId=${userId}`);
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getUserFiatTransaction = createAsyncThunk(
+   'userManagement/getUserFiatTransaction',
+   async ({ userId, page }, { rejectWithValue }) => {
+      try {
+         const transactions = await axiosClientInstance.get(
+            `/payment/get-user-fiat-deposit-transaction?userId=${userId}&page=${page}`
+         );
+         return transactions;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getUserAllCryptoCurrency = createAsyncThunk(
+   'userManagement/getUserCryptoCurrencyInfo',
+   async ({ userId }, { rejectWithValue }) => {
+      try {
+         const userCryptoCurrencyList = await cryptoPaymentServer.get(`/testnet/userInfo?userId=${userId}`);
+         return userCryptoCurrencyList;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getPrivacyFieldStatus = createAsyncThunk(
+   'userManagement/getPrivacyFieldStatus',
+   async ({ userId }, { rejectWithValue }) => {
+      try {
+         const getPrivacyFiledsResponse = await axiosClientInstance.get(`/client/get-privacy-fileds-status?userId=${userId}`);
+         return getPrivacyFiledsResponse;
       } catch (err) {
          if (err) {
             throw err;
