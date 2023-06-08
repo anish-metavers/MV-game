@@ -7,7 +7,7 @@ import WalletWithdrawComponent from '../WalletWithdrawComponent/WalletWithdrawCo
 
 const CheckTransactionButtons = [{ heading: 'Deposit' }, { heading: 'Withdraw' }];
 
-function WalletTransactionPopupComponent() {
+function WalletTransactionComponent() {
    const [ActiveTab, setActiveTab] = useState('Deposit');
 
    return (
@@ -35,4 +35,4 @@ function WalletTransactionPopupComponent() {
    );
 }
 
-export default WalletTransactionPopupComponent;
+export default WalletTransactionComponent;

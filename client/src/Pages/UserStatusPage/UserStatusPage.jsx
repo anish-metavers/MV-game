@@ -26,11 +26,12 @@ import {
    userCryptoCurrencyListErrorSelector,
 } from './UserStatus.Selector';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
-import WalletTransactionPopupComponent from '../../Components/WalletTransactionComponent/WalletTransactionComponent';
+import WalletTransactionComponent from '../../Components/WalletTransactionComponent/WalletTransactionComponent';
 import UserSettingsCardComponent from '../../Components/UserSettingsCardComponent/UserSettingsCardComponent';
 import GlobalChatComponent from '../../Components/GlobalChatComponent/GlobalChatComponent';
 import { removeGroupMessage } from '../../App/Features/userManagement/userManagementSlice';
 import FriendsListComponent from '../../Components/FriendsListComponent/FriendsListComponent';
+import UserBlcCharComponent from '../../Components/UserBlcCharComponent/UserBlcCharComponent';
 
 function UserStatusPage() {
    const dispatch = useDispatch();
@@ -117,9 +118,12 @@ function UserStatusPage() {
                      </div>
                   )}
             </div>
+            <div className="py-5 px-2 grd_div">
+               <UserBlcCharComponent />
+            </div>
             <div className="my-4 px-2">
                <p className="text-gray-300 font-medium text-xl mt-4 mb-4">Wallet transactions</p>
-               <WalletTransactionPopupComponent />
+               <WalletTransactionComponent />
             </div>
             <div className="flex w-full">
                <div className="px-2 pb-4 pt-2 w-full">

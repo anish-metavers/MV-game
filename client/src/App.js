@@ -4,6 +4,7 @@ import { useCookies } from 'react-cookie';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { setLoginUser } from './App/Features/Auth/authSlice';
+import { ConfigProvider, theme } from 'antd';
 
 // components
 import HomePageContainerComponent from './Components/HomePageContainerComponent/HomePageContainerComponent';
@@ -52,6 +53,7 @@ function App() {
    const [cookie] = useCookies();
    const dispatch = useDispatch();
    const navigation = useNavigate();
+   const { darkAlgorithm } = theme;
 
    useEffect(() => {
       if (!!cookie && !!cookie?._mv_games_auth && cookie?._mv_games_auth?._id) {
@@ -63,52 +65,58 @@ function App() {
 
    return (
       <div className="App">
-         <ThemeProvider theme={darkTheme}>
-            <Routes>
-               <Route path="/" element={<HomePage />}>
-                  <Route path="/" element={<HomePageContainerComponent />} />
-                  <Route path="/user-roles" element={<UserRolePage />} />
-                  <Route path="/user-roles/create" element={<CreateUserRolePage />} />
-                  <Route path="/user-roles/:id" element={<CreateUserRolePage />} />
-                  <Route path="/game-currency" element={<GameCurrencyPage />} />
-                  <Route path="/game-currency/create" element={<CreateGameCurrencyPage />} />
-                  <Route path="/game-currency/:id" element={<CreateGameCurrencyPage />} />
-                  <Route path="/games" element={<GameListPage />} />
-                  <Route path="/games/create" element={<UploadGamesPage />} />
-                  <Route path="/games/:id" element={<UploadGamesPage />} />
-                  <Route path="/avatars" element={<UserAvatarComponent />} />
-                  <Route path="/game-category" element={<GameCategoryPage />} />
-                  <Route path="/export/game/data" element={<ExportGameDataPage />} />
-                  <Route path="/games/providers" element={<GameProvidersPage />} />
-                  <Route path="/games/providers/create" element={<CreateNewGameProviderPage />} />
-                  <Route path="/games/providers/:id" element={<CreateNewGameProviderPage />} />
-                  <Route path="/provider/games/:id" element={<ProvidersGamesPage />} />
-                  <Route path="/game-currency-payment" element={<GameCurrencyPaymentMethodsPage />} />
-                  <Route path="/game-currency-payment/create" element={<PostGameCurrencyPaymentOptionsPage />} />
-                  <Route path="/game-currency-payment/edit/:id" element={<PostGameCurrencyPaymentOptionsPage />} />
-                  <Route path="/notification" element={<NotificationPage />} />
-                  <Route path="/notification/create" element={<PushNotificationPage />} />
-                  <Route path="/notification/edit/:id" element={<PushNotificationPage />} />
-                  <Route path="/fiat-deposit-payments" element={<FiatPaymentsPage />} />
-                  <Route path="/order/:orderId" element={<SingleTransactionInfoPage />} />
-                  <Route path="/payment-fields" element={<PaymentFiledsPage />} />
-                  <Route path="/payment-fields/create" element={<CreatePaymentFieldsPage />} />
-                  <Route path="/payment-fields/edit/:id" element={<CreatePaymentFieldsPage />} />
-                  <Route path="/fiat/withdraw/transaction" element={<FiatWithdrawTransactionPage />} />
-                  <Route path="/spin-draw" element={<SpinDrawPage />} />
-                  <Route path="/create-spin-items" element={<CreateSpinItemPage />} />
-                  <Route path="/spin/edit/:id" element={<CreateSpinItemPage />} />
-                  <Route path="/upload-images" element={<UploadImagesPage />} />
-                  <Route path="/lottery-draw" element={<LotteryDrawPage />} />
-                  <Route path="/lottery-draw/edit/:id" element={<EditLotteryPollPage />} />
-                  <Route path="/users" element={<UserPage />} />
-                  <Route path="/players-accounts/create" element={<PlayersAccountsPage />} />
-                  <Route path="/players-accounts/edit/:id" element={<PlayersAccountsPage />} />
-                  <Route path="/player-status/show/:id" element={<UserStatusPage />} />
-               </Route>
-               <Route path="/dashboard/auth/login" element={<LoginPage />} />
-            </Routes>
-         </ThemeProvider>
+         <ConfigProvider
+            theme={{
+               algorithm: darkAlgorithm,
+            }}
+         >
+            <ThemeProvider theme={darkTheme}>
+               <Routes>
+                  <Route path="/" element={<HomePage />}>
+                     <Route path="/" element={<HomePageContainerComponent />} />
+                     <Route path="/user-roles" element={<UserRolePage />} />
+                     <Route path="/user-roles/create" element={<CreateUserRolePage />} />
+                     <Route path="/user-roles/:id" element={<CreateUserRolePage />} />
+                     <Route path="/game-currency" element={<GameCurrencyPage />} />
+                     <Route path="/game-currency/create" element={<CreateGameCurrencyPage />} />
+                     <Route path="/game-currency/:id" element={<CreateGameCurrencyPage />} />
+                     <Route path="/games" element={<GameListPage />} />
+                     <Route path="/games/create" element={<UploadGamesPage />} />
+                     <Route path="/games/:id" element={<UploadGamesPage />} />
+                     <Route path="/avatars" element={<UserAvatarComponent />} />
+                     <Route path="/game-category" element={<GameCategoryPage />} />
+                     <Route path="/export/game/data" element={<ExportGameDataPage />} />
+                     <Route path="/games/providers" element={<GameProvidersPage />} />
+                     <Route path="/games/providers/create" element={<CreateNewGameProviderPage />} />
+                     <Route path="/games/providers/:id" element={<CreateNewGameProviderPage />} />
+                     <Route path="/provider/games/:id" element={<ProvidersGamesPage />} />
+                     <Route path="/game-currency-payment" element={<GameCurrencyPaymentMethodsPage />} />
+                     <Route path="/game-currency-payment/create" element={<PostGameCurrencyPaymentOptionsPage />} />
+                     <Route path="/game-currency-payment/edit/:id" element={<PostGameCurrencyPaymentOptionsPage />} />
+                     <Route path="/notification" element={<NotificationPage />} />
+                     <Route path="/notification/create" element={<PushNotificationPage />} />
+                     <Route path="/notification/edit/:id" element={<PushNotificationPage />} />
+                     <Route path="/fiat-deposit-payments" element={<FiatPaymentsPage />} />
+                     <Route path="/order/:orderId" element={<SingleTransactionInfoPage />} />
+                     <Route path="/payment-fields" element={<PaymentFiledsPage />} />
+                     <Route path="/payment-fields/create" element={<CreatePaymentFieldsPage />} />
+                     <Route path="/payment-fields/edit/:id" element={<CreatePaymentFieldsPage />} />
+                     <Route path="/fiat/withdraw/transaction" element={<FiatWithdrawTransactionPage />} />
+                     <Route path="/spin-draw" element={<SpinDrawPage />} />
+                     <Route path="/create-spin-items" element={<CreateSpinItemPage />} />
+                     <Route path="/spin/edit/:id" element={<CreateSpinItemPage />} />
+                     <Route path="/upload-images" element={<UploadImagesPage />} />
+                     <Route path="/lottery-draw" element={<LotteryDrawPage />} />
+                     <Route path="/lottery-draw/edit/:id" element={<EditLotteryPollPage />} />
+                     <Route path="/users" element={<UserPage />} />
+                     <Route path="/players-accounts/create" element={<PlayersAccountsPage />} />
+                     <Route path="/players-accounts/edit/:id" element={<PlayersAccountsPage />} />
+                     <Route path="/player-status/show/:id" element={<UserStatusPage />} />
+                  </Route>
+                  <Route path="/dashboard/auth/login" element={<LoginPage />} />
+               </Routes>
+            </ThemeProvider>
+         </ConfigProvider>
       </div>
    );
 }

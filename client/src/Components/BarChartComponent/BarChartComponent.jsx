@@ -1,17 +1,7 @@
 import React from 'react';
-import {
-   BarChart,
-   Bar,
-   Brush,
-   ReferenceLine,
-   XAxis,
-   YAxis,
-   Tooltip,
-   Legend,
-   ResponsiveContainer,
-} from 'recharts';
+import { BarChart, Bar, Brush, ReferenceLine, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-function BarChartComponent({ data, label }) {
+function BarChartComponent({ data, label, dataKey }) {
    return (
       <div className="w-full h-full">
          <p className="text-gray-300 font-semibold">{label}</p>
@@ -30,13 +20,10 @@ function BarChartComponent({ data, label }) {
                <XAxis dataKey="name" />
                <YAxis />
                <Tooltip />
-               <Legend
-                  verticalAlign="top"
-                  wrapperStyle={{ lineHeight: '40px' }}
-               />
+               <Legend verticalAlign="top" wrapperStyle={{ lineHeight: '40px' }} />
                <ReferenceLine y={0} stroke="#000" />
                <Brush dataKey="name" height={30} stroke="#8884d8" />
-               <Bar dataKey="count" fill="rgb(252, 141, 1)" />
+               <Bar dataKey={dataKey ? dataKey : 'count'} fill="rgb(252, 141, 1)" />
             </BarChart>
          </ResponsiveContainer>
       </div>
