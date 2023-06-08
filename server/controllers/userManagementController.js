@@ -12,6 +12,7 @@ const userSettingModel = require('../model/schema/userSettingSchema');
 const userSocialNetworkSchema = require('../model/schema/userSocialNetworkSchema');
 const userHistoryModel = require('../model/schema/userHistorySchema');
 const userProgressModel = require('../model/schema/userProgressSchema');
+const groupModel = require('../model/schema/groupSchema');
 
 const getUserSingleAccount = catchAsync(async function (req, res, next) {
    const { userId } = req.query;
@@ -423,10 +424,141 @@ const getUserSingleAccountInformation = catchAsync(async function (req, res, nex
    });
 });
 
+const getAllGlobalGroups = catchAsync(async function (req, res, next) {
+   const findChatgroups = await groupModel.find({}, { groupName: 1, _id: 1 });
+
+   if (findChatgroups) {
+      return res.status(httpStatusCodes.OK).json({
+         error: false,
+         success: true,
+         groups: findChatgroups,
+      });
+   } else {
+      return res.status(httpStatusCodes.INTERNAL_SERVER).json({
+         error: true,
+         success: false,
+         message: 'Internal server error',
+      });
+   }
+});
+
+const getUserGlobalChats = catchAsync(async function (req, res, next) {
+   const { userId, groupId, page } = req.query;
+
+   if (!userId || !groupId || !page) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: `${(!userId && 'User') || (!groupId && 'Group') || (!page && 'page')} id is reuqired`,
+      });
+   }
+
+   const isValidId = checkIsValidId(userId);
+
+   if (!isValidId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Selected is not valid id please check.',
+      });
+   }
+
+   const DOCUMENT_LIMIT = 30;
+
+   const totalDocuments = await groupModel.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(groupId) } },
+      { $unwind: '$groupMessages' },
+      { $match: { 'groupMessages.userId': mongoose.Types.ObjectId(userId) } },
+      { $group: { _id: null, count: { $sum: 1 } } },
+   ]);
+
+   const groupChats = await groupModel.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(groupId) } },
+      {
+         $project: {
+            _id: 1,
+            groupName: 1,
+            groupMessages: 1,
+         },
+      },
+      { $unwind: '$groupMessages' },
+      { $match: { 'groupMessages.userId': mongoose.Types.ObjectId(userId) } },
+      {
+         $lookup: {
+            from: 'auths',
+            localField: 'groupMessages.userId',
+            foreignField: '_id',
+            as: 'groupMessages.user',
+         },
+      },
+      { $unwind: '$groupMessages.user' },
+      {
+         $project: {
+            groupId: '$_id',
+            groupName: 1,
+            avatar: '$groupMessages.user.avatar',
+            createdAt: '$groupMessages.createdAt',
+            _id: '$groupMessages._id',
+            message: '$groupMessages.message',
+            userId: '$groupMessages.userId',
+            name: '$groupMessages.user.name',
+            gifphy: '$groupMessages.giphy',
+            onlyEmogi: '$groupMessages.onlyEmogi',
+         },
+      },
+      { $skip: page * DOCUMENT_LIMIT },
+      { $limit: DOCUMENT_LIMIT },
+      {
+         $group: {
+            _id: {
+               _id: '$groupId',
+               groupName: '$groupName',
+            },
+            groupMessages: {
+               $push: {
+                  avatar: '$avatar',
+                  _id: '$_id',
+                  message: '$message',
+                  userId: '$userId',
+                  createdAt: '$createdAt',
+                  name: '$name',
+                  gifphy: '$gifphy',
+                  onlyEmogi: '$onlyEmogi',
+                  hideUser: '$hideUser',
+                  provider: '$provider',
+                  hideUserName: '$hideUserName',
+               },
+            },
+         },
+      },
+   ]);
+
+   const chats = groupChats?.[0];
+   const count = totalDocuments?.[0]?.count;
+
+   if (chats) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         chats,
+         page: +page,
+         totalPages: Math.ceil(count / DOCUMENT_LIMIT - 1),
+      });
+   }
+
+   return res.status(httpStatusCodes.OK).json({
+      success: false,
+      error: true,
+      chats: {},
+   });
+});
+
 module.exports = {
    getUserSingleAccount,
    createPlayerAccount,
    updatePlayerAccount,
    setAccountPassword,
    getUserSingleAccountInformation,
+   getAllGlobalGroups,
+   getUserGlobalChats,
 };

@@ -85,6 +85,11 @@ function UserPage() {
                               </div>
                            </td>
                            <td>{el?.userId}</td>
+                           <td className={`${el?.createdBy}_cl`}>
+                              <div className="box_div shadow">
+                                 <p>{el?.createdBy}</p>
+                              </div>
+                           </td>
                            {/* <td>{!!el?.statisticsHidden && el?.statisticsHidden.toString()}</td>
                            <td>{!!el?.privateChat && el?.privateChat.toString()}</td>
                            <td>{!!el?.online && el?.online.toString()}</td>

@@ -6,9 +6,11 @@ import { useCookies } from 'react-cookie';
 import useAdmin from '../../Hooks/useAdmin';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+   getAllGlobalChatGroups,
    getPrivacyFieldStatus,
    getUserAllCryptoCurrency,
    getUserAllFiatCurrency,
+   getUserFriendList,
    getUserSelectedCurrency,
    getUserSingleAccountInformation,
 } from '../../App/Features/userManagement/userManagementActions';
@@ -26,6 +28,9 @@ import {
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import WalletTransactionPopupComponent from '../../Components/WalletTransactionComponent/WalletTransactionComponent';
 import UserSettingsCardComponent from '../../Components/UserSettingsCardComponent/UserSettingsCardComponent';
+import GlobalChatComponent from '../../Components/GlobalChatComponent/GlobalChatComponent';
+import { removeGroupMessage } from '../../App/Features/userManagement/userManagementSlice';
+import FriendsListComponent from '../../Components/FriendsListComponent/FriendsListComponent';
 
 function UserStatusPage() {
    const dispatch = useDispatch();
@@ -47,6 +52,8 @@ function UserStatusPage() {
          dispatch(getUserAllFiatCurrency({ userId: params?.id }));
          dispatch(getUserSelectedCurrency({ userId: params?.id }));
          dispatch(getPrivacyFieldStatus({ userId: params?.id }));
+         dispatch(getAllGlobalChatGroups());
+         dispatch(getUserFriendList({ userId: params?.id }));
       }
    }, [isAdmin, params]);
 
@@ -62,6 +69,12 @@ function UserStatusPage() {
          dispatch(getUserAllCryptoCurrency({ userId: userAccountInformation?.data?.item?.userId }));
       }
    }, [userAccountInformation]);
+
+   useEffect(() => {
+      return () => {
+         dispatch(removeGroupMessage());
+      };
+   }, []);
 
    return (
       <styled.div>
@@ -107,6 +120,18 @@ function UserStatusPage() {
             <div className="my-4 px-2">
                <p className="text-gray-300 font-medium text-xl mt-4 mb-4">Wallet transactions</p>
                <WalletTransactionPopupComponent />
+            </div>
+            <div className="flex w-full">
+               <div className="px-2 pb-4 pt-2 w-full">
+                  <p className="text-gray-300 font-medium text-xl mt-4 mb-4">Global chats</p>
+                  <div className="mt-4 mb-4">
+                     <GlobalChatComponent />
+                  </div>
+               </div>
+               <div className="w-full p-2">
+                  <p className="text-gray-300 font-medium text-xl mt-4 mb-4">User friends list</p>
+                  <FriendsListComponent />
+               </div>
             </div>
          </div>
       </styled.div>

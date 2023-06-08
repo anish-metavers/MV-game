@@ -193,3 +193,44 @@ export const getPrivacyFieldStatus = createAsyncThunk(
       }
    }
 );
+
+export const getAllGlobalChatGroups = createAsyncThunk('userManagement/getAllGlobalGroups', async (_, { rejectWithValue }) => {
+   try {
+      const response = await axiosInstance.get('/userManagement/get-all-global-chat-groups');
+      return response;
+   } catch (err) {
+      if (err) {
+         throw err;
+      }
+      return rejectWithValue(err.response.data);
+   }
+});
+
+export const getUserGlobalChats = createAsyncThunk(
+   'userManagement/getUserGlobalChats',
+   async ({ userId, groupId, page }, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(
+            `/userManagement/get-user-global-chats?userId=${userId}&groupId=${groupId}&page=${page}`
+         );
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const getUserFriendList = createAsyncThunk('userManagement/getFriendList', async ({ userId }, { rejectWithValue }) => {
+   try {
+      const friendListResponse = await axiosClientInstance.get(`/client/get-friends?userId=${userId}`);
+      return friendListResponse;
+   } catch (err) {
+      if (err) {
+         throw err;
+      }
+      return rejectWithValue(err.response.data);
+   }
+});

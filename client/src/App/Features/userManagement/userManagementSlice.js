@@ -13,6 +13,9 @@ import {
    getUserCryptoDepositTransactions,
    getUserAllCryptoCurrency,
    getPrivacyFieldStatus,
+   getAllGlobalChatGroups,
+   getUserGlobalChats,
+   getUserFriendList,
 } from './userManagementActions';
 
 const INITAL_STATE = {
@@ -46,6 +49,17 @@ const INITAL_STATE = {
    userProfilePrivacyInfo: null,
    userProfilePrivacyInfoLoading: false,
    userProfilePrivacyInfoFetchError: null,
+   allGlobalChatGroups: null,
+   allGlobalChatGroupsLoading: false,
+   allGlobalChatGroupsError: null,
+   groupChats: null,
+   groupChatsLoading: false,
+   groupChatsError: null,
+   loadMoreChatMessages: false,
+   userFriendsList: null,
+   userFriendsFetchLoading: false,
+   userFriendsFetchError: null,
+   selectedGroup: null,
 };
 
 const userManagementSlice = createSlice({
@@ -59,6 +73,12 @@ const userManagementSlice = createSlice({
          state.singleUserAccountInfo = null;
          state.singleUserAccountLoading = false;
          state.singleUserAccountError = null;
+      },
+      removeGroupMessage: (state) => {
+         state.groupChats = null;
+      },
+      selectedGroupHandler: (state, action) => {
+         state.selectedGroup = action.payload;
       },
    },
    extraReducers: (bulder) => {
@@ -299,9 +319,77 @@ const userManagementSlice = createSlice({
             state.userProfilePrivacyInfoLoading = false;
             state.userProfilePrivacyInfoFetchError = null;
          });
+
+      bulder
+         .addCase(getAllGlobalChatGroups.pending, (state) => {
+            state.allGlobalChatGroups = null;
+            state.allGlobalChatGroupsLoading = true;
+            state.allGlobalChatGroupsError = null;
+         })
+         .addCase(getAllGlobalChatGroups.rejected, (state, action) => {
+            state.allGlobalChatGroups = null;
+            state.allGlobalChatGroupsLoading = false;
+            state.allGlobalChatGroupsError = action.error.message;
+         })
+         .addCase(getAllGlobalChatGroups.fulfilled, (state, action) => {
+            state.allGlobalChatGroups = action.payload.data;
+            state.allGlobalChatGroupsLoading = false;
+            state.allGlobalChatGroupsError = null;
+         });
+
+      bulder
+         .addCase(getUserGlobalChats.pending, (state) => {
+            // state.groupChats = null;
+            state.groupChatsLoading = true;
+            state.groupChatsError = null;
+            state.loadMoreChatMessages = true;
+         })
+         .addCase(getUserGlobalChats.rejected, (state, action) => {
+            state.groupChats = null;
+            state.groupChatsLoading = false;
+            state.groupChatsError = action.error.message;
+            state.loadMoreChatMessages = false;
+         })
+         .addCase(getUserGlobalChats.fulfilled, (state, action) => {
+            const { groupMessages } = action.payload?.data?.chats;
+
+            if (state.groupChats && state.groupChats?.success && state.groupChats?.chats) {
+               state.groupChats = {
+                  ...state.groupChats,
+                  page: state.groupChats?.page + 1,
+                  chats: {
+                     ...state.groupChats?.chats,
+                     groupMessages: [...state.groupChats?.chats?.groupMessages, ...groupMessages],
+                  },
+               };
+            } else {
+               state.groupChats = action.payload.data;
+            }
+
+            state.groupChatsLoading = false;
+            state.groupChatsError = null;
+            state.loadMoreChatMessages = false;
+         });
+
+      bulder
+         .addCase(getUserFriendList.pending, (state) => {
+            state.userFriendsList = null;
+            state.userFriendsFetchLoading = true;
+            state.userFriendsFetchError = null;
+         })
+         .addCase(getUserFriendList.rejected, (state, action) => {
+            state.userFriendsList = null;
+            state.userFriendsFetchLoading = false;
+            state.userFriendsFetchError = action.error.message;
+         })
+         .addCase(getUserFriendList.fulfilled, (state, action) => {
+            state.userFriendsList = action.payload.data;
+            state.userFriendsFetchLoading = false;
+            state.userFriendsFetchError = null;
+         });
    },
 });
 
-export const { removeAccountErrors } = userManagementSlice.actions;
+export const { removeAccountErrors, removeGroupMessage, selectedGroupHandler } = userManagementSlice.actions;
 
 export default userManagementSlice.reducer;

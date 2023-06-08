@@ -3,7 +3,7 @@ export const ROW = [
    { heading: 'Email', id: 2 },
    { heading: 'avatar', id: 3 },
    { heading: 'User Id', id: 4 },
-   // { heading: 'Statistics Hidden', id: 5 },
+   { heading: 'Created By', id: 5 },
    // { heading: 'Private Chat', id: 6 },
    // { heading: 'Online', id: 7 },
    // { heading: 'New Friend Request', id: 8 },
