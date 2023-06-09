@@ -16,6 +16,7 @@ import {
    getAllGlobalChatGroups,
    getUserGlobalChats,
    getUserFriendList,
+   getUserWageredAmountGraph,
 } from './userManagementActions';
 
 const INITAL_STATE = {
@@ -60,6 +61,9 @@ const INITAL_STATE = {
    userFriendsFetchLoading: false,
    userFriendsFetchError: null,
    selectedGroup: null,
+   userWageredAmount: null,
+   userWageredAmountLoading: false,
+   userWageredAmountError: null,
 };
 
 const userManagementSlice = createSlice({
@@ -79,6 +83,10 @@ const userManagementSlice = createSlice({
       },
       selectedGroupHandler: (state, action) => {
          state.selectedGroup = action.payload;
+      },
+      removeUserWalletInfo: (state) => {
+         state.userCryptoCurrencyList = null;
+         state.walletFiatCurrencyData = null;
       },
    },
    extraReducers: (bulder) => {
@@ -386,6 +394,23 @@ const userManagementSlice = createSlice({
             state.userFriendsList = action.payload.data;
             state.userFriendsFetchLoading = false;
             state.userFriendsFetchError = null;
+         });
+
+      bulder
+         .addCase(getUserWageredAmountGraph.pending, (state) => {
+            state.userWageredAmount = null;
+            state.userWageredAmountLoading = true;
+            state.userWageredAmountError = null;
+         })
+         .addCase(getUserWageredAmountGraph.rejected, (state, action) => {
+            state.userWageredAmount = null;
+            state.userWageredAmountLoading = false;
+            state.userWageredAmountError = action.error.message;
+         })
+         .addCase(getUserWageredAmountGraph.fulfilled, (state, action) => {
+            state.userWageredAmount = action.payload.data;
+            state.userWageredAmountLoading = false;
+            state.userWageredAmountError = null;
          });
    },
 });

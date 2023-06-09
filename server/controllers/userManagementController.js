@@ -13,6 +13,7 @@ const userSocialNetworkSchema = require('../model/schema/userSocialNetworkSchema
 const userHistoryModel = require('../model/schema/userHistorySchema');
 const userProgressModel = require('../model/schema/userProgressSchema');
 const groupModel = require('../model/schema/groupSchema');
+const transactionModel = require('../model/schema/transactionSchema');
 
 const getUserSingleAccount = catchAsync(async function (req, res, next) {
    const { userId } = req.query;
@@ -553,6 +554,59 @@ const getUserGlobalChats = catchAsync(async function (req, res, next) {
    });
 });
 
+const getUserWageredAmountGraph = catchAsync(async function (req, res, next) {
+   const { userId } = req.query;
+
+   if (!userId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: `${!userId && 'User'} id is reuqired`,
+      });
+   }
+
+   const isValidId = checkIsValidId(userId);
+
+   if (!isValidId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Selected is not valid id please check.',
+      });
+   }
+
+   const wageredData = await transactionModel.aggregate([
+      { $match: { $and: [{ userId: mongoose.Types.ObjectId(userId) }, { transactionType: 'gameWageredAmount' }] } },
+      { $sort: { createdAt: 1 } },
+      {
+         $project: {
+            _id: 0,
+            amount: {
+               $convert: {
+                  input: '$amount',
+                  to: 'int',
+               },
+            },
+            transactionType: 1,
+         },
+      },
+   ]);
+
+   if (wageredData) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         items: wageredData,
+      });
+   }
+
+   return res.status(httpStatusCodes.NOT_FOUND).json({
+      success: false,
+      error: true,
+      message: 'Not found',
+   });
+});
+
 module.exports = {
    getUserSingleAccount,
    createPlayerAccount,
@@ -561,4 +615,5 @@ module.exports = {
    getUserSingleAccountInformation,
    getAllGlobalGroups,
    getUserGlobalChats,
+   getUserWageredAmountGraph,
 };

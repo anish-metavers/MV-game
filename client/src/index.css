@@ -240,3 +240,11 @@ img {
    background-position: center;
    background-size: cover;
 }
+
+.Crypto_btn {
+   color: #fff;
+   padding: 0.8rem 2.3rem;
+   background-color: #5617cb;
+   background-image: conic-gradient(from 1turn, #8447f6, #5617cb);
+   font-size: 15px;
+}

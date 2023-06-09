@@ -48,6 +48,10 @@ function UserBlcCharComponent() {
       }
    }, [walletFiatCurrencyData, userCryptoCurrencyList]);
 
+   useEffect(() => {
+      return () => {};
+   }, []);
+
    return (
       <styled.div>
          <Controller

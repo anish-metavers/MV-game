@@ -55,8 +55,8 @@ export const div = styled.div`
       border-bottom-right-radius: 1em;
    }
    .icon {
-      height: 3em;
-      width: 3em;
+      height: 4em;
+      width: 4em;
       padding: 0em 0em;
       margin: 0em 0em;
       background: rgba(0, 0, 0, 0.2);

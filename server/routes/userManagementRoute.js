@@ -9,6 +9,7 @@ router.get('/get-single-user-account', varifyJwtToken, userManagementController.
 router.get('/get-user-account-information', varifyJwtToken, userManagementController.getUserSingleAccountInformation);
 router.get('/get-all-global-chat-groups', varifyJwtToken, userManagementController.getAllGlobalGroups);
 router.get('/get-user-global-chats', varifyJwtToken, userManagementController.getUserGlobalChats);
+router.get('/get-user-wagered-amount', varifyJwtToken, userManagementController.getUserWageredAmountGraph);
 
 // API => POST
 router.post('/create-player-account', varifyJwtToken, createPlayerAccount, userManagementController.createPlayerAccount);

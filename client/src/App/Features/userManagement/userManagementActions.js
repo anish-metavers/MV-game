@@ -234,3 +234,18 @@ export const getUserFriendList = createAsyncThunk('userManagement/getFriendList'
       return rejectWithValue(err.response.data);
    }
 });
+
+export const getUserWageredAmountGraph = createAsyncThunk(
+   'userManagement/getUserWageredAmountGraph',
+   async ({ userId }, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(`/userManagement/get-user-wagered-amount?userId=${userId}`);
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);

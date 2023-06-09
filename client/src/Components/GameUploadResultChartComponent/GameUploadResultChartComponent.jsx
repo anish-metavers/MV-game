@@ -1,21 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import * as styled from './GameUploadResultChartComponent.style';
-import {
-   LineChart,
-   Line,
-   XAxis,
-   YAxis,
-   Tooltip,
-   Legend,
-   ResponsiveContainer,
-} from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useDispatch, useSelector } from 'react-redux';
 import useAdmin from '../../Hooks/useAdmin';
 import { useCookies } from 'react-cookie';
-import {
-   filterGameUploadDataResult,
-   getGamesUploadResult,
-} from '../../App/Features/Admin/adminActions';
+import { filterGameUploadDataResult, getGamesUploadResult } from '../../App/Features/Admin/adminActions';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -39,9 +28,7 @@ function GameUploadResultChartComponent() {
    const gameStatusLoading = useSelector(gameStatusLoadingSelector);
    const gameStatusError = useSelector(gameStatusErrorSelector);
    const gameStatusFilterData = useSelector(gameStatusFilterDataSelector);
-   const gameStatusFilterDataError = useSelector(
-      gameStatusFilterDataErrorSelector
-   );
+   const gameStatusFilterDataError = useSelector(gameStatusFilterDataErrorSelector);
 
    const handleChange = async (event) => {
       const value = event.target.value;
@@ -56,32 +43,20 @@ function GameUploadResultChartComponent() {
 
    return (
       <styled.div>
-         {!!gameStatusError ? (
-            <p className="text-sm error_cl">{gameStatusError}</p>
-         ) : null}
-         {!!gameStatusFilterDataError ? (
-            <p className="text-sm error_cl">{gameStatusFilterDataError}</p>
-         ) : null}
+         {!!gameStatusError ? <p className="text-sm error_cl">{gameStatusError}</p> : null}
+         {!!gameStatusFilterDataError ? <p className="text-sm error_cl">{gameStatusFilterDataError}</p> : null}
          {!!gameStatusLoading ? <SpinnerComponent /> : null}
          {!!gameStatus && gameStatus?.success ? (
             <Fragment>
                <styled.filterDiv>
                   <div>
-                     <h1 className="text-gray text-2xl text-gray-200 font-semibold">
-                        Games Overview Status
-                     </h1>
+                     <h1 className="text-gray text-2xl text-gray-200 font-semibold">Games Overview Status</h1>
                   </div>
                   <div className="flex items-center space-x-3">
                      <Box sx={{ minWidth: 150 }}>
                         <FormControl fullWidth>
-                           <InputLabel id="demo-simple-select-label">
-                              Filter
-                           </InputLabel>
-                           <Select
-                              defaultValue={'%d %m %Y'}
-                              label="Filter"
-                              onChange={handleChange}
-                           >
+                           <InputLabel id="demo-simple-select-label">Filter</InputLabel>
+                           <Select defaultValue={'%d %m %Y'} label="Filter" onChange={handleChange}>
                               <MenuItem value={'%d %m %Y'}>Days</MenuItem>
                               <MenuItem value={'%m %Y'}>Months</MenuItem>
                               <MenuItem value={'%Y'}>Year</MenuItem>
@@ -95,9 +70,7 @@ function GameUploadResultChartComponent() {
                      <LineChart
                         width={300}
                         height={100}
-                        data={
-                           gameStatusFilterData?.result || gameStatus?.result
-                        }
+                        data={gameStatusFilterData?.result || gameStatus?.result}
                         margin={{
                            top: 5,
                            right: 30,
@@ -109,12 +82,7 @@ function GameUploadResultChartComponent() {
                         <Tooltip />
                         <Legend />
                         <XAxis dataKey="_id" />
-                        <Line
-                           type="monotoneX"
-                           dataKey="games"
-                           stroke="#fc8d01"
-                           strokeWidth={2}
-                        />
+                        <Line type="monotoneX" dataKey="games" stroke="#fc8d01" strokeWidth={2} />
                      </LineChart>
                   </ResponsiveContainer>
                </styled.mapDiv>
