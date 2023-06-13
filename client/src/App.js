@@ -42,6 +42,8 @@ import LotteryDrawPage from './Pages/LotteryDrawPage/LotteryDrawPage';
 import EditLotteryPollPage from './Pages/EditLotteryPollPage/EditLotteryPollPage';
 import PlayersAccountsPage from './Pages/PlayersAccountsPage/PlayersAccountsPage';
 import UserStatusPage from './Pages/UserStatusPage/UserStatusPage';
+import FaqCategoryPage from './Pages/FaqCategoryPage/FaqCategoryPage';
+import FaqCategorySinglePage from './Pages/FaqCategorySinglePage/FaqCategorySinglePage';
 
 const darkTheme = createTheme({
    palette: {
@@ -112,6 +114,8 @@ function App() {
                      <Route path="/players-accounts/create" element={<PlayersAccountsPage />} />
                      <Route path="/players-accounts/edit/:id" element={<PlayersAccountsPage />} />
                      <Route path="/player-status/show/:id" element={<UserStatusPage />} />
+                     <Route path="/faq-category" element={<FaqCategoryPage />} />
+                     <Route path="/faq-category/create" element={<FaqCategorySinglePage />} />
                   </Route>
                   <Route path="/dashboard/auth/login" element={<LoginPage />} />
                </Routes>

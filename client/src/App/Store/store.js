@@ -9,6 +9,7 @@ import notificationSlice from '../Features/Notification/notificationSlice';
 import MediaSlice from '../Features/Media/MediaSlice';
 import LuckyDrawSlice from '../Features/LuckyDraw/LuckyDrawSlice';
 import userManagementSlice from '../Features/userManagement/userManagementSlice';
+import faqSlice from '../Features/Faq/faqSlice';
 
 const store = configureStore({
    reducer: {
@@ -22,6 +23,7 @@ const store = configureStore({
       media: MediaSlice,
       LuckyDraw: LuckyDrawSlice,
       userManagement: userManagementSlice,
+      faq: faqSlice,
    },
    middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

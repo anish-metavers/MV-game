@@ -25,6 +25,7 @@ import { ImSpinner10 } from '@react-icons/all-files/im/ImSpinner10';
 import { ImImages } from '@react-icons/all-files/im/ImImages';
 import { GiRolledCloth } from '@react-icons/all-files/gi/GiRolledCloth';
 import { RiAccountPinBoxFill } from '@react-icons/all-files/ri/RiAccountPinBoxFill';
+import { FaQuestion } from '@react-icons/all-files/fa/FaQuestion';
 
 function SidebarComponent() {
    const auth = useSelector(authSelector);
@@ -78,6 +79,9 @@ function SidebarComponent() {
             <DashboardSidebarTabComponent heading={'Lucky Draw'}>
                <IconListComponent icon={<ImSpinner10 />} heading={'Spin'} link={'spin-draw'} />
                <IconListComponent icon={<GiRolledCloth />} heading={'Lottery lucky draw'} link={'lottery-draw'} />
+            </DashboardSidebarTabComponent>
+            <DashboardSidebarTabComponent heading={'Faq'}>
+               <IconListComponent icon={<FaQuestion />} heading={'Faqs Category'} link={'faq-category'} />
             </DashboardSidebarTabComponent>
             <DashboardSidebarTabComponent heading={'User management'}>
                <IconListComponent icon={<FiUsers />} heading={'Users'} link={'/users?page=0'} />
