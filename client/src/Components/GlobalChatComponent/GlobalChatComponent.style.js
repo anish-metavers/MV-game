@@ -10,4 +10,5 @@ export const div = styled.div`
    display: flex;
    flex-direction: column;
    height: 700px;
+   position: relative;
 `;
