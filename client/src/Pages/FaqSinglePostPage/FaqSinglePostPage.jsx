@@ -1,20 +1,19 @@
-import React, { useEffect } from "react";
-import * as styled from "./FaqSinglePostPage.style";
-import NavbarComponent from "../../Components/NavbarComponent/NavbarComponent";
-import PageHeadingComponent from "../../Components/PageHeadingComponent/PageHeadingComponent";
-import CustomButtonComponent from "../../Components/CustomButtonComponent/CustomButtonComponent";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import { useCookies } from "react-cookie";
-import useAdmin from "../../Hooks/useAdmin";
-import { useDispatch, useSelector } from "react-redux";
-import { createNewFaqPost, getAllFaqCategoriesList, getSingleFaqPost, updatePost } from "../../App/Features/Faq/faqActions";
-import { Switch, message } from "antd";
-import QuillComponent from "../../Components/QuillComponent/QuillComponent";
-import MenuItem from "@mui/material/MenuItem";
+import React, { useEffect, useRef } from 'react';
+import * as styled from './FaqSinglePostPage.style';
+import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
+import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHeadingComponent';
+import CustomButtonComponent from '../../Components/CustomButtonComponent/CustomButtonComponent';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import { useCookies } from 'react-cookie';
+import useAdmin from '../../Hooks/useAdmin';
+import { useDispatch, useSelector } from 'react-redux';
+import { createNewFaqPost, getAllFaqCategoriesList, getSingleFaqPost, updatePost } from '../../App/Features/Faq/faqActions';
+import { Switch, message } from 'antd';
+import MenuItem from '@mui/material/MenuItem';
 import {
    allFaqCategoriesListSelector,
    allFaqCategoriesListLoadingSelector,
@@ -23,15 +22,16 @@ import {
    newPostSavedErrorSelector,
    singleFaqPostSelector,
    updatePostLoadingSelector,
-} from "./FaqSinglePostPage.Selector";
-import SpinnerComponent from "../../Components/SpinnerComponent/SpinnerComponent";
-import { useParams } from "react-router";
-import { removePostInfo } from "../../App/Features/Faq/faqSlice";
-import * as DOMPurify from "dompurify";
+} from './FaqSinglePostPage.Selector';
+import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
+import { useParams } from 'react-router';
+import { removePostInfo } from '../../App/Features/Faq/faqSlice';
+import * as DOMPurify from 'dompurify';
+import JoditEditor from 'jodit-react';
 
 const schema = yup.object({
-   heading: yup.string().required("Post heading is reuqired"),
-   categoryId: yup.string().required("Category id is required"),
+   heading: yup.string().required('Post heading is reuqired'),
+   categoryId: yup.string().required('Category id is required'),
 });
 
 function FaqSinglePostPage() {
@@ -43,13 +43,14 @@ function FaqSinglePostPage() {
    } = useForm({
       resolver: yupResolver(schema),
       defaultValues: {
-         heading: "",
+         heading: '',
          isDefault: false,
-         metaData: "",
-         categoryId: "",
+         metaData: '',
+         categoryId: '',
       },
    });
 
+   const editor = useRef(null);
    const [cookie] = useCookies();
    const [isAdmin] = useAdmin(cookie);
    const dispatch = useDispatch();
@@ -71,7 +72,7 @@ function FaqSinglePostPage() {
             dispatch(createNewFaqPost(data));
          }
       } else {
-         message.error("You need to login first");
+         message.error('You need to login first');
       }
    };
 
@@ -88,10 +89,10 @@ function FaqSinglePostPage() {
    useEffect(() => {
       if (!!singleFaqPost && singleFaqPost?.success && !!singleFaqPost?.item) {
          const { item } = singleFaqPost;
-         setValue("heading", item?.heading);
-         setValue("isDefault", item?.isDefault);
-         setValue("categoryId", item?.categoryId);
-         setValue("metaData", DOMPurify.sanitize(item?.metaData));
+         setValue('heading', item?.heading);
+         setValue('isDefault', item?.isDefault);
+         setValue('categoryId', item?.categoryId);
+         setValue('metaData', DOMPurify.sanitize(item?.metaData));
       }
    }, [singleFaqPost]);
 
@@ -106,7 +107,7 @@ function FaqSinglePostPage() {
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               pageName={!!param && param?.id ? "Update faq post" : "Create faq post"}
+               pageName={!!param && param?.id ? 'Update faq post' : 'Create faq post'}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.
                Blanditiis, maiores perspiciatis. Est rerum, sit
                voluptas molestias officia modi, provident earum ad
@@ -116,7 +117,7 @@ function FaqSinglePostPage() {
             <form className="mt-3" onSubmit={handleSubmit(onSubmit)}>
                <Box
                   sx={{
-                     "& > :not(style)": { my: 1, width: "100%" },
+                     '& > :not(style)': { my: 1, width: '100%' },
                   }}
                >
                   <div className="flex items-center space-x-2">
@@ -149,12 +150,12 @@ function FaqSinglePostPage() {
                                     control={control}
                                     render={({ field: { onChange, value } }) => (
                                        <TextField
-                                          value={value || ""}
+                                          value={value || ''}
                                           onChange={onChange}
                                           className="w-full"
                                           select
                                           label="Select"
-                                          defaultValue={""}
+                                          defaultValue={''}
                                        >
                                           {allFaqCategoriesList?.items.map((option) => (
                                              <MenuItem key={option._id} value={option._id}>
@@ -176,7 +177,7 @@ function FaqSinglePostPage() {
                         name="isDefault"
                         control={control}
                         render={({ field: { onChange, value } }) => (
-                           <Switch checked={value} onChange={onChange} checkedChildren={"Yes"} unCheckedChildren={"No"} />
+                           <Switch checked={value} onChange={onChange} checkedChildren={'Yes'} unCheckedChildren={'No'} />
                         )}
                      />
                      <p className="text-gray-200">Is default</p>
@@ -184,15 +185,17 @@ function FaqSinglePostPage() {
                   <Controller
                      name="metaData"
                      control={control}
-                     render={({ field: { onChange, value } }) => <QuillComponent onChange={onChange} value={value} />}
+                     render={({ field: { onChange, value } }) => (
+                        <JoditEditor ref={editor} value={value} tabIndex={1} onChange={onChange} />
+                     )}
                   />
                   <div className="pt-3">
                      <div className="flex">
                         <CustomButtonComponent
                            isLoading={!!param && param?.id ? updatePostLoading : newPostSavedLoading}
-                           type={"submit"}
-                           text={!!param && param?.id ? "Update" : "Save"}
-                           btnCl={"Publish"}
+                           type={'submit'}
+                           text={!!param && param?.id ? 'Update' : 'Save'}
+                           btnCl={'Publish'}
                         />
                      </div>
                      {!!newPostSavedError && <p className="text-sm error_cl">{newPostSavedError}</p>}

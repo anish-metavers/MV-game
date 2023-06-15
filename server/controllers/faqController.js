@@ -1,7 +1,8 @@
-const { catchAsync, httpStatusCodes, checkIsValidId } = require("../helper/helper");
+const { default: mongoose } = require('mongoose');
+const { catchAsync, httpStatusCodes, checkIsValidId } = require('../helper/helper');
 
-const faqPostCategoryModel = require("../model/schema/faqPostCategorySchema");
-const faqPostModel = require("../model/schema/faqPostSchema");
+const faqPostCategoryModel = require('../model/schema/faqPostCategorySchema');
+const faqPostModel = require('../model/schema/faqPostSchema');
 
 const getAllFaqCategories = catchAsync(async function (req, res, next) {
    const { page } = req.query;
@@ -10,7 +11,7 @@ const getAllFaqCategories = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "Page is required",
+         message: 'Page is required',
       });
    }
 
@@ -37,7 +38,7 @@ const getAllFaqCategories = catchAsync(async function (req, res, next) {
    return res.status(httpStatusCodes.BAD_REQUEST).json({
       success: false,
       error: true,
-      message: "categories not found!",
+      message: 'categories not found!',
    });
 });
 
@@ -54,14 +55,14 @@ const createNewFaqCategory = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.CREATED).json({
          success: true,
          errror: false,
-         message: "Saved",
+         message: 'Saved',
       });
    }
 
    return res.status(httpStatusCodes.INTERNAL_SERVER).json({
       success: false,
       errror: true,
-      message: "Internal server errror",
+      message: 'Internal server errror',
    });
 });
 
@@ -72,7 +73,7 @@ const deleteFaqCategory = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "Category id is required",
+         message: 'Category id is required',
       });
    }
 
@@ -82,7 +83,7 @@ const deleteFaqCategory = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "Category is not valid id please check.",
+         message: 'Category is not valid id please check.',
       });
    }
 
@@ -92,7 +93,7 @@ const deleteFaqCategory = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
-         message: "Category is deleted",
+         message: 'Category is deleted',
          categoryId,
       });
    }
@@ -100,7 +101,7 @@ const deleteFaqCategory = catchAsync(async function (req, res, next) {
    return res.status(httpStatusCodes.NOT_FOUND).json({
       success: false,
       errror: true,
-      message: "Not found",
+      message: 'Not found',
    });
 });
 
@@ -111,7 +112,7 @@ const getSingleCategory = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "Category id is required",
+         message: 'Category id is required',
       });
    }
 
@@ -121,7 +122,7 @@ const getSingleCategory = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "Category is not valid id please check.",
+         message: 'Category is not valid id please check.',
       });
    }
 
@@ -138,7 +139,7 @@ const getSingleCategory = catchAsync(async function (req, res, next) {
    return res.status(httpStatusCodes.NOT_FOUND).json({
       success: false,
       errror: true,
-      message: "Not found",
+      message: 'Not found',
    });
 });
 
@@ -149,7 +150,7 @@ const updateFaqCategory = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "Category id is required",
+         message: 'Category id is required',
       });
    }
 
@@ -159,7 +160,7 @@ const updateFaqCategory = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "Id is not valid id please check.",
+         message: 'Id is not valid id please check.',
       });
    }
 
@@ -169,7 +170,7 @@ const updateFaqCategory = catchAsync(async function (req, res, next) {
          $set: {
             heading,
             isShow,
-            metadata: !!metaData ? metaData : "",
+            metadata: !!metaData ? metaData : '',
          },
       }
    );
@@ -178,14 +179,14 @@ const updateFaqCategory = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
-         message: "Category updated",
+         message: 'Category updated',
       });
    }
 
    return res.status(httpStatusCodes.BAD_REQUEST).json({
       success: false,
       error: true,
-      message: "No changes",
+      message: 'No changes',
    });
 });
 
@@ -203,7 +204,7 @@ const getAllFaqCategoriesList = catchAsync(async function (req, res, next) {
    return res.status(httpStatusCodes.NOT_FOUND).json({
       success: false,
       errror: true,
-      message: "Not found",
+      message: 'Not found',
    });
 });
 
@@ -214,7 +215,7 @@ const createNewFaqPost = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "Category id is required",
+         message: 'Category id is required',
       });
    }
 
@@ -224,11 +225,14 @@ const createNewFaqPost = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "Id is not valid id please check.",
+         message: 'Id is not valid id please check.',
       });
    }
 
+   const _id = mongoose.Types.ObjectId();
+
    const newPost = await faqPostModel({
+      _id,
       heading,
       isDefault,
       metaData,
@@ -236,17 +240,31 @@ const createNewFaqPost = catchAsync(async function (req, res, next) {
    }).save();
 
    if (newPost) {
+      // store post id in faq category document.
+      const storePostInCategoryDoc = await faqPostCategoryModel.updateOne(
+         { _id: categoryId },
+         {
+            $push: {
+               posts: {
+                  postId: _id,
+               },
+            },
+         }
+      );
+
+      console.log(storePostInCategoryDoc);
+
       return res.status(httpStatusCodes.CREATED).json({
          success: true,
          error: false,
-         message: "Post saved",
+         message: 'Post saved',
       });
    }
 
    return res.status(httpStatusCodes.INTERNAL_SERVER).json({
       success: false,
       errror: true,
-      message: "Internal server errror",
+      message: 'Internal server errror',
    });
 });
 
@@ -257,7 +275,7 @@ const getAllFaqPosts = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "Page is required",
+         message: 'Page is required',
       });
    }
 
@@ -284,7 +302,7 @@ const getAllFaqPosts = catchAsync(async function (req, res, next) {
    return res.status(httpStatusCodes.BAD_REQUEST).json({
       success: false,
       error: true,
-      message: "categories not found!",
+      message: 'categories not found!',
    });
 });
 
@@ -295,7 +313,7 @@ const getSingleFaqPosts = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "postId is required",
+         message: 'postId is required',
       });
    }
 
@@ -305,7 +323,7 @@ const getSingleFaqPosts = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "postId is not valid id please check.",
+         message: 'postId is not valid id please check.',
       });
    }
 
@@ -322,7 +340,7 @@ const getSingleFaqPosts = catchAsync(async function (req, res, next) {
    return res.status(httpStatusCodes.BAD_REQUEST).json({
       success: false,
       error: true,
-      message: "Post not found!",
+      message: 'Post not found!',
    });
 });
 
@@ -333,7 +351,7 @@ const updatePost = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "postId is required",
+         message: 'postId is required',
       });
    }
 
@@ -343,7 +361,17 @@ const updatePost = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "postId is not valid id please check.",
+         message: 'postId is not valid id please check.',
+      });
+   }
+
+   const checkPostExists = await faqPostModel.findOne({ _id: postId }, { _id: 1, categoryId: 1 });
+
+   if (!checkPostExists) {
+      return res.status(httpStatusCodes.NOT_FOUND).json({
+         success: false,
+         error: true,
+         message: 'post not found!',
       });
    }
 
@@ -360,17 +388,41 @@ const updatePost = catchAsync(async function (req, res, next) {
    );
 
    if (updatePostDocument.modifiedCount) {
+      // update post category
+      // if the post id is same then no need to store the update the post document.
+      if (!!checkPostExists && checkPostExists?.categoryId.valueOf() !== categoryId) {
+         const removeIdFromPrevCategory = await faqPostCategoryModel.updateOne(
+            { _id: checkPostExists?.categoryId },
+            {
+               $pull: { posts: { postId: postId } },
+            }
+         );
+
+         if (!removeIdFromPrevCategory) {
+            throw Error('someting worng with removing post id from prev post category document');
+         }
+
+         const storePostInCategoryDoc = await faqPostCategoryModel.updateOne(
+            { _id: categoryId },
+            { $push: { posts: { postId: postId } } }
+         );
+
+         if (!storePostInCategoryDoc) {
+            throw Error('someting worng with add post id from new post category document');
+         }
+      }
+
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
-         message: "Updated",
+         message: 'Updated',
       });
    }
 
    return res.status(httpStatusCodes.BAD_REQUEST).json({
       success: false,
       error: true,
-      message: "No change",
+      message: 'No change',
    });
 });
 
@@ -381,7 +433,7 @@ const deleteFaqPost = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "postId is required",
+         message: 'postId is required',
       });
    }
 
@@ -391,7 +443,7 @@ const deleteFaqPost = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: "postId is not valid id please check.",
+         message: 'postId is not valid id please check.',
       });
    }
 
@@ -401,7 +453,7 @@ const deleteFaqPost = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: true,
-         message: "Post Deleted",
+         message: 'Post Deleted',
          postId,
       });
    }
@@ -409,7 +461,7 @@ const deleteFaqPost = catchAsync(async function (req, res, next) {
    return res.status(httpStatusCodes.INTERNAL_SERVER).json({
       success: false,
       error: true,
-      message: "Internal server error",
+      message: 'Internal server error',
    });
 });
 
