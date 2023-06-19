@@ -25,6 +25,7 @@
       "react-cookie": "^4.1.1",
       "react-dom": "^18.2.0",
       "react-hook-form": "^7.43.1",
+      "react-input-emoji": "^5.1.0",
       "react-phone-number-input": "^3.2.19",
       "react-quill": "^2.0.0",
       "react-redux": "^8.0.5",

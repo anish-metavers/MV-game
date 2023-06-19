@@ -213,4 +213,17 @@ export const div = styled.div`
       cursor: no-drop;
       opacity: 0.5;
    }
+
+   .send_button {
+      padding: 1rem 1.4rem;
+      color: #fff;
+      background-color: var(--primary-color);
+      background-image: conic-gradient(from 1turn, #6acf15, #209b44);
+      cursor: pointer;
+      border-radius: 5px;
+
+      svg {
+         color: var(--main-cl);
+      }
+   }
 `;

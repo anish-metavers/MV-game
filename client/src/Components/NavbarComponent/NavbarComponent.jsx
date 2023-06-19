@@ -47,7 +47,9 @@ function NavbarComponent() {
    return (
       <styled.div className="shadow-sm flex items-center justify-between">
          <AnimatePresence>
-            {!!showPickerPopUp && <PicMediaImagesPopupComponent close={() => dispatch(showPickerPopUpHandler(false))} />}
+            {!!showPickerPopUp && (
+               <PicMediaImagesPopupComponent close={() => dispatch(showPickerPopUpHandler(false))} />
+            )}
          </AnimatePresence>
          {!!cookie && !!cookie?._mv_games_auth ? (
             <Fragment>

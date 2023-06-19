@@ -1,55 +1,56 @@
-import React, { useEffect } from "react";
-import { Route, Routes } from "react-router";
-import { useCookies } from "react-cookie";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router";
-import { setLoginUser } from "./App/Features/Auth/authSlice";
-import { ConfigProvider, theme } from "antd";
+import React, { useEffect } from 'react';
+import { Route, Routes } from 'react-router';
+import { useCookies } from 'react-cookie';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { setLoginUser } from './App/Features/Auth/authSlice';
+import { ConfigProvider, theme } from 'antd';
 
 // components
-import HomePageContainerComponent from "./Components/HomePageContainerComponent/HomePageContainerComponent";
+import HomePageContainerComponent from './Components/HomePageContainerComponent/HomePageContainerComponent';
 
 // pages
-import LoginPage from "./Pages/LoginPage/LoginPage";
-import HomePage from "./Pages/HomePage/HomePage";
-import UserRolePage from "./Pages/UserRolePage/UserRolePage";
-import CreateUserRolePage from "./Pages/CreateUserRolePage/CreateUserRolePage";
-import GameCurrencyPage from "./Pages/GameCurrencyPage/GameCurrencyPage";
-import CreateGameCurrencyPage from "./Pages/CreateGameCurrencyPage/CreateGameCurrencyPage";
-import GameListPage from "./Pages/GameListPage/GameListPage";
-import UploadGamesPage from "./Pages/UploadGamesPage/UploadGamesPage";
-import UserAvatarComponent from "./Pages/UserAvatarComponent/UserAvatarComponent";
-import UserPage from "./Pages/UserPage/UserPage";
-import GameCategoryPage from "./Pages/GameCategoryPage/GameCategoryPage";
-import ExportGameDataPage from "./Pages/ExportGameDataPage/ExportGameDataPage";
-import GameProvidersPage from "./Pages/GameProvidersPage/GameProvidersPage";
-import CreateNewGameProviderPage from "./Pages/CreateNewGameProviderPage/CreateNewGameProviderPage";
-import ProvidersGamesPage from "./Pages/ProvidersGamesPage/ProvidersGamesPage";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import GameCurrencyPaymentMethodsPage from "./Pages/GameCurrencyPaymentMethodsPage/GameCurrencyPaymentMethodsPage";
-import PostGameCurrencyPaymentOptionsPage from "./Pages/PostGameCurrencyPaymentOptionsPage/PostGameCurrencyPaymentOptionsPage";
-import NotificationPage from "./Pages/NotificationPage/NotificationPage";
-import PushNotificationPage from "./Pages/PushNotificationPage/PushNotificationPage";
-import FiatPaymentsPage from "./Pages/FiatPaymentsPage/FiatPaymentsPage";
-import SingleTransactionInfoPage from "./Pages/SingleTransactionInfoPage/SingleTransactionInfoPage";
-import PaymentFiledsPage from "./Pages/PaymentFiledsPage/PaymentFiledsPage";
-import CreatePaymentFieldsPage from "./Pages/CreatePaymentFieldsPage/CreatePaymentFieldsPage";
-import FiatWithdrawTransactionPage from "./Pages/FiatWithdrawTransactionPage/FiatWithdrawTransactionPage";
-import SpinDrawPage from "./Pages/SpinDrawPage/SpinDrawPage";
-import CreateSpinItemPage from "./Pages/CreateSpinItemPage/CreateSpinItemPage";
-import UploadImagesPage from "./Pages/UploadImagesPage/UploadImagesPage";
-import LotteryDrawPage from "./Pages/LotteryDrawPage/LotteryDrawPage";
-import EditLotteryPollPage from "./Pages/EditLotteryPollPage/EditLotteryPollPage";
-import PlayersAccountsPage from "./Pages/PlayersAccountsPage/PlayersAccountsPage";
-import UserStatusPage from "./Pages/UserStatusPage/UserStatusPage";
-import FaqCategoryPage from "./Pages/FaqCategoryPage/FaqCategoryPage";
-import FaqCategorySinglePage from "./Pages/FaqCategorySinglePage/FaqCategorySinglePage";
-import FaqPostsPage from "./Pages/FaqPostsPage/FaqPostsPage";
-import FaqSinglePostPage from "./Pages/FaqSinglePostPage/FaqSinglePostPage";
+import LoginPage from './Pages/LoginPage/LoginPage';
+import HomePage from './Pages/HomePage/HomePage';
+import UserRolePage from './Pages/UserRolePage/UserRolePage';
+import CreateUserRolePage from './Pages/CreateUserRolePage/CreateUserRolePage';
+import GameCurrencyPage from './Pages/GameCurrencyPage/GameCurrencyPage';
+import CreateGameCurrencyPage from './Pages/CreateGameCurrencyPage/CreateGameCurrencyPage';
+import GameListPage from './Pages/GameListPage/GameListPage';
+import UploadGamesPage from './Pages/UploadGamesPage/UploadGamesPage';
+import UserAvatarComponent from './Pages/UserAvatarComponent/UserAvatarComponent';
+import UserPage from './Pages/UserPage/UserPage';
+import GameCategoryPage from './Pages/GameCategoryPage/GameCategoryPage';
+import ExportGameDataPage from './Pages/ExportGameDataPage/ExportGameDataPage';
+import GameProvidersPage from './Pages/GameProvidersPage/GameProvidersPage';
+import CreateNewGameProviderPage from './Pages/CreateNewGameProviderPage/CreateNewGameProviderPage';
+import ProvidersGamesPage from './Pages/ProvidersGamesPage/ProvidersGamesPage';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import GameCurrencyPaymentMethodsPage from './Pages/GameCurrencyPaymentMethodsPage/GameCurrencyPaymentMethodsPage';
+import PostGameCurrencyPaymentOptionsPage from './Pages/PostGameCurrencyPaymentOptionsPage/PostGameCurrencyPaymentOptionsPage';
+import NotificationPage from './Pages/NotificationPage/NotificationPage';
+import PushNotificationPage from './Pages/PushNotificationPage/PushNotificationPage';
+import FiatPaymentsPage from './Pages/FiatPaymentsPage/FiatPaymentsPage';
+import SingleTransactionInfoPage from './Pages/SingleTransactionInfoPage/SingleTransactionInfoPage';
+import PaymentFiledsPage from './Pages/PaymentFiledsPage/PaymentFiledsPage';
+import CreatePaymentFieldsPage from './Pages/CreatePaymentFieldsPage/CreatePaymentFieldsPage';
+import FiatWithdrawTransactionPage from './Pages/FiatWithdrawTransactionPage/FiatWithdrawTransactionPage';
+import SpinDrawPage from './Pages/SpinDrawPage/SpinDrawPage';
+import CreateSpinItemPage from './Pages/CreateSpinItemPage/CreateSpinItemPage';
+import UploadImagesPage from './Pages/UploadImagesPage/UploadImagesPage';
+import LotteryDrawPage from './Pages/LotteryDrawPage/LotteryDrawPage';
+import EditLotteryPollPage from './Pages/EditLotteryPollPage/EditLotteryPollPage';
+import PlayersAccountsPage from './Pages/PlayersAccountsPage/PlayersAccountsPage';
+import UserStatusPage from './Pages/UserStatusPage/UserStatusPage';
+import FaqCategoryPage from './Pages/FaqCategoryPage/FaqCategoryPage';
+import FaqCategorySinglePage from './Pages/FaqCategorySinglePage/FaqCategorySinglePage';
+import FaqPostsPage from './Pages/FaqPostsPage/FaqPostsPage';
+import FaqSinglePostPage from './Pages/FaqSinglePostPage/FaqSinglePostPage';
+import LiveChatPage from './Pages/LiveChatPage/LiveChatPage';
 
 const darkTheme = createTheme({
    palette: {
-      mode: "dark",
+      mode: 'dark',
    },
 });
 
@@ -63,7 +64,7 @@ function App() {
       if (!!cookie && !!cookie?._mv_games_auth && cookie?._mv_games_auth?._id) {
          dispatch(setLoginUser({ auth: cookie?._mv_games_auth }));
       } else {
-         navigation("/dashboard/auth/login");
+         navigation('/dashboard/auth/login');
       }
    }, []);
 
@@ -122,6 +123,7 @@ function App() {
                      <Route path="/faq-posts" element={<FaqPostsPage />} />
                      <Route path="/faq-post/create" element={<FaqSinglePostPage />} />
                      <Route path="/faq-post/edit/:id" element={<FaqSinglePostPage />} />
+                     <Route path="/live/support" element={<LiveChatPage />} />
                   </Route>
                   <Route path="/dashboard/auth/login" element={<LoginPage />} />
                </Routes>
