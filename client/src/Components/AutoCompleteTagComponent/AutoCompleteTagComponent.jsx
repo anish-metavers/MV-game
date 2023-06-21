@@ -4,16 +4,7 @@ import { Checkbox, TextField } from '@mui/material';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
-function AutoCompleteTagComponent({
-   items,
-   setValue,
-   getValues,
-   filed,
-   value,
-   label,
-   placeholder,
-   fieldName,
-}) {
+function AutoCompleteTagComponent({ items, setValue, getValues, filed, value, label, placeholder, fieldName }) {
    return (
       <Autocomplete
          multiple
@@ -28,9 +19,7 @@ function AutoCompleteTagComponent({
             });
             setValue(
                filed,
-               getValues(filed).filter((i) =>
-                  values.find((v) => v.category === i.category)
-               )
+               getValues(filed).filter((i) => values.find((v) => v.category === i.category))
             );
          }}
          sx={{ width: '100%' }}
@@ -47,9 +36,7 @@ function AutoCompleteTagComponent({
                </li>
             );
          }}
-         renderInput={(params) => (
-            <TextField {...params} label={label} placeholder={placeholder} />
-         )}
+         renderInput={(params) => <TextField {...params} label={label} placeholder={placeholder} />}
       />
    );
 }

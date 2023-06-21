@@ -36,16 +36,42 @@ const getUserSingleAccount = catchAsync(async function (req, res, next) {
       });
    }
 
-   const findUserAccount = await authModel.findOne(
-      { _id: userId },
-      { name: 1, email: 1, active: 1, avatar: 1, accountEnable: 1 }
-   );
+   const findUserAccount = await authModel.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(userId) } },
+      { $unwind: { path: '$userRole', preserveNullAndEmptyArrays: true } },
+      {
+         $lookup: {
+            from: 'roles',
+            localField: 'userRole.roleId',
+            foreignField: '_id',
+            as: 'role',
+            pipeline: [{ $project: { _id: 1, roleName: 1 } }],
+         },
+      },
+      { $project: { avatar: 1, role: 1, name: 1, email: 1, active: 1, accountEnable: 1 } },
+      {
+         $group: {
+            _id: {
+               _id: '$_id',
+               name: '$name',
+               email: '$email',
+               active: '$active',
+               avatar: '$avatar',
+               accountEnable: '$accountEnable',
+            },
+            roles: { $push: { $arrayElemAt: ['$role', 0] } },
+         },
+      },
+      { $project: { _id: 0, roles: 1, item: '$_id' } },
+   ]);
 
-   if (findUserAccount) {
+   const userInfo = findUserAccount?.[0];
+
+   if (userInfo) {
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
-         item: findUserAccount,
+         item: userInfo,
       });
    }
 
@@ -222,9 +248,7 @@ const createPlayerAccount = catchAsync(async function (req, res, next) {
 });
 
 const updatePlayerAccount = catchAsync(async function (req, res, next) {
-   const { userId, name, email, active, avatar, accountEnable } = req.body;
-
-   console.log(req.body);
+   const { userId, name, email, active, avatar, accountEnable, roles } = req.body;
 
    if (!userId) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
@@ -244,6 +268,11 @@ const updatePlayerAccount = catchAsync(async function (req, res, next) {
       });
    }
 
+   let userRole;
+   if (!!roles && roles.length) {
+      userRole = roles.map((el) => ({ roleId: el?._id, roleName: el?.roleName }));
+   }
+
    const findAndUpdateInfo = await authModel.updateOne(
       { _id: userId },
       {
@@ -253,6 +282,7 @@ const updatePlayerAccount = catchAsync(async function (req, res, next) {
             active,
             avatar,
             accountEnable,
+            userRole,
          },
       }
    );
@@ -607,6 +637,23 @@ const getUserWageredAmountGraph = catchAsync(async function (req, res, next) {
    });
 });
 
+const getUserRoleLists = catchAsync(async function (req, res, next) {
+   const findAllRoles = await roleModel.find({}, { roleName: 1 });
+   if (!findAllRoles) {
+      return res.status(httpStatusCodes.NOT_FOUND).json({
+         success: false,
+         error: true,
+         message: 'Roles data is not found!',
+      });
+   }
+
+   return res.status(httpStatusCodes.OK).json({
+      success: true,
+      error: false,
+      items: findAllRoles,
+   });
+});
+
 module.exports = {
    getUserSingleAccount,
    createPlayerAccount,
@@ -616,4 +663,5 @@ module.exports = {
    getAllGlobalGroups,
    getUserGlobalChats,
    getUserWageredAmountGraph,
+   getUserRoleLists,
 };

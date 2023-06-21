@@ -4,11 +4,14 @@ import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
 import * as styled from './GameCurrencyPaymentMethodsPage.style';
 import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHeadingComponent';
 import { useNavigate } from 'react-router';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrencyPaymentOptions } from '../../App/Features/Payment/paymentActions';
-import { currencyMethodsSelector, currencyMethodsLoadingSelector, currencyMethodsErrorSelector } from './GameCurrency.Selector';
+import {
+   currencyMethodsSelector,
+   currencyMethodsLoadingSelector,
+   currencyMethodsErrorSelector,
+} from './GameCurrency.Selector';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import TableComponent from '../../Components/TableComponent/TableComponent';
 import dayjs from 'dayjs';
@@ -24,8 +27,11 @@ const ROW = [
 
 function GameCurrencyPaymentMethodsPage() {
    const navigation = useNavigate();
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const dispatch = useDispatch();
    const [Page, setPage] = useState(0);
 

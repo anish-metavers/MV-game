@@ -2,8 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import * as styled from './GameUploadResultChartComponent.style';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useDispatch, useSelector } from 'react-redux';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import useRoles from '../../Hooks/useRoles';
 import { filterGameUploadDataResult, getGamesUploadResult } from '../../App/Features/Admin/adminActions';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
@@ -20,8 +19,9 @@ import {
 import SpinnerComponent from '../SpinnerComponent/SpinnerComponent';
 
 function GameUploadResultChartComponent() {
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+   } = useRoles();
    const dispatch = useDispatch();
 
    const gameStatus = useSelector(gameStatusSelector);
@@ -36,10 +36,10 @@ function GameUploadResultChartComponent() {
    };
 
    useEffect(() => {
-      if (isAdmin) {
+      if (isAdmin || isSupport) {
          dispatch(getGamesUploadResult());
       }
-   }, [isAdmin]);
+   }, [isAdmin, isSupport]);
 
    return (
       <styled.div>

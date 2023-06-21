@@ -5,8 +5,7 @@ import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHead
 import { MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import useRoles from '../../Hooks/useRoles';
 import { deletePaymentOptionsFiled, getAllPaymentOptionFields } from '../../App/Features/Payment/paymentActions';
 import {
    paymentOptionsFieldsSelector,
@@ -32,8 +31,11 @@ const ROW = [
 
 function PaymentFiledsPage() {
    const navigation = useNavigate();
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const dispatch = useDispatch();
    const [Page, setPage] = useState(0);
 

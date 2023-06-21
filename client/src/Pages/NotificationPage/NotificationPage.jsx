@@ -5,9 +5,11 @@ import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHead
 import { MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllSystemNotification, deleteSingleNotification } from '../../App/Features/Notification/notificationActions';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import {
+   getAllSystemNotification,
+   deleteSingleNotification,
+} from '../../App/Features/Notification/notificationActions';
+import useRoles from '../../Hooks/useRoles';
 import {
    systemNotificationsSelector,
    systemNotificationsLoadingSelector,
@@ -34,8 +36,11 @@ const ROW = [
 function NotificationPage() {
    const navigation = useNavigate();
    const [Page, setPage] = useState(0);
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const dispatch = useDispatch();
    const socket = useContext(SocketContext);
 

@@ -3,21 +3,18 @@ import * as styled from './CategoryListInnerComponent.style';
 import { BiLayer } from '@react-icons/all-files/bi/BiLayer';
 import { MdKeyboardArrowDown } from '@react-icons/all-files/md/MdKeyboardArrowDown';
 import { VscEdit } from '@react-icons/all-files/vsc/VscEdit';
-import {
-   deleteSingleGameCategory,
-   getSinglegameCategory,
-} from '../../App/Features/Games/GameActions';
+import { deleteSingleGameCategory, getSinglegameCategory } from '../../App/Features/Games/GameActions';
 import { useDispatch } from 'react-redux';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import useRoles from '../../Hooks/useRoles';
 import { MdDeleteForever } from '@react-icons/all-files/md/MdDeleteForever';
 import { Popconfirm } from 'antd';
 import Badge from '@mui/material/Badge';
 import { CgGames } from '@react-icons/all-files/cg/CgGames';
 
 function CategoryListInnerComponent({ data }) {
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+   } = useRoles();
    const dispatch = useDispatch();
    const DropDownRef = useRef(null);
    const ArRef = useRef(null);
@@ -43,16 +40,10 @@ function CategoryListInnerComponent({ data }) {
 
    return (
       <styled.div ref={DropDownRef}>
-         <div
-            className="flex items-center justify-between ic_box"
-            onClick={ShowHandler}
-         >
+         <div className="flex items-center justify-between ic_box" onClick={ShowHandler}>
             <div className="flex items-center space-x-4">
                <BiLayer className="text-gray-300" />
-               <styled.iconBoxDiv
-                  className="hover:bg-gray-900"
-                  onClick={EditHandler}
-               >
+               <styled.iconBoxDiv className="hover:bg-gray-900" onClick={EditHandler}>
                   <VscEdit className="text-gray-300" />
                </styled.iconBoxDiv>
                {/* <Popconfirm
@@ -67,11 +58,7 @@ function CategoryListInnerComponent({ data }) {
                   </styled.iconBoxDiv>
                </Popconfirm> */}
                <p className="text-gray-300">{data?._id?.name || data?.name}</p>
-               <div
-                  className={`shadow status ${
-                     data?._id?.status || data?.status
-                  }`}
-               >
+               <div className={`shadow status ${data?._id?.status || data?.status}`}>
                   {data?._id?.status || data?.status}
                </div>
                <div>

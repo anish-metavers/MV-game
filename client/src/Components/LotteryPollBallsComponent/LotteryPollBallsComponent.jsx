@@ -7,8 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import CustomButtonComponent from '../CustomButtonComponent/CustomButtonComponent';
 import { message } from 'antd';
 import { useParams } from 'react-router';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import { updateLuckyDrawPollResult } from '../../App/Features/LuckyDraw/LuckyDrawActions';
 
 const digitalBalls = new Array(36).fill(1).map((el, idx) => (el = idx + 1));
@@ -22,8 +21,11 @@ function LotteryPollBallsComponent({ jackpotBallNumber, luckyNumbers }) {
       },
    });
 
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
 
    const params = useParams();
    const dispatch = useDispatch();
@@ -152,7 +154,9 @@ function LotteryPollBallsComponent({ jackpotBallNumber, luckyNumbers }) {
                            </div>
                         </div>
                      </styled.ballsDiv>
-                     <p className="text-sm text-green-500 px-2 text-center">Please choose 6 numbers to save the lottery result</p>
+                     <p className="text-sm text-green-500 px-2 text-center">
+                        Please choose 6 numbers to save the lottery result
+                     </p>
                      <div className="mt-4 mb-4 flex items-center justify-center">
                         <CustomButtonComponent
                            text={'Set lottery result numbers'}

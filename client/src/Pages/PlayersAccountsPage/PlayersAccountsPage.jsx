@@ -12,6 +12,7 @@ import CustomButtonComponent from '../../Components/CustomButtonComponent/Custom
 import { useDispatch, useSelector } from 'react-redux';
 import {
    createPlayerAccount,
+   getUserRoleLists,
    getUserSingleAccount,
    updatePlayerAccount,
 } from '../../App/Features/userManagement/userManagementActions';
@@ -25,19 +26,21 @@ import {
    singleUserAccountErrorSelector,
    showSetPasswordPopupSelector,
    pickedImageSelector,
+   userRolesListSelector,
+   userRolesListLoadingSelector,
 } from './PlayersAccount.Selector';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import { removeAccountErrors } from '../../App/Features/userManagement/userManagementSlice';
 import { useParams } from 'react-router';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import SetAccountPasswordPopupComponent from '../../Components/SetAccountPasswordPopupComponent/SetAccountPasswordPopupComponent';
 import { AnimatePresence } from 'framer-motion';
 import { showAndHidePwdPopupHandler } from '../../App/Features/Admin/adminSlice';
 import { removePickedImage, showPickerPopUpHandler } from '../../App/Features/Media/MediaSlice';
 import { CgColorPicker } from '@react-icons/all-files/cg/CgColorPicker';
+import AutoCompleteTagComponent from '../../Components/AutoCompleteTagComponent/AutoCompleteTagComponent';
 
 const schema = yup.object({
    name: yup.string().required('Name is reuqired'),
@@ -51,6 +54,7 @@ function PlayersAccountsPage() {
       setValue,
       formState: { errors },
       reset,
+      getValues,
    } = useForm({
       defaultValues: {
          name: '',
@@ -62,8 +66,11 @@ function PlayersAccountsPage() {
       resolver: yupResolver(schema),
    });
 
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const dispatch = useDispatch();
    const param = useParams();
 
@@ -76,6 +83,8 @@ function PlayersAccountsPage() {
    const singleUserAccountError = useSelector(singleUserAccountErrorSelector);
    const showSetPasswordPopup = useSelector(showSetPasswordPopupSelector);
    const pickedImage = useSelector(pickedImageSelector);
+   const userRolesList = useSelector(userRolesListSelector);
+   const userRolesListLoading = useSelector(userRolesListLoadingSelector);
 
    const createHandler = function (data) {
       if (isAdmin) {
@@ -103,6 +112,7 @@ function PlayersAccountsPage() {
    useEffect(() => {
       if (isAdmin && !!param && param?.id) {
          dispatch(getUserSingleAccount({ userId: param?.id }));
+         dispatch(getUserRoleLists());
       } else {
          reset();
       }
@@ -110,12 +120,13 @@ function PlayersAccountsPage() {
 
    useEffect(() => {
       if (!!singleUserAccountInfo && singleUserAccountInfo?.success && singleUserAccountInfo?.item) {
-         const { item } = singleUserAccountInfo;
+         const { item, roles } = singleUserAccountInfo?.item;
          setValue('name', item?.name);
          setValue('active', item?.active);
          setValue('email', item?.email);
          setValue('avatar', item?.avatar);
          setValue('accountEnable', item?.accountEnable);
+         setValue('roles', roles);
       }
    }, [singleUserAccountInfo]);
 
@@ -188,6 +199,27 @@ function PlayersAccountsPage() {
                            />
                            {!!errors?.email?.message && <p className="text-sm error_cl">{errors?.email?.message}</p>}
                         </div>
+                        <div className="w-full">
+                           {!!userRolesListLoading && <SpinnerComponent />}
+                           {!!userRolesList && userRolesList?.success && userRolesList?.items && (
+                              <Controller
+                                 name="roles"
+                                 control={control}
+                                 render={({ field: { onChange, value } }) => (
+                                    <AutoCompleteTagComponent
+                                       value={value}
+                                       onChange={onChange}
+                                       setValue={setValue}
+                                       getValues={getValues}
+                                       items={userRolesList?.items}
+                                       filed={'roles'}
+                                       label={'Role'}
+                                       fieldName={'roleName'}
+                                    />
+                                 )}
+                              />
+                           )}
+                        </div>
                      </div>
                      <div className="flex items-center space-x-5">
                         <div className="flex items-center space-x-4 pt-2">
@@ -225,7 +257,10 @@ function PlayersAccountsPage() {
                      </div>
                      <div className="py-4">
                         <div className="image_picker">
-                           <CgColorPicker className="text-gray-200 text-xl cursor-pointer" onClick={() => pickedImageHander()} />
+                           <CgColorPicker
+                              className="text-gray-200 text-xl cursor-pointer"
+                              onClick={() => pickedImageHander()}
+                           />
                         </div>
                         <p className="text-gray-300 font-medium mb-2 mt-2">User profile</p>
                         <div className="image_prev mt-2">
@@ -260,7 +295,11 @@ function PlayersAccountsPage() {
                            !!singleUserAccountInfo &&
                            singleUserAccountInfo?.success &&
                            singleUserAccountInfo?.item && (
-                              <CustomButtonComponent onClick={setPasswordHandler} text={'Set Password'} btnCl={'Publish'} />
+                              <CustomButtonComponent
+                                 onClick={setPasswordHandler}
+                                 text={'Set Password'}
+                                 btnCl={'Publish'}
+                              />
                            )}
                      </div>
                   </Box>

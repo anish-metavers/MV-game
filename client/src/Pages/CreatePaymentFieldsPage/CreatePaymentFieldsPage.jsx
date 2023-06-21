@@ -15,8 +15,7 @@ import {
    getSinglePaymentOptionField,
    updatePaymentOptionField,
 } from '../../App/Features/Payment/paymentActions';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import { message } from 'antd';
 import { useParams } from 'react-router';
 
@@ -49,8 +48,11 @@ function CreatePaymentFieldsPage() {
       resolver: yupResolver(Schema),
    });
    const dispatch = useDispatch();
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const [loading, setLoading] = useState(false);
    const params = useParams();
    const editId = params?.id;
@@ -185,7 +187,12 @@ function CreatePaymentFieldsPage() {
                         </div>
                      </div>
                      <CheckBoxComponent heading={'Field hide'} name="hide" control={control} Controller={Controller} />
-                     <CheckBoxComponent heading={'Field read only'} name="readOnly" control={control} Controller={Controller} />
+                     <CheckBoxComponent
+                        heading={'Field read only'}
+                        name="readOnly"
+                        control={control}
+                        Controller={Controller}
+                     />
                   </Box>
                   <div className="flex mt-4">
                      <CustomButtonComponent

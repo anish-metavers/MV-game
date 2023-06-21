@@ -17,6 +17,7 @@ import {
    getUserGlobalChats,
    getUserFriendList,
    getUserWageredAmountGraph,
+   getUserRoleLists,
 } from './userManagementActions';
 
 const INITAL_STATE = {
@@ -64,6 +65,9 @@ const INITAL_STATE = {
    userWageredAmount: null,
    userWageredAmountLoading: false,
    userWageredAmountError: null,
+   userRolesList: null,
+   userRolesListLoading: false,
+   userRolesListError: null,
 };
 
 const userManagementSlice = createSlice({
@@ -411,6 +415,23 @@ const userManagementSlice = createSlice({
             state.userWageredAmount = action.payload.data;
             state.userWageredAmountLoading = false;
             state.userWageredAmountError = null;
+         });
+
+      bulder
+         .addCase(getUserRoleLists.pending, (state) => {
+            state.userRolesList = null;
+            state.userRolesListLoading = true;
+            state.userRolesListError = null;
+         })
+         .addCase(getUserRoleLists.rejected, (state, action) => {
+            state.userRolesList = null;
+            state.userRolesListLoading = false;
+            state.userRolesListError = action.error.message;
+         })
+         .addCase(getUserRoleLists.fulfilled, (state, action) => {
+            state.userRolesList = action.payload.data;
+            state.userRolesListLoading = false;
+            state.userRolesListError = null;
          });
    },
 });

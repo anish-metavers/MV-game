@@ -12,14 +12,16 @@ function LiveChatScreenComponent() {
    return (
       <styled.div>
          {!param && <ChatHomeScreenComponent />}
-         <styled.contentDiv>
-            <div className="screen_div">
-               <MessageComponent sender={true} />
-               <MessageComponent sender={false} />
-               <MessageComponent sender={false} />
-            </div>
-            <SendMessageComponent />
-         </styled.contentDiv>
+         {!!param && (
+            <styled.contentDiv>
+               <div className="screen_div">
+                  <MessageComponent sender={true} />
+                  <MessageComponent sender={false} />
+                  <MessageComponent sender={false} />
+               </div>
+               <SendMessageComponent />
+            </styled.contentDiv>
+         )}
       </styled.div>
    );
 }

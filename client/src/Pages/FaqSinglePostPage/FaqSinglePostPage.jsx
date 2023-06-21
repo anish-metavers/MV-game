@@ -8,10 +8,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import { useDispatch, useSelector } from 'react-redux';
-import { createNewFaqPost, getAllFaqCategoriesList, getSingleFaqPost, updatePost } from '../../App/Features/Faq/faqActions';
+import {
+   createNewFaqPost,
+   getAllFaqCategoriesList,
+   getSingleFaqPost,
+   updatePost,
+} from '../../App/Features/Faq/faqActions';
 import { Switch, message } from 'antd';
 import MenuItem from '@mui/material/MenuItem';
 import {
@@ -51,8 +55,11 @@ function FaqSinglePostPage() {
    });
 
    const editor = useRef(null);
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const dispatch = useDispatch();
    const param = useParams();
 
@@ -177,7 +184,12 @@ function FaqSinglePostPage() {
                         name="isDefault"
                         control={control}
                         render={({ field: { onChange, value } }) => (
-                           <Switch checked={value} onChange={onChange} checkedChildren={'Yes'} unCheckedChildren={'No'} />
+                           <Switch
+                              checked={value}
+                              onChange={onChange}
+                              checkedChildren={'Yes'}
+                              unCheckedChildren={'No'}
+                           />
                         )}
                      />
                      <p className="text-gray-200">Is default</p>

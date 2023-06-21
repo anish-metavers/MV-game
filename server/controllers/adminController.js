@@ -1,4 +1,4 @@
-const { catchAsync, httpStatusCodes, uploadToS3 } = require('../helper/helper');
+const { catchAsync, httpStatusCodes, uploadToS3, checkIsValidId } = require('../helper/helper');
 const currencyModel = require('../model/schema/currencySchema');
 const roleModel = require('../model/schema/roleSchema');
 const gameModel = require('../model/schema/gameSchema');
@@ -87,7 +87,7 @@ const deleteSingleAvatar = catchAsync(async function (req, res, next) {
 
 const getAllUsers = catchAsync(async function (req, res, next) {
    const { page } = req.query;
-   const DOCUMENT_LIMIT = 10;
+   const DOCUMENT_LIMIT = 30;
    const documentCount = await authModel.countDocuments();
 
    const findDocuments = await authModel

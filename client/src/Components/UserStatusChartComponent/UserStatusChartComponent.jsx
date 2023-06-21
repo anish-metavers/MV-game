@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import * as styled from './UserStatusChartComponent.style';
-import {
-   ComposedChart,
-   Line,
-   XAxis,
-   YAxis,
-   Tooltip,
-   Legend,
-   ResponsiveContainer,
-} from 'recharts';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import { ComposedChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import useRoles from '../../Hooks/useRoles';
 import { useDispatch } from 'react-redux';
 import { getUserLoginResults } from '../../App/Features/Admin/adminActions';
 
 function UserStatusChartComponent() {
    const dispatch = useDispatch();
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+   } = useRoles();
    const [UserResult, setUserResult] = useState([]);
 
    const UserResultHandler = async function () {
@@ -32,18 +24,16 @@ function UserStatusChartComponent() {
    };
 
    useEffect(() => {
-      if (isAdmin) {
+      if (isAdmin || isSupport) {
          UserResultHandler();
       }
-   }, [isAdmin]);
+   }, [isAdmin, isSupport]);
 
    return (
       <styled.div className=" bg-zinc-800 p-4">
          <styled.filterDiv>
             <div>
-               <h1 className="text-gray text-xl text-gray-200 font-semibold">
-                  User Summary
-               </h1>
+               <h1 className="text-gray text-xl text-gray-200 font-semibold">User Summary</h1>
             </div>
             <div className="flex items-center space-x-3"></div>
          </styled.filterDiv>
@@ -64,12 +54,7 @@ function UserStatusChartComponent() {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line
-                     type="monotone"
-                     strokeWidth={2}
-                     dataKey="user"
-                     stroke="#ff7300"
-                  />
+                  <Line type="monotone" strokeWidth={2} dataKey="user" stroke="#ff7300" />
                </ComposedChart>
             </ResponsiveContainer>
          </styled.mapDiv>

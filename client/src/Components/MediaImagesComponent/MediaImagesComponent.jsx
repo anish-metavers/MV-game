@@ -3,23 +3,11 @@ import * as styled from './MediaImagesComponent.style';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import { VscClose } from '@react-icons/all-files/vsc/VscClose';
 import { Popconfirm } from 'antd';
-import {
-   mediaImagesSelector,
-   mediaImagesLoadingSelector,
-   mediaImagesErrorSelector,
-} from './Media.Selector';
+import { mediaImagesSelector, mediaImagesLoadingSelector, mediaImagesErrorSelector } from './Media.Selector';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-   deleteMediaFiles,
-   getAllUploadImages,
-} from '../../App/Features/Media/MediaActions';
-import {
-   pickedImageHandler,
-   removeImagesInfo,
-   showPickerPopUpHandler,
-} from '../../App/Features/Media/MediaSlice';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import { deleteMediaFiles, getAllUploadImages } from '../../App/Features/Media/MediaActions';
+import { pickedImageHandler, removeImagesInfo, showPickerPopUpHandler } from '../../App/Features/Media/MediaSlice';
+import useRoles from '../../Hooks/useRoles';
 import CustomButtonComponent from '../CustomButtonComponent/CustomButtonComponent';
 import { BiEditAlt } from '@react-icons/all-files/bi/BiEditAlt';
 import EditMediaFilePopupComponent from '../EditMediaFilePopupComponent/EditMediaFilePopupComponent';
@@ -28,8 +16,11 @@ import { CgColorPicker } from '@react-icons/all-files/cg/CgColorPicker';
 
 function MediaImagesComponent({ type }) {
    const [Page, setPage] = useState(0);
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const dispatch = useDispatch();
    const [IsEdit, setIsEdit] = useState(false);
    const [SelectedImage, setSelectedImage] = useState(false);
@@ -68,16 +59,9 @@ function MediaImagesComponent({ type }) {
    return (
       <styled.div>
          <AnimatePresence>
-            {!!IsEdit && (
-               <EditMediaFilePopupComponent
-                  selectedImage={SelectedImage}
-                  close={() => setIsEdit(false)}
-               />
-            )}
+            {!!IsEdit && <EditMediaFilePopupComponent selectedImage={SelectedImage} close={() => setIsEdit(false)} />}
          </AnimatePresence>
-         {!!mediaImagesError && (
-            <p className="text-sm error_cl">{mediaImagesError}</p>
-         )}
+         {!!mediaImagesError && <p className="text-sm error_cl">{mediaImagesError}</p>}
          {!!mediaImagesLoading && <SpinnerComponent />}
          <div className="grd_div">
             {!!mediaImages &&
@@ -105,17 +89,11 @@ function MediaImagesComponent({ type }) {
                            src={el?.key}
                         />
                         {!!type && type === 'select' ? (
-                           <div
-                              className="edit_btn"
-                              onClick={() => pickerHandler(el?.key)}
-                           >
+                           <div className="edit_btn" onClick={() => pickerHandler(el?.key)}>
                               <CgColorPicker />
                            </div>
                         ) : (
-                           <div
-                              className="edit_btn"
-                              onClick={() => editImageHandler(el?.key)}
-                           >
+                           <div className="edit_btn" onClick={() => editImageHandler(el?.key)}>
                               <BiEditAlt />
                            </div>
                         )}
@@ -125,11 +103,7 @@ function MediaImagesComponent({ type }) {
          </div>
          {mediaImages?.totalPages > Page && (
             <div className="flex items-center w-full justify-center">
-               <CustomButtonComponent
-                  text={'Load more.'}
-                  btnCl={'load_mode text-sm'}
-                  onClick={loadMoreHandler}
-               />
+               <CustomButtonComponent text={'Load more.'} btnCl={'load_mode text-sm'} onClick={loadMoreHandler} />
             </div>
          )}
       </styled.div>

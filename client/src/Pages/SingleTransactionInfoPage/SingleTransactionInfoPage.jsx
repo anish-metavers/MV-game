@@ -1,8 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import { getSingleOrderInfo, updateFiatWithdrawTransaction } from '../../App/Features/Payment/paymentActions';
 import {
    singleOrderSelector,
@@ -41,8 +40,11 @@ function SingleTransactionInfoPage() {
    const params = useParams();
    const dispatch = useDispatch();
    const { orderId } = params;
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const { register, getValues } = useForm();
    const [ShowAnimation, setShowAnimation] = useState(false);
 
@@ -124,7 +126,9 @@ function SingleTransactionInfoPage() {
                      {singleOrder?.transactions?.transactionUpdatedAt && (
                         <BoxCm
                            heading={'Updated at'}
-                           value={dayjs(singleOrder?.transactions?.transactionUpdatedAt).format('DD MMMM YY hh:mm:ss A')}
+                           value={dayjs(singleOrder?.transactions?.transactionUpdatedAt).format(
+                              'DD MMMM YY hh:mm:ss A'
+                           )}
                         />
                      )}
                      {singleOrder?.transactions?.upiRefNumber && (
@@ -149,7 +153,11 @@ function SingleTransactionInfoPage() {
                            {(function () {
                               const keys = Object.keys(singleOrder?.transactions?.withdrawInformation);
                               return keys.map((el) => (
-                                 <BoxCm key={el} heading={el} value={singleOrder?.transactions?.withdrawInformation[el]} />
+                                 <BoxCm
+                                    key={el}
+                                    heading={el}
+                                    value={singleOrder?.transactions?.withdrawInformation[el]}
+                                 />
                               ));
                            })()}
                         </Fragment>
@@ -213,7 +221,9 @@ function SingleTransactionInfoPage() {
                                  {!!updateFiatWithdraw && updateFiatWithdraw?.success && (
                                     <p className="text-sm text-gray-300">{updateFiatWithdraw?.message}</p>
                                  )}
-                                 {!!updateFiatWithdrawError && <p className="text-sm error_cl">{updateFiatWithdrawError}</p>}
+                                 {!!updateFiatWithdrawError && (
+                                    <p className="text-sm error_cl">{updateFiatWithdrawError}</p>
+                                 )}
                               </div>
                            </div>
                         )}

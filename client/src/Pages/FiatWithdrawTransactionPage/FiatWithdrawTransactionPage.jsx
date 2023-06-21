@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
 import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHeadingComponent';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import useRoles from '../../Hooks/useRoles';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllFiatWithdrawTransaction } from '../../App/Features/Payment/paymentActions';
 import {
@@ -28,8 +27,11 @@ const ROW = [
 ];
 
 function FiatWithdrawTransactionPage() {
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const dispatch = useDispatch();
    const [Page, setPage] = useState(0);
    const navigation = useNavigate();

@@ -4,9 +4,12 @@ import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHead
 import * as styled from './FiatPaymentsPage.style';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllFiatDepositTransactions } from '../../App/Features/Payment/paymentActions';
-import { fiatTransactionsSelector, fiatTransactionsLoadingSelector, fiatTransactionsErrorSelector } from './FiatPayment.Selector';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import {
+   fiatTransactionsSelector,
+   fiatTransactionsLoadingSelector,
+   fiatTransactionsErrorSelector,
+} from './FiatPayment.Selector';
+import useRoles from '../../Hooks/useRoles';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import TableComponent from '../../Components/TableComponent/TableComponent';
 import dayjs from 'dayjs';
@@ -24,8 +27,11 @@ const ROW = [
 
 function FiatPaymentsPage() {
    const dispatch = useDispatch();
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const [Page, setPage] = useState(0);
    const navigation = useNavigate();
 

@@ -16,14 +16,10 @@ import {
 } from './PostNewCategory.Selector';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
-import {
-   postNewGameCategory,
-   updateGameCategory,
-} from '../../App/Features/Games/GameActions';
+import { postNewGameCategory, updateGameCategory } from '../../App/Features/Games/GameActions';
 import { message } from 'antd';
 import { yupResolver } from '@hookform/resolvers/yup';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import useRoles from '../../Hooks/useRoles';
 import SpinnerComponent from '../SpinnerComponent/SpinnerComponent';
 import { Switch } from 'antd';
 
@@ -56,20 +52,17 @@ function PostNewCategoryComponent() {
    });
    const naviation = useNavigate();
    const dispatch = useDispatch();
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin },
+   } = useRoles();
 
    const newGameCategory = useSelector(newGameCategorySelector);
    const newGameCategoryError = useSelector(newGameCategoryErrorSelector);
    const newGameCategoryLoading = useSelector(newGameCategoryLoadingSelector);
    const singleGameCategory = useSelector(singleGameCategorySelector);
    const singleGameCategoryError = useSelector(singleGameCategoryErrorSelector);
-   const updateGameCategoryLoading = useSelector(
-      updateGameCategoryLoadingSelector
-   );
-   const singleGameCategoryLoading = useSelector(
-      singleGameCategoryLoadingSelector
-   );
+   const updateGameCategoryLoading = useSelector(updateGameCategoryLoadingSelector);
+   const singleGameCategoryLoading = useSelector(singleGameCategoryLoadingSelector);
 
    const onSubmit = function (data) {
       if (!isAdmin) {
@@ -89,9 +82,7 @@ function PostNewCategoryComponent() {
             })
          );
       } else {
-         dispatch(
-            postNewGameCategory({ ...data, status: data?.CategoryStatus })
-         );
+         dispatch(postNewGameCategory({ ...data, status: data?.CategoryStatus }));
       }
    };
 
@@ -122,9 +113,7 @@ function PostNewCategoryComponent() {
                   shrink: true,
                }}
             />
-            {!!errors?.name?.message ? (
-               <p className="error_cl text-sm">{errors?.name?.message}</p>
-            ) : null}
+            {!!errors?.name?.message ? <p className="error_cl text-sm">{errors?.name?.message}</p> : null}
             <Controller
                name="CategoryStatus"
                control={control}
@@ -152,12 +141,7 @@ function PostNewCategoryComponent() {
                   control={control}
                   name="showCategory"
                   render={({ field: { onChange, value } }) => (
-                     <Switch
-                        checkedChildren="Yes"
-                        onChange={onChange}
-                        checked={value}
-                        unCheckedChildren="No"
-                     />
+                     <Switch checkedChildren="Yes" onChange={onChange} checked={value} unCheckedChildren="No" />
                   )}
                />
             </div>
@@ -178,23 +162,13 @@ function PostNewCategoryComponent() {
                      btnCl={'Publish'}
                      text={!!singleGameCategory ? 'Update' : 'Save'}
                      type={'submit'}
-                     isLoading={
-                        !!singleGameCategory
-                           ? updateGameCategoryLoading
-                           : newGameCategoryLoading
-                     }
+                     isLoading={!!singleGameCategory ? updateGameCategoryLoading : newGameCategoryLoading}
                   />
                )}
             </div>
-            {!!newGameCategoryError ? (
-               <p className="error_cl text-sm">{newGameCategoryError}</p>
-            ) : null}
-            {!!newGameCategory ? (
-               <p className="text-sm text-gray-600">{newGameCategory}</p>
-            ) : null}
-            {!!singleGameCategoryError ? (
-               <p className="error_cl text-sm">{singleGameCategoryError}</p>
-            ) : null}
+            {!!newGameCategoryError ? <p className="error_cl text-sm">{newGameCategoryError}</p> : null}
+            {!!newGameCategory ? <p className="text-sm text-gray-600">{newGameCategory}</p> : null}
+            {!!singleGameCategoryError ? <p className="error_cl text-sm">{singleGameCategoryError}</p> : null}
          </Box>
       </form>
    );

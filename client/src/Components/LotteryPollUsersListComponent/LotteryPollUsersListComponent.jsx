@@ -9,8 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import SpinnerComponent from '../SpinnerComponent/SpinnerComponent';
 import UserTicketListComponent from '../UserTicketListComponent/UserTicketListComponent';
 import TableComponent from '../TableComponent/TableComponent';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import { useParams } from 'react-router';
 import { getSingleLotteryDrawUsersList } from '../../App/Features/LuckyDraw/LuckyDrawActions';
 
@@ -28,8 +27,11 @@ const ROW = [
 function LotteryPollUsersListComponent({ filter }) {
    const [Page, setPage] = useState(0);
 
-   const [Cookie] = useCookies();
-   const [isAdmin] = useAdmin(Cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const params = useParams();
    const dispatch = useDispatch();
 

@@ -10,12 +10,23 @@ router.get('/get-user-account-information', varifyJwtToken, userManagementContro
 router.get('/get-all-global-chat-groups', varifyJwtToken, userManagementController.getAllGlobalGroups);
 router.get('/get-user-global-chats', varifyJwtToken, userManagementController.getUserGlobalChats);
 router.get('/get-user-wagered-amount', varifyJwtToken, userManagementController.getUserWageredAmountGraph);
+router.get('/get-user-roles-lists', varifyJwtToken, userManagementController.getUserRoleLists);
 
 // API => POST
-router.post('/create-player-account', varifyJwtToken, createPlayerAccount, userManagementController.createPlayerAccount);
+router.post(
+   '/create-player-account',
+   varifyJwtToken,
+   createPlayerAccount,
+   userManagementController.createPlayerAccount
+);
 
 // API => PATCH
-router.patch('/update-player-account', varifyJwtToken, createPlayerAccount, userManagementController.updatePlayerAccount);
+router.patch(
+   '/update-player-account',
+   varifyJwtToken,
+   createPlayerAccount,
+   userManagementController.updatePlayerAccount
+);
 router.patch('/set-account-password', varifyJwtToken, userManagementController.setAccountPassword);
 
 // API => DELETE

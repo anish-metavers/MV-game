@@ -5,14 +5,16 @@ import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHead
 import { useDispatch } from 'react-redux';
 import { getAllLotteryPoll } from '../../App/Features/LuckyDraw/LuckyDrawActions';
 import LotteryPollCardsComponent from '../../Components/LotteryPollCardsComponent/LotteryPollCardsComponent';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import useRoles from '../../Hooks/useRoles';
 import { removeLotteryPollInfo } from '../../App/Features/LuckyDraw/LuckyDrawSlice';
 
 function LotteryDrawPage() {
    const dispatch = useDispatch();
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
 
    useEffect(() => {
       if (isAdmin) {

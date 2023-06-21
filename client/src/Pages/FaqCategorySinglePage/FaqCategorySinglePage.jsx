@@ -1,32 +1,31 @@
-import React, { useEffect } from "react";
-import * as styled from "./FaqCategorySinglePage.style";
-import NavbarComponent from "../../Components/NavbarComponent/NavbarComponent";
-import PageHeadingComponent from "../../Components/PageHeadingComponent/PageHeadingComponent";
-import CustomButtonComponent from "../../Components/CustomButtonComponent/CustomButtonComponent";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import { useForm, Controller } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Switch, message } from "antd";
-import QuillComponent from "../../Components/QuillComponent/QuillComponent";
-import { useDispatch, useSelector } from "react-redux";
-import { createNewFaqCategory, getSingleCategory, updateFaqCategory } from "../../App/Features/Faq/faqActions";
+import React, { useEffect } from 'react';
+import * as styled from './FaqCategorySinglePage.style';
+import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
+import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHeadingComponent';
+import CustomButtonComponent from '../../Components/CustomButtonComponent/CustomButtonComponent';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import { useForm, Controller } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Switch, message } from 'antd';
+import QuillComponent from '../../Components/QuillComponent/QuillComponent';
+import { useDispatch, useSelector } from 'react-redux';
+import { createNewFaqCategory, getSingleCategory, updateFaqCategory } from '../../App/Features/Faq/faqActions';
 import {
    newFaqCategoryLoadingSelector,
    newFaqCategoryErrorSelector,
    singleCategorySelector,
    singleCategoryErrorSelector,
    updateFaqCategoryLoadingSelector,
-} from "./FaqCategory.Selector";
-import { useParams } from "react-router";
-import { useCookies } from "react-cookie";
-import useAdmin from "../../Hooks/useAdmin";
-import { categoryInfo } from "../../App/Features/Faq/faqSlice";
-import * as DOMPurify from "dompurify";
+} from './FaqCategory.Selector';
+import { useParams } from 'react-router';
+import useRoles from '../../Hooks/useRoles';
+import { categoryInfo } from '../../App/Features/Faq/faqSlice';
+import * as DOMPurify from 'dompurify';
 
 const schema = yup.object({
-   heading: yup.string().required("Heading is reuqired"),
+   heading: yup.string().required('Heading is reuqired'),
 });
 
 function FaqCategorySinglePage() {
@@ -38,14 +37,17 @@ function FaqCategorySinglePage() {
    } = useForm({
       resolver: yupResolver(schema),
       defaultValues: {
-         heading: "",
+         heading: '',
          isShow: false,
-         metadata: "",
+         metadata: '',
       },
    });
 
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const param = useParams();
    const dispatch = useDispatch();
 
@@ -63,16 +65,16 @@ function FaqCategorySinglePage() {
             dispatch(createNewFaqCategory(data));
          }
       } else {
-         message.error("Please login with admin account");
+         message.error('Please login with admin account');
       }
    };
 
    useEffect(() => {
       if (!!singleCategory && singleCategory?.success && singleCategory?.item) {
          const { item } = singleCategory;
-         setValue("heading", item?.heading);
-         setValue("isShow", item?.isShow);
-         setValue("metadata", DOMPurify.sanitize(item?.metadata));
+         setValue('heading', item?.heading);
+         setValue('isShow', item?.isShow);
+         setValue('metadata', DOMPurify.sanitize(item?.metadata));
       }
    }, [singleCategory]);
 
@@ -93,8 +95,8 @@ function FaqCategorySinglePage() {
          <NavbarComponent />
          <div className="container_div">
             <PageHeadingComponent
-               pageName={"Create new faq Category"}
-               subHeading={"Faq Category"}
+               pageName={'Create new faq Category'}
+               subHeading={'Faq Category'}
                para={`Lorem ipsum dolor sit amet consectetur adipisicing elit.
                Blanditiis, maiores perspiciatis. Est rerum, sit
                voluptas molestias officia modi, provident earum ad
@@ -104,7 +106,7 @@ function FaqCategorySinglePage() {
             <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
                <Box
                   sx={{
-                     "& > :not(style)": { my: 1, width: "100%" },
+                     '& > :not(style)': { my: 1, width: '100%' },
                   }}
                >
                   <div className="w-full">
@@ -112,7 +114,13 @@ function FaqCategorySinglePage() {
                         name="heading"
                         control={control}
                         render={({ field: { onChange, value } }) => (
-                           <TextField className="w-full" value={value} onChange={onChange} label="Heading" variant="outlined" />
+                           <TextField
+                              className="w-full"
+                              value={value}
+                              onChange={onChange}
+                              label="Heading"
+                              variant="outlined"
+                           />
                         )}
                      />
                      {!!errors?.heading?.message && <p className="text-sm error_cl">{errors?.heading.message}</p>}
@@ -122,7 +130,12 @@ function FaqCategorySinglePage() {
                         name="isShow"
                         control={control}
                         render={({ field: { onChange, value } }) => (
-                           <Switch checked={value} onChange={onChange} checkedChildren={"Yes"} unCheckedChildren={"No"} />
+                           <Switch
+                              checked={value}
+                              onChange={onChange}
+                              checkedChildren={'Yes'}
+                              unCheckedChildren={'No'}
+                           />
                         )}
                      />
                      <p className="text-gray-200">Is show</p>
@@ -136,9 +149,9 @@ function FaqCategorySinglePage() {
                      <div className="flex">
                         <CustomButtonComponent
                            isLoading={!!param && param?.id ? updateFaqCategoryLoading : newFaqCategoryLoading}
-                           type={"submit"}
-                           text={!!param && param?.id ? "Update" : "Publish"}
-                           btnCl={"Publish"}
+                           type={'submit'}
+                           text={!!param && param?.id ? 'Update' : 'Publish'}
+                           btnCl={'Publish'}
                         />
                      </div>
                      {!!newFaqCategoryError ||

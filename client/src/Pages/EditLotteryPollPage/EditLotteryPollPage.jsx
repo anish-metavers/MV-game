@@ -4,8 +4,7 @@ import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
 import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHeadingComponent';
 import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import useRoles from '../../Hooks/useRoles';
 import {
    authSelector,
    singleLotteryPollSelector,
@@ -20,8 +19,11 @@ import SingleLotteryPollTabComponent from '../../Components/SingleLotteryPollTab
 import LotteryParticipateUserGraphComponent from '../../Components/LotteryParticipateUserGraphComponent/LotteryParticipateUserGraphComponent';
 
 function EditLotteryPollPage() {
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
 
    const params = useParams();
    const dispatch = useDispatch();

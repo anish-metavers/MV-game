@@ -6,8 +6,7 @@ import { MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllLuckyDraw } from '../../App/Features/LuckyDraw/LuckyDrawActions';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import { luckyDrawsSelector, luckyDrawLoadingSelector } from './SpinDraw.Selector';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import TableComponent from '../../Components/TableComponent/TableComponent';
@@ -23,8 +22,11 @@ const ROW = [
 function SpinDrawPage() {
    const navigation = useNavigate();
    const dispatch = useDispatch();
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const [Page, setPage] = useState(0);
 
    const luckyDraws = useSelector(luckyDrawsSelector);
@@ -70,7 +72,10 @@ function SpinDrawPage() {
                            <td>{el?.spinName}</td>
                            <td>{dayjs(el?.createdAt).format('DD MMM YYYY h:m:s A')}</td>
                            <td>
-                              <MdModeEdit className="cursor-pointer" onClick={() => navigation(`/spin/edit/${el?._id}`)} />
+                              <MdModeEdit
+                                 className="cursor-pointer"
+                                 onClick={() => navigation(`/spin/edit/${el?._id}`)}
+                              />
                            </td>
                         </tr>
                      ))}

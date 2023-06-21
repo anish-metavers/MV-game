@@ -10,8 +10,7 @@ import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch } from 'react-redux';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import {
    createNewSystemNotification,
    getSingleNotificationInfo,
@@ -39,8 +38,11 @@ function PushNotificationPage() {
       resolver: yupResolver(Schema),
    });
    const dispatch = useDispatch();
-   const [coookie] = useCookies();
-   const [isAdmin] = useAdmin(coookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const navigation = useNavigate();
    const [BtnLoading, setBtnLoading] = useState(false);
    const params = useParams();
@@ -124,13 +126,17 @@ function PushNotificationPage() {
                               />
                            )}
                         />
-                        {!!errors?.heading?.message ? <p className="text-sm error_cl">{errors?.heading?.message}</p> : null}
+                        {!!errors?.heading?.message ? (
+                           <p className="text-sm error_cl">{errors?.heading?.message}</p>
+                        ) : null}
                      </div>
                      <div>
                         <Controller
                            name="description"
                            control={control}
-                           render={({ field: { onChange, value } }) => <QuillComponent onChange={onChange} value={value} />}
+                           render={({ field: { onChange, value } }) => (
+                              <QuillComponent onChange={onChange} value={value} />
+                           )}
                         />
                      </div>
                   </Box>

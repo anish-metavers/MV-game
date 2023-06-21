@@ -21,10 +21,13 @@ import {
 } from './Spin.Selector';
 import { showPickerPopUpHandler, pickedImageHandler } from '../../App/Features/Media/MediaSlice';
 import { VscClose } from '@react-icons/all-files/vsc/VscClose';
-import { createNewLuckyDraw, getSingleLuckyDraw, updateSpinLuckyDraw } from '../../App/Features/LuckyDraw/LuckyDrawActions';
+import {
+   createNewLuckyDraw,
+   getSingleLuckyDraw,
+   updateSpinLuckyDraw,
+} from '../../App/Features/LuckyDraw/LuckyDrawActions';
 import { useParams } from 'react-router';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import { removeSingleDrawInfo } from '../../App/Features/LuckyDraw/LuckyDrawSlice';
 import { Switch } from 'antd';
 import { getGameCurrency } from '../../App/Features/Games/GameActions';
@@ -57,8 +60,11 @@ function CreateSpinItemPage() {
    });
 
    const dispatch = useDispatch();
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const params = useParams();
    const paramId = params?.id;
 
@@ -186,7 +192,12 @@ function CreateSpinItemPage() {
                            name="enable"
                            control={control}
                            render={({ field: { onChange, value } }) => (
-                              <Switch onChange={onChange} checked={value} checkedChildren={'yes'} unCheckedChildren={'No'} />
+                              <Switch
+                                 onChange={onChange}
+                                 checked={value}
+                                 checkedChildren={'yes'}
+                                 unCheckedChildren={'No'}
+                              />
                            )}
                         />
                         <p className="text-gray-300">Enable</p>
@@ -308,7 +319,11 @@ function CreateSpinItemPage() {
                         </div>
                      ))}
                      <div className="flex items-center space-x-3">
-                        <CustomButtonComponent text={'Add new spin item'} btnCl={'Publish'} onClick={addNewSpinItemHandler} />
+                        <CustomButtonComponent
+                           text={'Add new spin item'}
+                           btnCl={'Publish'}
+                           onClick={addNewSpinItemHandler}
+                        />
                         <CustomButtonComponent
                            text={!!paramId ? 'Update' : 'Save'}
                            btnCl={'Publish'}

@@ -12,16 +12,18 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import { uploadBulkImages } from '../../App/Features/Media/MediaActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import { removeImagesInfo } from '../../App/Features/Media/MediaSlice';
 
 function UploadMediaImagesComponent() {
    const [SelectedImages, setSelectedImages] = useState([]);
    const inputRef = useRef(null);
    const dt = new DataTransfer();
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const dispatch = useDispatch();
 
    const uploadBulkImagesInfo = useSelector(uploadBulkImagesInfoSelector);
@@ -36,10 +38,7 @@ function UploadMediaImagesComponent() {
          for (let item in imageFiles) {
             const numItems = +item;
             if (typeof numItems === 'number' && !isNaN(numItems)) {
-               setSelectedImages((prevState) => [
-                  ...prevState,
-                  imageFiles[item],
-               ]);
+               setSelectedImages((prevState) => [...prevState, imageFiles[item]]);
             }
          }
          for (let file of imageFiles) {
@@ -51,11 +50,7 @@ function UploadMediaImagesComponent() {
    };
 
    const closeHandler = function (imageName, lastModified) {
-      setSelectedImages(
-         SelectedImages.filter(
-            (el) => el?.name !== imageName && el?.lastModified !== lastModified
-         )
-      );
+      setSelectedImages(SelectedImages.filter((el) => el?.name !== imageName && el?.lastModified !== lastModified));
       for (let i = 0; i < dt.items.length; i++) {
          if (imageName === dt.items[i].getAsFile().name) {
             dt.items.remove(i);
@@ -110,9 +105,7 @@ function UploadMediaImagesComponent() {
                        <Alert
                           key={`${el?.lastModified}-${el?.name}`}
                           severity="success"
-                          onClose={() =>
-                             closeHandler(el?.name, el?.lastModified)
-                          }
+                          onClose={() => closeHandler(el?.name, el?.lastModified)}
                        >
                           {el?.name}
                        </Alert>
@@ -128,18 +121,12 @@ function UploadMediaImagesComponent() {
                   onClick={onSubmit}
                   isLoading={uploadBulkImagesLoading}
                />
-               <CustomButtonComponent
-                  text={'Clear'}
-                  btnCl={'Publish'}
-                  onClick={clearHandler}
-               />
+               <CustomButtonComponent text={'Clear'} btnCl={'Publish'} onClick={clearHandler} />
             </div>
          ) : (
             <CustomButtonComponent text={'Upload'} btnCl={'Publish no_allow'} />
          )}
-         {!!uploadBulkImagesError && (
-            <p className="text-sm error_cl">{uploadBulkImagesError}</p>
-         )}
+         {!!uploadBulkImagesError && <p className="text-sm error_cl">{uploadBulkImagesError}</p>}
       </div>
    );
 }

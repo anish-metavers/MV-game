@@ -20,8 +20,7 @@ import {
    updateSingleGame,
    getAllGamesCategroy,
 } from '../../App/Features/Games/GameActions';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import useRoles from '../../Hooks/useRoles';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import { removeGameInfo } from '../../App/Features/Games/GameSlice';
 import {
@@ -71,11 +70,14 @@ function UploadGamesPage() {
       resolver: yupResolver(Schema),
    });
 
-   const [cookie] = useCookies();
    const editor = useRef(null);
    const [GameImagePreview, setGameImagePreview] = useState(null);
    const params = useParams();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const dispatch = useDispatch();
 
    const gameProvidersList = useSelector(gameProvidersListSelector);
@@ -213,7 +215,9 @@ function UploadGamesPage() {
                                  />
                               )}
                            />
-                           {!!errors?.name?.message ? <p className="text-sm error_cl">{errors?.name?.message}</p> : null}
+                           {!!errors?.name?.message ? (
+                              <p className="text-sm error_cl">{errors?.name?.message}</p>
+                           ) : null}
                         </div>
                         <div className="w-full">
                            <Controller
@@ -233,9 +237,13 @@ function UploadGamesPage() {
                            {!!errors?.by?.message ? <p className="text-sm error_cl">{errors?.by?.message}</p> : null}
                         </div>
                         <div className="w-full">
-                           {!!allGamesCategorysError ? <p className="text-sm error_cl">{allGamesCategorysError}</p> : null}
+                           {!!allGamesCategorysError ? (
+                              <p className="text-sm error_cl">{allGamesCategorysError}</p>
+                           ) : null}
                            {!!allGamesCategorysLoading ? <SpinnerComponent /> : null}
-                           {!!allGamesCategorys && !!allGamesCategorys?.categorys && allGamesCategorys?.categorys.length ? (
+                           {!!allGamesCategorys &&
+                           !!allGamesCategorys?.categorys &&
+                           allGamesCategorys?.categorys.length ? (
                               <Controller
                                  name="gameCategory"
                                  control={control}
@@ -359,7 +367,9 @@ function UploadGamesPage() {
                            <Controller
                               name="aboutGame"
                               control={control}
-                              render={({ field: { onChange, value } }) => <QuillComponent onChange={onChange} value={value} />}
+                              render={({ field: { onChange, value } }) => (
+                                 <QuillComponent onChange={onChange} value={value} />
+                              )}
                            />
                         </div>
                      </div>
@@ -369,7 +379,9 @@ function UploadGamesPage() {
                            <Controller
                               name="gameBitcontroller"
                               control={control}
-                              render={({ field: { onChange, value } }) => <Switch onChange={onChange} checked={value} />}
+                              render={({ field: { onChange, value } }) => (
+                                 <Switch onChange={onChange} checked={value} />
+                              )}
                            />
                         </div>
                      </div>
@@ -399,8 +411,12 @@ function UploadGamesPage() {
                   </Box>
                </form>
             </div>
-            {!!updateGameinfo && updateGameinfo?.success ? <p className="text-gray-400">{updateGameinfo?.message}</p> : null}
-            {!!updateGameinfo && !updateGameinfo?.success ? <p className="text-sm error_cl">{updateGameinfo?.message}</p> : null}
+            {!!updateGameinfo && updateGameinfo?.success ? (
+               <p className="text-gray-400">{updateGameinfo?.message}</p>
+            ) : null}
+            {!!updateGameinfo && !updateGameinfo?.success ? (
+               <p className="text-sm error_cl">{updateGameinfo?.message}</p>
+            ) : null}
             {!!insertGameInfo ? <p className="text-gray-400">{insertGameInfo?.message}</p> : null}
             {!!gameProvidersError ? <p className="text-sm error_cl">{gameProvidersError}</p> : null}
             {!!insertGameError ? <p className="text-sm error_cl">{insertGameError}</p> : null}

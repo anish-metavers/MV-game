@@ -4,8 +4,7 @@ import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHead
 import * as styled from './GameCurrencyPage.style';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSingleGameCurrency, getGameCurrencysList } from '../../App/Features/Games/GameActions';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import useRoles from '../../Hooks/useRoles';
 import { useSearchParams } from 'react-router-dom';
 import { MenuItem } from '@mui/material';
 import TableComponent from '../../Components/TableComponent/TableComponent';
@@ -13,12 +12,19 @@ import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent
 import { useNavigate } from 'react-router-dom';
 import { ROW } from './TableCl';
 import dayjs from 'dayjs';
-import { gameCurrencyListInfoSelector, gameCurrencyListLoadingSelector, gameCurrencyListErrorSelector } from './Game.Selector';
+import {
+   gameCurrencyListInfoSelector,
+   gameCurrencyListLoadingSelector,
+   gameCurrencyListErrorSelector,
+} from './Game.Selector';
 
 function GameCurrencyPage() {
-   const [cookie] = useCookies();
    const dispatch = useDispatch();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const [params] = useSearchParams();
    const page = params.get('page');
    const navigation = useNavigate();
@@ -123,7 +129,10 @@ function GameCurrencyPage() {
                      </TableComponent>
                   ) : (
                      <div className="flex">
-                        <p className=" text-gray-800 hover:text-blue-700 cursor-pointer" onClick={CreateGameCurrencyHandler}>
+                        <p
+                           className=" text-gray-800 hover:text-blue-700 cursor-pointer"
+                           onClick={CreateGameCurrencyHandler}
+                        >
                            Create New Currency
                         </p>
                      </div>

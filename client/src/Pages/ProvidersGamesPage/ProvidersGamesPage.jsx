@@ -3,12 +3,15 @@ import * as styled from './ProvidersGamesPage.style';
 import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
 import GameSmCardComponent from '../../Components/GameSmCardComponent/GameSmCardComponent';
 import { useParams } from 'react-router-dom';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import useRoles from '../../Hooks/useRoles';
 import { useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProvidersGames } from '../../App/Features/GameProviders/GameProvidersActions';
-import { providerGamesListSelector, providerGamesLoadingSelector, providerGamesErrorSelector } from './ProviderGame.Selector';
+import {
+   providerGamesListSelector,
+   providerGamesLoadingSelector,
+   providerGamesErrorSelector,
+} from './ProviderGame.Selector';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import { removeProviderGamesInfo } from '../../App/Features/GameProviders/GameProvidersSlice';
 import TabHeadingComponent from '../../Components/TabHeadingComponent/TabHeadingComponent';
@@ -17,8 +20,11 @@ import { useNavigate } from 'react-router-dom';
 import UserProfileComponent from '../../Components/UserProfileComponent/UserProfileComponent';
 
 function ProvidersGamesPage() {
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const [param] = useSearchParams();
    const params = useParams();
    const dispatch = useDispatch();
@@ -85,9 +91,14 @@ function ProvidersGamesPage() {
                               {providerGamesList?.provider[0]?.games.length} / {providerGamesList?.totalDocuments}
                            </div>
                         ) : null}
-                        {providerGamesList?.provider[0]?.games.length && providerGamesList?.provider[0]?.games[0]?.game ? (
+                        {providerGamesList?.provider[0]?.games.length &&
+                        providerGamesList?.provider[0]?.games[0]?.game ? (
                            providerGamesList?.totalPages && providerGamesList?.totalPages > +page ? (
-                              <CustomButtonComponent btnCl={'large_sn_btn'} text={'Load more'} onClick={LoadMoreHandler} />
+                              <CustomButtonComponent
+                                 btnCl={'large_sn_btn'}
+                                 text={'Load more'}
+                                 onClick={LoadMoreHandler}
+                              />
                            ) : (
                               <CustomButtonComponent btnCl={'large_sn_btn no_allow'} text={'No more'} />
                            )

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, Fragment } from 'react';
 import * as styled from './SidebarComponent.style';
 import DashboardSidebarTabComponent from '../DashboardSidebarTabComponent/DashboardSidebarTabComponent';
 import IconListComponent from '../IconListComponent/IconListComponent';
@@ -14,9 +14,7 @@ import { MdDashboard } from '@react-icons/all-files/md/MdDashboard';
 import { VscSymbolMethod } from '@react-icons/all-files/vsc/VscSymbolMethod';
 import { RiNotificationBadgeFill } from '@react-icons/all-files/ri/RiNotificationBadgeFill';
 import { authSelector } from './Sidebar.Selector';
-import { useSelector } from 'react-redux';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import { useSelector, useDispatch } from 'react-redux';
 import { SocketContext } from '../../Context/SocketContext';
 import { MdPayment } from '@react-icons/all-files/md/MdPayment';
 import { VscSymbolArray } from '@react-icons/all-files/vsc/VscSymbolArray';
@@ -28,25 +26,27 @@ import { RiAccountPinBoxFill } from '@react-icons/all-files/ri/RiAccountPinBoxFi
 import { FaQuestion } from '@react-icons/all-files/fa/FaQuestion';
 import { AiOutlineCreditCard } from '@react-icons/all-files/ai/AiOutlineCreditCard';
 import { HiOutlineChatAlt } from '@react-icons/all-files/hi/HiOutlineChatAlt';
+import { getUserRole } from '../../App/Features/Admin/adminActions';
+import useRoles from '../../Hooks/useRoles';
 
 function SidebarComponent() {
    const auth = useSelector(authSelector);
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
    const socket = useContext(SocketContext);
+   const dispatch = useDispatch();
+   const {
+      userRoles: { isAdmin, isSupport, isSubAdmin },
+   } = useRoles();
 
    useEffect(() => {
-      if (!!auth && isAdmin && auth?.user && auth?.user?._id) {
-         // const roles = auth?.user?.roles.map((el) => ({ role: el?.roleId?.roleName, roleId: el?.roleId?._id }));
-
+      if (!!auth && auth?.user && auth?.user?._id) {
          socket.emit('_online_user', {
             userId: auth?.user?._id,
             userCrId: auth?.user?.userId,
          });
 
-         socket.emit('_join_group_room', { groupId: 'admin_dashboard_room' });
+         dispatch(getUserRole({ userId: auth?.user?._id }));
       }
-   }, [auth, isAdmin]);
+   }, [auth]);
 
    return (
       <styled.div>
@@ -56,66 +56,84 @@ function SidebarComponent() {
          <styled.sclDiv className="shadow">
             <DashboardSidebarTabComponent heading={'Dashboard'}>
                <IconListComponent icon={<MdDashboard />} heading={'Dashboard'} link={'/'} />
-               <IconListComponent icon={<FiLink />} heading={'Users Role'} link={'/user-roles?page=0'} />
-               <IconListComponent
-                  icon={<HiOutlineCurrencyRupee />}
-                  heading={'Game Currency'}
-                  link={'/game-currency?page=0'}
-               />
-               <IconListComponent icon={<VscExtensions />} heading={'Game Category'} link={'/game-category?page=0'} />
-               <IconListComponent icon={<RiGameFill />} heading={'Games'} link={'/games?page=0'} />
-               <IconListComponent icon={<FiGitlab />} heading={'Avatar'} link={'/avatars'} />
-               <IconListComponent
-                  icon={<SiNintendogamecube />}
-                  heading={'Games providers'}
-                  link={'/games/providers?page=0'}
-               />
-               <IconListComponent icon={<ImImages />} heading={'Images'} link={'/upload-images'} />
+               {isAdmin && (
+                  <>
+                     <IconListComponent icon={<FiLink />} heading={'Users Role'} link={'/user-roles?page=0'} />
+                     <IconListComponent
+                        icon={<HiOutlineCurrencyRupee />}
+                        heading={'Game Currency'}
+                        link={'/game-currency?page=0'}
+                     />
+                     <IconListComponent
+                        icon={<VscExtensions />}
+                        heading={'Game Category'}
+                        link={'/game-category?page=0'}
+                     />
+                     <IconListComponent icon={<RiGameFill />} heading={'Games'} link={'/games?page=0'} />
+                     <IconListComponent icon={<FiGitlab />} heading={'Avatar'} link={'/avatars'} />
+                     <IconListComponent
+                        icon={<SiNintendogamecube />}
+                        heading={'Games providers'}
+                        link={'/games/providers?page=0'}
+                     />
+                     <IconListComponent icon={<ImImages />} heading={'Images'} link={'/upload-images'} />
+                  </>
+               )}
             </DashboardSidebarTabComponent>
-            <DashboardSidebarTabComponent heading={'Push Notification'}>
-               <IconListComponent icon={<RiNotificationBadgeFill />} heading={'Notification'} link={'notification'} />
-            </DashboardSidebarTabComponent>
-            <DashboardSidebarTabComponent heading={'Tools'}>
-               <IconListComponent
-                  icon={<AiOutlineFileProtect />}
-                  heading={'Export Game Data'}
-                  link={'/export/game/data'}
-               />
-            </DashboardSidebarTabComponent>
-            <DashboardSidebarTabComponent heading={'Payment'}>
-               <IconListComponent icon={<VscSymbolArray />} heading={'Payment fields'} link={'/payment-fields'} />
-               <IconListComponent
-                  icon={<VscSymbolMethod />}
-                  heading={'Game Currency Payment'}
-                  link={'/game-currency-payment'}
-               />
-               <IconListComponent
-                  icon={<MdPayment />}
-                  heading={'Fiat deposit payments'}
-                  link={'/fiat-deposit-payments'}
-               />
-               <IconListComponent
-                  icon={<AiOutlineTransaction />}
-                  heading={'Fiat withdraw transaction'}
-                  link={'/fiat/withdraw/transaction'}
-               />
-            </DashboardSidebarTabComponent>
-            <DashboardSidebarTabComponent heading={'Lucky Draw'}>
-               <IconListComponent icon={<ImSpinner10 />} heading={'Spin'} link={'spin-draw'} />
-               <IconListComponent icon={<GiRolledCloth />} heading={'Lottery lucky draw'} link={'lottery-draw'} />
-            </DashboardSidebarTabComponent>
-            <DashboardSidebarTabComponent heading={'Faq'}>
-               <IconListComponent icon={<FaQuestion />} heading={'Faqs Category'} link={'faq-category'} />
-               <IconListComponent icon={<AiOutlineCreditCard />} heading={'Faqs Posts'} link={'faq-posts'} />
-            </DashboardSidebarTabComponent>
-            <DashboardSidebarTabComponent heading={'User management'}>
-               <IconListComponent icon={<FiUsers />} heading={'Users'} link={'/users?page=0'} />
-               <IconListComponent
-                  icon={<RiAccountPinBoxFill />}
-                  heading={'Player accounts'}
-                  link={'/players-accounts/create'}
-               />
-            </DashboardSidebarTabComponent>
+            {isAdmin && (
+               <DashboardSidebarTabComponent heading={'Push Notification'}>
+                  <IconListComponent
+                     icon={<RiNotificationBadgeFill />}
+                     heading={'Notification'}
+                     link={'notification'}
+                  />
+               </DashboardSidebarTabComponent>
+            )}
+            {isAdmin || isSubAdmin ? (
+               <Fragment>
+                  <DashboardSidebarTabComponent heading={'Tools'}>
+                     <IconListComponent
+                        icon={<AiOutlineFileProtect />}
+                        heading={'Export Game Data'}
+                        link={'/export/game/data'}
+                     />
+                  </DashboardSidebarTabComponent>
+                  <DashboardSidebarTabComponent heading={'Payment'}>
+                     <IconListComponent icon={<VscSymbolArray />} heading={'Payment fields'} link={'/payment-fields'} />
+                     <IconListComponent
+                        icon={<VscSymbolMethod />}
+                        heading={'Game Currency Payment'}
+                        link={'/game-currency-payment'}
+                     />
+                     <IconListComponent
+                        icon={<MdPayment />}
+                        heading={'Fiat deposit payments'}
+                        link={'/fiat-deposit-payments'}
+                     />
+                     <IconListComponent
+                        icon={<AiOutlineTransaction />}
+                        heading={'Fiat withdraw transaction'}
+                        link={'/fiat/withdraw/transaction'}
+                     />
+                  </DashboardSidebarTabComponent>
+                  <DashboardSidebarTabComponent heading={'Lucky Draw'}>
+                     <IconListComponent icon={<ImSpinner10 />} heading={'Spin'} link={'spin-draw'} />
+                     <IconListComponent icon={<GiRolledCloth />} heading={'Lottery lucky draw'} link={'lottery-draw'} />
+                  </DashboardSidebarTabComponent>
+                  <DashboardSidebarTabComponent heading={'Faq'}>
+                     <IconListComponent icon={<FaQuestion />} heading={'Faqs Category'} link={'faq-category'} />
+                     <IconListComponent icon={<AiOutlineCreditCard />} heading={'Faqs Posts'} link={'faq-posts'} />
+                  </DashboardSidebarTabComponent>
+                  <DashboardSidebarTabComponent heading={'User management'}>
+                     <IconListComponent icon={<FiUsers />} heading={'Users'} link={'/users?page=0'} />
+                     <IconListComponent
+                        icon={<RiAccountPinBoxFill />}
+                        heading={'Player accounts'}
+                        link={'/players-accounts/create'}
+                     />
+                  </DashboardSidebarTabComponent>
+               </Fragment>
+            ) : null}
             <DashboardSidebarTabComponent heading={'Live'}>
                <IconListComponent icon={<HiOutlineChatAlt />} heading={'Live chat'} link={'/live/support'} />
             </DashboardSidebarTabComponent>

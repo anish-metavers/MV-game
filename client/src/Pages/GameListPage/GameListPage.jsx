@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import * as style from './GameListPage.style';
 import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
 import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHeadingComponent';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import useRoles from '../../Hooks/useRoles';
 import { useSearchParams } from 'react-router-dom';
 import { getGamesLists } from '../../App/Features/Games/GameActions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,8 +13,11 @@ import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent
 import { gameListInfoSelector, gameListLoadingSelector, gameListInfoErrorSelector } from './GameList.Selector';
 
 function GameListPage() {
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const [params] = useSearchParams();
    const page = params.get('page');
    const dispatch = useDispatch();

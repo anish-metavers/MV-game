@@ -14,9 +14,12 @@ import CustomButtonComponent from '../../Components/CustomButtonComponent/Custom
 import JoditEditor from 'jodit-react';
 import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { inertNewGameCurrency, updateSingleGameCurrency, getSingleGameCurrency } from '../../App/Features/Games/GameActions';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import {
+   inertNewGameCurrency,
+   updateSingleGameCurrency,
+   getSingleGameCurrency,
+} from '../../App/Features/Games/GameActions';
+import useRoles from '../../Hooks/useRoles';
 import { removeCurrencyInfo } from '../../App/Features/Games/GameSlice';
 import { getAllPaymentOptionList } from '../../App/Features/Payment/paymentActions';
 import {
@@ -34,11 +37,6 @@ import {
 } from './CreateGame.Selector';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import AutoCompleteTagComponent from '../../Components/AutoCompleteTagComponent/AutoCompleteTagComponent';
-
-const Currencies = [
-   { value: true, label: 'yes' },
-   { value: false, label: 'no' },
-];
 
 const CurrencyType = [{ name: 'FIAT', value: 'FIAT' }];
 
@@ -63,8 +61,11 @@ function CreateGameCurrencyPage() {
       },
       resolver: yupResolver(Schema),
    });
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const params = useParams();
    const dispatch = useDispatch();
 
@@ -236,7 +237,9 @@ function CreateGameCurrencyPage() {
                         </div>
                         <div className="w-full mt-4 md:mt-0">
                            {!!paymentOptionsListLoading ? <SpinnerComponent /> : null}
-                           {!!paymentOptionsListError ? <p className="text-sm error_cl">{paymentOptionsListError}</p> : null}
+                           {!!paymentOptionsListError ? (
+                              <p className="text-sm error_cl">{paymentOptionsListError}</p>
+                           ) : null}
                            {!!paymentOptionsList &&
                            paymentOptionsList?.success &&
                            paymentOptionsList?.items &&
@@ -274,8 +277,8 @@ function CreateGameCurrencyPage() {
                         <div className="space_div">
                            <label className="text-gray-400 font-medium">Meta Description</label>
                            <p className="mt-2 text-gray-400">
-                              A meta description tag generally informs and interests users with a short, relevant summary of what
-                              a particular page is about.
+                              A meta description tag generally informs and interests users with a short, relevant
+                              summary of what a particular page is about.
                            </p>
                            <div>
                               <JoditEditor

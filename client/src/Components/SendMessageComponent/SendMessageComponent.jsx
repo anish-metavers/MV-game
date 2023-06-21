@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import * as styled from './SendMessageComponent.style';
 import InputEmoji from 'react-input-emoji';
 import { useForm, Controller } from 'react-hook-form';
 import { BiSend } from '@react-icons/all-files/bi/BiSend';
 import CustomButtonComponent from '../CustomButtonComponent/CustomButtonComponent';
+import { SocketContext } from '../../Context/SocketContext';
+import { authSelector } from './SendMessage.Selector';
+import { useSelector } from 'react-redux';
+import { message } from 'antd';
 
 function SendMessageComponent() {
    const { getValues, control, setValue } = useForm({
@@ -12,10 +16,24 @@ function SendMessageComponent() {
       },
    });
 
+   const socket = useContext(SocketContext);
+   const auth = useSelector(authSelector);
+
    const sendHandler = function () {
-      const message = getValues('message');
-      console.log(message);
-      setValue('message', '');
+      if (!!auth && auth?.user && auth?.user?._id) {
+         const message = getValues('message');
+
+         const messageObject = {
+            name: auth?.user?.name,
+            message,
+            sender: auth?.user?._id,
+         };
+
+         socket.emit('_send_live_support_messsage', messageObject);
+         setValue('message', '');
+      } else {
+         message.error('You have to login first');
+      }
    };
 
    return (

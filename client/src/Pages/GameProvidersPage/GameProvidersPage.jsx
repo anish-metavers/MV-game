@@ -5,15 +5,18 @@ import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHead
 import * as styled from './GameProvidersPage.style';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import useAdmin from '../../Hooks/useAdmin';
-import { useCookies } from 'react-cookie';
+import useRoles from '../../Hooks/useRoles';
 import { useSearchParams } from 'react-router-dom';
 import {
    blockSingleGameProvider,
    getAllGameProviders,
    unblockSingleGameProvider,
 } from '../../App/Features/GameProviders/GameProvidersActions';
-import { gameProvidersSelector, gameProvidersLoadingSelector, gameProvidersErrorSelector } from './GameProvider.Selector';
+import {
+   gameProvidersSelector,
+   gameProvidersLoadingSelector,
+   gameProvidersErrorSelector,
+} from './GameProvider.Selector';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import TableComponent from '../../Components/TableComponent/TableComponent';
 import { ROW } from './GameProviderTable';
@@ -21,9 +24,12 @@ import dayjs from 'dayjs';
 import { Popconfirm } from 'antd';
 
 function GameProvidersPage() {
-   const [cookie] = useCookies();
    const navigation = useNavigate();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const dispatch = useDispatch();
    const [params] = useSearchParams();
    const page = params.get('page');
@@ -101,7 +107,10 @@ function GameProvidersPage() {
                            {el?.description.length >= 100 ? `${el?.description.slice(0, 100)}...` : el?.description}
                         </td>
                         <td>
-                           <div className="logo_div shadow cursor-pointer" onClick={() => GameProviderPageHandler(el?._id)}>
+                           <div
+                              className="logo_div shadow cursor-pointer"
+                              onClick={() => GameProviderPageHandler(el?._id)}
+                           >
                               <img src={el?.logo} alt="" />
                            </div>
                         </td>
@@ -142,8 +151,8 @@ function GameProvidersPage() {
                <div>
                   <p className="text-lg text-gray-300">No game providers</p>
                   <p className="text-sm text-gray-500">
-                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Non tempora deleniti rem ipsa? Explicabo voluptates
-                     illum officiis sapiente a! Laudantium?
+                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Non tempora deleniti rem ipsa? Explicabo
+                     voluptates illum officiis sapiente a! Laudantium?
                   </p>
                </div>
             )}

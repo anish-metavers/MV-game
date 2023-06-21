@@ -1,5 +1,60 @@
-const { catchAsync, httpStatusCodes } = require('../helper/helper');
+const { default: mongoose } = require('mongoose');
+const { catchAsync, httpStatusCodes, checkIsValidId } = require('../helper/helper');
+const authModel = require('../model/schema/authSchema');
 const roleModel = require('../model/schema/roleSchema');
+
+const getUserRole = catchAsync(async function (req, res, next) {
+   const { userId } = req.query;
+
+   if (!userId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'User id is required',
+      });
+   }
+
+   const isValidId = checkIsValidId(userId);
+
+   if (!isValidId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'User Id is not valid id please check.',
+      });
+   }
+
+   const userRoles = await authModel.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(userId) } },
+      { $unwind: { path: '$userRole', preserveNullAndEmptyArrays: true } },
+      {
+         $lookup: {
+            from: 'roles',
+            localField: 'userRole.roleId',
+            foreignField: '_id',
+            as: 'role',
+            pipeline: [{ $project: { _id: 0, roleName: 1 } }],
+         },
+      },
+      { $project: { role: 1 } },
+      { $group: { _id: '$_id', roles: { $push: { $arrayElemAt: ['$role', 0] } } } },
+      { $project: { _id: 0, roles: 1 } },
+   ]);
+
+   const data = userRoles?.[0];
+
+   if (data) {
+      return res.status(httpStatusCodes.OK).json({
+         items: (!!data && data?.roles) || [],
+      });
+   }
+
+   return res.status(httpStatusCodes.NOT_FOUND).json({
+      success: false,
+      error: true,
+      message: 'Roles not found',
+   });
+});
 
 const getAllUserRoles = catchAsync(async function (req, res, next) {
    /**
@@ -16,7 +71,7 @@ const getAllUserRoles = catchAsync(async function (req, res, next) {
       });
    }
 
-   const DOCUMENT_LIMIT = 10;
+   const DOCUMENT_LIMIT = 20;
    const documentCount = await roleModel.countDocuments();
    const findAllRoles = await roleModel
       .find({})
@@ -200,6 +255,7 @@ const deleteUserSingleRole = catchAsync(async function (req, res, next) {
 });
 
 module.exports = {
+   getUserRole,
    insertNewUsersRole,
    getAllUserRoles,
    deleteUserSingleRole,

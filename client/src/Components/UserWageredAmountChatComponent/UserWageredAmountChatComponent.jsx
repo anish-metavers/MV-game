@@ -7,16 +7,18 @@ import {
 } from './UserWageredAmountChatComponent.Selector';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import { getUserWageredAmountGraph } from '../../App/Features/userManagement/userManagementActions';
 import SpinnerComponent from '../SpinnerComponent/SpinnerComponent';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import NoDataComponent from '../NoDataComponent/NoDataComponent';
 
 function UserWageredAmountChatComponent() {
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
 
    const params = useParams();
    const dispatch = useDispatch();
@@ -35,7 +37,10 @@ function UserWageredAmountChatComponent() {
       <styled.div>
          {!!userWageredAmountLoading && <SpinnerComponent />}
          {!!userWageredAmountError && <p className="text-sm error_cl">{userWageredAmountError}</p>}
-         {!!userWageredAmount && userWageredAmount?.success && !!userWageredAmount?.items && userWageredAmount?.items.length ? (
+         {!!userWageredAmount &&
+         userWageredAmount?.success &&
+         !!userWageredAmount?.items &&
+         userWageredAmount?.items.length ? (
             <ResponsiveContainer width="100%" height="100%">
                <LineChart
                   width={500}

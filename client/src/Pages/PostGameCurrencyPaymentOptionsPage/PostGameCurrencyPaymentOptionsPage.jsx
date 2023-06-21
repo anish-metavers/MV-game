@@ -12,8 +12,7 @@ import ImageUploadComponent from '../../Components/ImageUploadComponent/ImageUpl
 import { message } from 'antd';
 import { GiPayMoney } from '@react-icons/all-files/gi/GiPayMoney';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import {
    insertPaymentMethodInfoSelector,
    insertPaymentMethodInfoLoadingSelector,
@@ -53,8 +52,11 @@ const Schema = yup.object({
 });
 
 function PostGameCurrencyPaymentOptionsPage() {
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const dispatch = useDispatch();
    const [ImagePreview, setImagePreview] = useState(null);
    const params = useParams();
@@ -195,7 +197,10 @@ function PostGameCurrencyPaymentOptionsPage() {
                         <div className="w-full">
                            {paymentFieldsLoading && <SpinnerComponent />}
                            {paymentFieldsError && <p className="text-sm error_cl">{paymentFieldsError}</p>}
-                           {!!paymentFields && paymentFields?.success && paymentFields?.items && paymentFields?.items.length ? (
+                           {!!paymentFields &&
+                           paymentFields?.success &&
+                           paymentFields?.items &&
+                           paymentFields?.items.length ? (
                               <Controller
                                  name="paymentOptionsFields"
                                  control={control}
@@ -297,8 +302,12 @@ function PostGameCurrencyPaymentOptionsPage() {
                   {!!updatePaymentOptionInfo ? (
                      <p className="text-sm text-gray-300 mt-2">{updatePaymentOptionInfo?.message}</p>
                   ) : null}
-                  {!!insertPaymentMethodError ? <p className="text-sm error_cl mt-2">{insertPaymentMethodError}</p> : null}
-                  {!!updatePaymentOptionError ? <p className="text-sm error_cl mt-2">{updatePaymentOptionError}</p> : null}
+                  {!!insertPaymentMethodError ? (
+                     <p className="text-sm error_cl mt-2">{insertPaymentMethodError}</p>
+                  ) : null}
+                  {!!updatePaymentOptionError ? (
+                     <p className="text-sm error_cl mt-2">{updatePaymentOptionError}</p>
+                  ) : null}
                   {!!insertPaymentMethodInfo && insertPaymentMethodInfo?.success ? (
                      <p className="text-sm text-gray-300 mt-2">{insertPaymentMethodInfo?.message}</p>
                   ) : null}

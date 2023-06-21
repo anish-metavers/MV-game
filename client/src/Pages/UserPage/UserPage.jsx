@@ -3,8 +3,7 @@ import * as styled from './UserPage.style';
 import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
 import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHeadingComponent';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import { getAllUsers } from '../../App/Features/Admin/adminActions';
 import { useSearchParams } from 'react-router-dom';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
@@ -17,8 +16,11 @@ import { VscEdit } from '@react-icons/all-files/vsc/VscEdit';
 
 function UserPage() {
    const dispatch = useDispatch();
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const [params] = useSearchParams();
    const page = params.get('page');
    const navigation = useNavigate();

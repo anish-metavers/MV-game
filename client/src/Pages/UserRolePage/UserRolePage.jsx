@@ -5,8 +5,7 @@ import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHead
 import { ROW } from './RoleTable';
 import TableComponent from '../../Components/TableComponent/TableComponent';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import { getAllUserRoles, deleteUserRole } from '../../App/Features/Admin/adminActions';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import { useNavigate } from 'react-router';
@@ -17,8 +16,11 @@ import { Popconfirm } from 'antd';
 import { rolesSelector, getRolesLoadingSelector, getRolesErrorSelector } from './UserRole.Selector';
 
 function UserRolePage() {
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const navigation = useNavigate();
    const dispatch = useDispatch();
    const [params] = useSearchParams();
@@ -89,7 +91,9 @@ function UserRolePage() {
                               <td>{el?._id}</td>
                               <td>{el?.roleName}</td>
                               <td>{dayjs(el?.createdAt).format('DD MMMM YYYY m:h:ss A')}</td>
-                              <td>{el?.updatedAt ? dayjs(el?.updatedAt).format('DD MMMM YYYY h:m:ss A') : '--- ---'}</td>
+                              <td>
+                                 {el?.updatedAt ? dayjs(el?.updatedAt).format('DD MMMM YYYY h:m:ss A') : '--- ---'}
+                              </td>
                               {el?.default ? (
                                  <td>Default roles</td>
                               ) : (

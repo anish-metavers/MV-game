@@ -16,29 +16,39 @@ export const getUserSingleAccount = createAsyncThunk(
    }
 );
 
-export const updatePlayerAccount = createAsyncThunk('userManagement/updatePlayerAccount', async (data, { rejectWithValue }) => {
-   try {
-      const response = await axiosInstance.patch('/userManagement/update-player-account', data, { validateStatus: false });
-      return response;
-   } catch (err) {
-      if (err) {
-         throw err;
+export const updatePlayerAccount = createAsyncThunk(
+   'userManagement/updatePlayerAccount',
+   async (data, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.patch('/userManagement/update-player-account', data, {
+            validateStatus: false,
+         });
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
       }
-      return rejectWithValue(err.response.data);
    }
-});
+);
 
-export const createPlayerAccount = createAsyncThunk('userManagement/createPlayerAccount', async (data, { rejectWithValue }) => {
-   try {
-      const response = await axiosInstance.post('userManagement/create-player-account', data, { validateStatus: false });
-      return response;
-   } catch (err) {
-      if (err) {
-         throw err;
+export const createPlayerAccount = createAsyncThunk(
+   'userManagement/createPlayerAccount',
+   async (data, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.post('userManagement/create-player-account', data, {
+            validateStatus: false,
+         });
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
       }
-      return rejectWithValue(err.response.data);
    }
-});
+);
 
 export const setPlayerAccountPassword = createAsyncThunk(
    'userManagement/setPlayerAccountPassword',
@@ -74,7 +84,9 @@ export const getUserAllFiatCurrency = createAsyncThunk(
    'userManagement/getUserAllFiatCurrency',
    async ({ userId }, { rejectWithValue }) => {
       try {
-         const allCurrencyResponse = await axiosClientInstance.get(`/payment/get-user-all-fiat-currency-info?userId=${userId}`);
+         const allCurrencyResponse = await axiosClientInstance.get(
+            `/payment/get-user-all-fiat-currency-info?userId=${userId}`
+         );
          return allCurrencyResponse;
       } catch (err) {
          if (err) {
@@ -106,7 +118,9 @@ export const getUserCryptoWithdrawTransactions = createAsyncThunk(
    'userManagement/getUserCryptoWithdrawTransactions',
    async ({ userId, page }, { rejectWithValue }) => {
       try {
-         const cryptoTransaction = await cryptoPaymentServer.get(`/testnet/get-withdrawl-admin?userId=${userId}&page=${page}`);
+         const cryptoTransaction = await cryptoPaymentServer.get(
+            `/testnet/get-withdrawl-admin?userId=${userId}&page=${page}`
+         );
          return cryptoTransaction;
       } catch (err) {
          if (err) {
@@ -183,7 +197,9 @@ export const getPrivacyFieldStatus = createAsyncThunk(
    'userManagement/getPrivacyFieldStatus',
    async ({ userId }, { rejectWithValue }) => {
       try {
-         const getPrivacyFiledsResponse = await axiosClientInstance.get(`/client/get-privacy-fileds-status?userId=${userId}`);
+         const getPrivacyFiledsResponse = await axiosClientInstance.get(
+            `/client/get-privacy-fileds-status?userId=${userId}`
+         );
          return getPrivacyFiledsResponse;
       } catch (err) {
          if (err) {
@@ -194,17 +210,20 @@ export const getPrivacyFieldStatus = createAsyncThunk(
    }
 );
 
-export const getAllGlobalChatGroups = createAsyncThunk('userManagement/getAllGlobalGroups', async (_, { rejectWithValue }) => {
-   try {
-      const response = await axiosInstance.get('/userManagement/get-all-global-chat-groups');
-      return response;
-   } catch (err) {
-      if (err) {
-         throw err;
+export const getAllGlobalChatGroups = createAsyncThunk(
+   'userManagement/getAllGlobalGroups',
+   async (_, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get('/userManagement/get-all-global-chat-groups');
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
       }
-      return rejectWithValue(err.response.data);
    }
-});
+);
 
 export const getUserGlobalChats = createAsyncThunk(
    'userManagement/getUserGlobalChats',
@@ -223,17 +242,20 @@ export const getUserGlobalChats = createAsyncThunk(
    }
 );
 
-export const getUserFriendList = createAsyncThunk('userManagement/getFriendList', async ({ userId }, { rejectWithValue }) => {
-   try {
-      const friendListResponse = await axiosClientInstance.get(`/client/get-friends?userId=${userId}`);
-      return friendListResponse;
-   } catch (err) {
-      if (err) {
-         throw err;
+export const getUserFriendList = createAsyncThunk(
+   'userManagement/getFriendList',
+   async ({ userId }, { rejectWithValue }) => {
+      try {
+         const friendListResponse = await axiosClientInstance.get(`/client/get-friends?userId=${userId}`);
+         return friendListResponse;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
       }
-      return rejectWithValue(err.response.data);
    }
-});
+);
 
 export const getUserWageredAmountGraph = createAsyncThunk(
    'userManagement/getUserWageredAmountGraph',
@@ -249,3 +271,15 @@ export const getUserWageredAmountGraph = createAsyncThunk(
       }
    }
 );
+
+export const getUserRoleLists = createAsyncThunk('userManagement/getUserRoleLists', async (_, { rejectWithValue }) => {
+   try {
+      const response = await axiosInstance.get('/userManagement/get-user-roles-lists');
+      return response;
+   } catch (err) {
+      if (err) {
+         throw err;
+      }
+      return rejectWithValue(err.response.data);
+   }
+});

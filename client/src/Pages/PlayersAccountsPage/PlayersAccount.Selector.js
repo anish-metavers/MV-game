@@ -8,7 +8,10 @@ const mediaRedudcer = (state) => state.media;
 
 export const pickedImageSelector = createSelector([mediaRedudcer], (mediaSlice) => mediaSlice.pickedImage);
 
-export const showSetPasswordPopupSelector = createSelector([adminReducer], (adminSlice) => adminSlice.showSetPasswordPopup);
+export const showSetPasswordPopupSelector = createSelector(
+   [adminReducer],
+   (adminSlice) => adminSlice.showSetPasswordPopup
+);
 
 export const createPlayerAccountInfoSelector = createSelector(
    [userManagementReducer],
@@ -43,4 +46,14 @@ export const singleUserAccountLoadingSelector = createSelector(
 export const singleUserAccountErrorSelector = createSelector(
    [userManagementReducer],
    (userManagementSlice) => userManagementSlice.singleUserAccountError
+);
+
+export const userRolesListSelector = createSelector(
+   [userManagementReducer],
+   (userManagementSlice) => userManagementSlice.userRolesList
+);
+
+export const userRolesListLoadingSelector = createSelector(
+   [userManagementReducer],
+   (userManagementSlice) => userManagementSlice.userRolesListLoading
 );

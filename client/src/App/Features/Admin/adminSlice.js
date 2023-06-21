@@ -11,6 +11,7 @@ import {
    getAllUsers,
    getGamesUploadResult,
    filterGameUploadDataResult,
+   getUserRole,
 } from './adminActions';
 
 const INITAL_STATE = {
@@ -46,6 +47,9 @@ const INITAL_STATE = {
    gameStatusFilterData: null,
    gameStatusFilterDataError: null,
    showSetPasswordPopup: false,
+   userRole: null,
+   userRoleLoading: false,
+   userRoleError: null,
 };
 
 const adminSlice = createSlice({
@@ -246,6 +250,23 @@ const adminSlice = createSlice({
             state.gameStatus = action.payload?.data;
             state.gameStatusLoading = false;
             state.gameStatusError = null;
+         });
+
+      bulder
+         .addCase(getUserRole.pending, (state) => {
+            state.userRole = null;
+            state.userRoleLoading = true;
+            state.userRoleError = null;
+         })
+         .addCase(getUserRole.rejected, (state, action) => {
+            state.userRole = null;
+            state.userRoleLoading = false;
+            state.userRoleError = action.error.message;
+         })
+         .addCase(getUserRole.fulfilled, (state, action) => {
+            state.userRole = action.payload?.data?.items;
+            state.userRoleLoading = false;
+            state.userRoleError = null;
          });
 
       bulder

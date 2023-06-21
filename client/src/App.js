@@ -8,6 +8,7 @@ import { ConfigProvider, theme } from 'antd';
 
 // components
 import HomePageContainerComponent from './Components/HomePageContainerComponent/HomePageContainerComponent';
+import ProtectedRoute from './utils/ProtectedRoute';
 
 // pages
 import LoginPage from './Pages/LoginPage/LoginPage';
@@ -79,51 +80,366 @@ function App() {
                <Routes>
                   <Route path="/" element={<HomePage />}>
                      <Route path="/" element={<HomePageContainerComponent />} />
-                     <Route path="/user-roles" element={<UserRolePage />} />
-                     <Route path="/user-roles/create" element={<CreateUserRolePage />} />
-                     <Route path="/user-roles/:id" element={<CreateUserRolePage />} />
-                     <Route path="/game-currency" element={<GameCurrencyPage />} />
-                     <Route path="/game-currency/create" element={<CreateGameCurrencyPage />} />
-                     <Route path="/game-currency/:id" element={<CreateGameCurrencyPage />} />
-                     <Route path="/games" element={<GameListPage />} />
-                     <Route path="/games/create" element={<UploadGamesPage />} />
-                     <Route path="/games/:id" element={<UploadGamesPage />} />
-                     <Route path="/avatars" element={<UserAvatarComponent />} />
-                     <Route path="/game-category" element={<GameCategoryPage />} />
-                     <Route path="/export/game/data" element={<ExportGameDataPage />} />
-                     <Route path="/games/providers" element={<GameProvidersPage />} />
-                     <Route path="/games/providers/create" element={<CreateNewGameProviderPage />} />
-                     <Route path="/games/providers/:id" element={<CreateNewGameProviderPage />} />
-                     <Route path="/provider/games/:id" element={<ProvidersGamesPage />} />
-                     <Route path="/game-currency-payment" element={<GameCurrencyPaymentMethodsPage />} />
-                     <Route path="/game-currency-payment/create" element={<PostGameCurrencyPaymentOptionsPage />} />
-                     <Route path="/game-currency-payment/edit/:id" element={<PostGameCurrencyPaymentOptionsPage />} />
-                     <Route path="/notification" element={<NotificationPage />} />
-                     <Route path="/notification/create" element={<PushNotificationPage />} />
-                     <Route path="/notification/edit/:id" element={<PushNotificationPage />} />
-                     <Route path="/fiat-deposit-payments" element={<FiatPaymentsPage />} />
-                     <Route path="/order/:orderId" element={<SingleTransactionInfoPage />} />
-                     <Route path="/payment-fields" element={<PaymentFiledsPage />} />
-                     <Route path="/payment-fields/create" element={<CreatePaymentFieldsPage />} />
-                     <Route path="/payment-fields/edit/:id" element={<CreatePaymentFieldsPage />} />
-                     <Route path="/fiat/withdraw/transaction" element={<FiatWithdrawTransactionPage />} />
-                     <Route path="/spin-draw" element={<SpinDrawPage />} />
-                     <Route path="/create-spin-items" element={<CreateSpinItemPage />} />
-                     <Route path="/spin/edit/:id" element={<CreateSpinItemPage />} />
-                     <Route path="/upload-images" element={<UploadImagesPage />} />
-                     <Route path="/lottery-draw" element={<LotteryDrawPage />} />
-                     <Route path="/lottery-draw/edit/:id" element={<EditLotteryPollPage />} />
-                     <Route path="/users" element={<UserPage />} />
-                     <Route path="/players-accounts/create" element={<PlayersAccountsPage />} />
-                     <Route path="/players-accounts/edit/:id" element={<PlayersAccountsPage />} />
-                     <Route path="/player-status/show/:id" element={<UserStatusPage />} />
-                     <Route path="/faq-category" element={<FaqCategoryPage />} />
-                     <Route path="/faq-category/create" element={<FaqCategorySinglePage />} />
-                     <Route path="/faq-category/edit/:id" element={<FaqCategorySinglePage />} />
-                     <Route path="/faq-posts" element={<FaqPostsPage />} />
-                     <Route path="/faq-post/create" element={<FaqSinglePostPage />} />
-                     <Route path="/faq-post/edit/:id" element={<FaqSinglePostPage />} />
-                     <Route path="/live/support" element={<LiveChatPage />} />
+                     <Route
+                        path="/user-roles"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <UserRolePage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/user-roles/create"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <CreateUserRolePage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/user-roles/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <CreateUserRolePage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/game-currency"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <GameCurrencyPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/game-currency/create"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <CreateGameCurrencyPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/game-currency/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <CreateGameCurrencyPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/games"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <GameListPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/games/create"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <UploadGamesPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/games/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <UploadGamesPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/avatars"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <UserAvatarComponent />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/game-category"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <GameCategoryPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/export/game/data"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <ExportGameDataPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/games/providers"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <GameProvidersPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/games/providers/create"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <CreateNewGameProviderPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/games/providers/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <CreateNewGameProviderPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/provider/games/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <ProvidersGamesPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/game-currency-payment"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <GameCurrencyPaymentMethodsPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/game-currency-payment/create"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <PostGameCurrencyPaymentOptionsPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/game-currency-payment/edit/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <PostGameCurrencyPaymentOptionsPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/notification"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <NotificationPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/notification/create"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <PushNotificationPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/notification/edit/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <PushNotificationPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/fiat-deposit-payments"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <FiatPaymentsPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/order/:orderId"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <SingleTransactionInfoPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/payment-fields"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <PaymentFiledsPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/payment-fields/create"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <CreatePaymentFieldsPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/payment-fields/edit/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <CreatePaymentFieldsPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/fiat/withdraw/transaction"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <FiatWithdrawTransactionPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/spin-draw"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <SpinDrawPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/create-spin-items"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <CreateSpinItemPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/spin/edit/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <CreateSpinItemPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/upload-images"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <UploadImagesPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/lottery-draw"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <LotteryDrawPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/lottery-draw/edit/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <EditLotteryPollPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/users"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <UserPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/players-accounts/create"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <PlayersAccountsPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/players-accounts/edit/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <PlayersAccountsPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/player-status/show/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <UserStatusPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/faq-category"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <FaqCategoryPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/faq-category/create"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <FaqCategorySinglePage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/faq-category/edit/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <FaqCategorySinglePage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/faq-posts"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <FaqPostsPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/faq-post/create"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <FaqSinglePostPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/faq-post/edit/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <FaqSinglePostPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/live/support"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin', 'support']}>
+                              <LiveChatPage />
+                           </ProtectedRoute>
+                        }
+                     />
                   </Route>
                   <Route path="/dashboard/auth/login" element={<LoginPage />} />
                </Routes>

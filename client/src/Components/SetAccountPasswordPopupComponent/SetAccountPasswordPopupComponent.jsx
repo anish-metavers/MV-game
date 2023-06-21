@@ -11,11 +11,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showAndHidePwdPopupHandler } from '../../App/Features/Admin/adminSlice';
 import { motion } from 'framer-motion';
 import { useParams } from 'react-router';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import { message } from 'antd';
 import { setPlayerAccountPassword } from '../../App/Features/userManagement/userManagementActions';
-import { accountPasswordChangeLoadingSelector, accountPasswordChangeErrorSelector } from './SetAccountPassword.Selector';
+import {
+   accountPasswordChangeLoadingSelector,
+   accountPasswordChangeErrorSelector,
+} from './SetAccountPassword.Selector';
 
 const schema = yup.object({
    password: yup
@@ -40,8 +42,11 @@ function SetAccountPasswordPopupComponent() {
    });
 
    const param = useParams();
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
    const dispatch = useDispatch();
 
    const accountPasswordChangeLoading = useSelector(accountPasswordChangeLoadingSelector);

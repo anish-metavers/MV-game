@@ -6,8 +6,7 @@ import {
    getUserTicketLuckyNumbersCount,
 } from '../../App/Features/LuckyDraw/LuckyDrawActions';
 import { useParams } from 'react-router';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import {
    userLuckyNumbersSelector,
    userLuckyNumbersLoadingSelector,
@@ -20,8 +19,11 @@ import SpinnerComponent from '../SpinnerComponent/SpinnerComponent';
 import BarChartComponent from '../BarChartComponent/BarChartComponent';
 
 function LotteryParticipateUserGraphComponent() {
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
 
    const dispatch = useDispatch();
    const param = useParams();
@@ -31,9 +33,7 @@ function LotteryParticipateUserGraphComponent() {
    const userLuckyNumbersLoading = useSelector(userLuckyNumbersLoadingSelector);
    const userLuckyNumbersError = useSelector(userLuckyNumbersErrorSelector);
    const userJackpotNumbers = useSelector(userJackpotNumbersSelector);
-   const userJackpotNumbersLoading = useSelector(
-      userJackpotNumbersLoadingSelector
-   );
+   const userJackpotNumbersLoading = useSelector(userJackpotNumbersLoadingSelector);
    const userJackpotNumbersError = useSelector(userJackpotNumbersErrorSelector);
 
    useEffect(() => {
@@ -52,17 +52,10 @@ function LotteryParticipateUserGraphComponent() {
                      <SpinnerComponent />
                   </div>
                )}
-               {!!userLuckyNumbersError && (
-                  <p className="text-sm error_cl">{userLuckyNumbersError}</p>
+               {!!userLuckyNumbersError && <p className="text-sm error_cl">{userLuckyNumbersError}</p>}
+               {!!userLuckyNumbers && userLuckyNumbers?.success && userLuckyNumbers?.items && (
+                  <BarChartComponent data={userLuckyNumbers?.items} label={'User lucky numbers with count'} />
                )}
-               {!!userLuckyNumbers &&
-                  userLuckyNumbers?.success &&
-                  userLuckyNumbers?.items && (
-                     <BarChartComponent
-                        data={userLuckyNumbers?.items}
-                        label={'User lucky numbers with count'}
-                     />
-                  )}
             </div>
             <div className="w-full h-full">
                {!!userJackpotNumbersLoading && (
@@ -70,17 +63,10 @@ function LotteryParticipateUserGraphComponent() {
                      <SpinnerComponent />
                   </div>
                )}
-               {!!userJackpotNumbersError && (
-                  <p className="text-sm error_cl">{userJackpotNumbersError}</p>
+               {!!userJackpotNumbersError && <p className="text-sm error_cl">{userJackpotNumbersError}</p>}
+               {!!userJackpotNumbers && userJackpotNumbers?.success && userJackpotNumbers?.items && (
+                  <BarChartComponent data={userJackpotNumbers?.items} label={'User lucky jackpot numbers with count'} />
                )}
-               {!!userJackpotNumbers &&
-                  userJackpotNumbers?.success &&
-                  userJackpotNumbers?.items && (
-                     <BarChartComponent
-                        data={userJackpotNumbers?.items}
-                        label={'User lucky jackpot numbers with count'}
-                     />
-                  )}
             </div>
          </div>
       </styled.div>

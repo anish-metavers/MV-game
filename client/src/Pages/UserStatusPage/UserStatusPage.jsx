@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import * as styled from './UserStatusPage.style';
 import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
 import { useParams } from 'react-router';
-import { useCookies } from 'react-cookie';
-import useAdmin from '../../Hooks/useAdmin';
+import useRoles from '../../Hooks/useRoles';
 import { useDispatch, useSelector } from 'react-redux';
 import {
    getAllGlobalChatGroups,
@@ -28,8 +27,11 @@ import UserWageredAmountChatComponent from '../../Components/UserWageredAmountCh
 function UserStatusPage() {
    const dispatch = useDispatch();
    const params = useParams();
-   const [cookie] = useCookies();
-   const [isAdmin] = useAdmin(cookie);
+   const {
+      userRoles: { isAdmin, isSupport },
+      isLoading,
+      error,
+   } = useRoles();
 
    const userAccountInformation = useSelector(userAccountInformationSelector);
 
