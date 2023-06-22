@@ -4,13 +4,21 @@ import * as styled from './LiveChatPage.style';
 import UserListComponent from '../../Components/UserListComponent/UserListComponent';
 import LiveChatScreenComponent from '../../Components/LiveChatScreenComponent/LiveChatScreenComponent';
 import useRoles from '../../Hooks/useRoles';
+import { useDispatch } from 'react-redux';
+import { getAllQueryUserLists } from '../../App/Features/LiveSupport/liveSupportActions';
 
 function LiveChatPage() {
    const {
-      userRoles: { isAdmin },
+      userRoles: { isAdmin, isSupport },
    } = useRoles();
 
-   console.log(isAdmin);
+   const dispatch = useDispatch();
+
+   useEffect(() => {
+      if (isAdmin || isSupport) {
+         dispatch(getAllQueryUserLists());
+      }
+   }, [isAdmin, isSupport]);
 
    return (
       <styled.div>

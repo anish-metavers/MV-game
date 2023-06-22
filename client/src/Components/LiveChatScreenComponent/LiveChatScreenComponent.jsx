@@ -1,13 +1,52 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import * as styled from './LiveChatScreenComponent.style';
 import ChatHomeScreenComponent from '../ChatHomeScreenComponent/ChatHomeScreenComponent';
 import { useSearchParams } from 'react-router-dom';
 import MessageComponent from '../MessageComponent/MessageComponent';
 import SendMessageComponent from '../SendMessageComponent/SendMessageComponent';
+import { useDispatch, useSelector } from 'react-redux';
+import { getQueryUserChats } from '../../App/Features/LiveSupport/liveSupportActions';
+import {
+   queryUsersChatsSelector,
+   queryUsersChatsLoadingSelector,
+   queryUsersChatsErrorSelector,
+   authSelector,
+} from './LiveChat.Selector';
+import SpinnerComponent from '../SpinnerComponent/SpinnerComponent';
+import { SocketContext } from '../../Context/SocketContext';
 
 function LiveChatScreenComponent() {
-   let [searchParams, setSearchParams] = useSearchParams();
+   const dispatch = useDispatch();
+   let [searchParams] = useSearchParams();
+   const socket = useContext(SocketContext);
    const param = searchParams.get('chat');
+
+   const auth = useSelector(authSelector);
+   const queryUsersChats = useSelector(queryUsersChatsSelector);
+   const queryUsersChatsLoading = useSelector(queryUsersChatsLoadingSelector);
+   const queryUsersChatsError = useSelector(queryUsersChatsErrorSelector);
+
+   useEffect(() => {
+      if (!!param) {
+         dispatch(getQueryUserChats({ userId: param, page: 0, chatFrom: 'supportTeamUser' }));
+      }
+   }, [param]);
+
+   useEffect(() => {
+      if (
+         !!param &&
+         !!auth &&
+         auth?.user &&
+         auth?.user?._id &&
+         !!queryUsersChats &&
+         queryUsersChats?.success &&
+         queryUsersChats?.chats &&
+         !!queryUsersChats?.chats?.item
+      ) {
+         const { _id } = queryUsersChats?.chats?.item;
+         socket.emit('_join_support_room', { groupId: _id });
+      }
+   }, [param, queryUsersChats]);
 
    return (
       <styled.div>
@@ -15,9 +54,22 @@ function LiveChatScreenComponent() {
          {!!param && (
             <styled.contentDiv>
                <div className="screen_div">
-                  <MessageComponent sender={true} />
-                  <MessageComponent sender={false} />
-                  <MessageComponent sender={false} />
+                  {!!queryUsersChatsLoading && <SpinnerComponent />}
+                  {!!queryUsersChatsError && <p className="text-sm error_cl">{queryUsersChatsError}</p>}
+                  {!!queryUsersChats &&
+                     queryUsersChats?.success &&
+                     !!queryUsersChats?.chats &&
+                     !!queryUsersChats?.chats?.messages &&
+                     queryUsersChats?.chats?.messages.length &&
+                     queryUsersChats?.chats?.messages.length &&
+                     queryUsersChats?.chats?.messages.map((el) => (
+                        <MessageComponent
+                           createdAt={el?.createdAt}
+                           message={el?.message}
+                           key={el?._id}
+                           sender={auth?.user?._id === el?.user?._id}
+                        />
+                     ))}
                </div>
                <SendMessageComponent />
             </styled.contentDiv>

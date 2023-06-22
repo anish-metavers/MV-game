@@ -1,10 +1,14 @@
 import styled from 'styled-components';
 
 export const chatDiv = styled.div`
-   float: left;
    padding: 1rem;
+   width: 100%;
+   display: flex;
+   justify-content: ${(props) => (props?.sender ? 'end' : 'start')};
 
    .mg_div {
+      max-width: 300px;
+
       .date_time {
          font-size: 12px;
          display: flex;
@@ -13,7 +17,6 @@ export const chatDiv = styled.div`
       }
 
       .message_div {
-         width: 500px;
          padding: 1rem;
          border-radius: 0 20px 20px 20px;
          background-color: var(--light-green-cl);

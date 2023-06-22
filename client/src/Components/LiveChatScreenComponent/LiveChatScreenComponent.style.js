@@ -19,8 +19,6 @@ export const contentDiv = styled.div`
    }
 
    .my_message {
-      float: right !important;
-
       .date_time {
          justify-content: end !important;
       }

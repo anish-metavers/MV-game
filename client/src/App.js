@@ -48,6 +48,7 @@ import FaqCategorySinglePage from './Pages/FaqCategorySinglePage/FaqCategorySing
 import FaqPostsPage from './Pages/FaqPostsPage/FaqPostsPage';
 import FaqSinglePostPage from './Pages/FaqSinglePostPage/FaqSinglePostPage';
 import LiveChatPage from './Pages/LiveChatPage/LiveChatPage';
+import SupportApprovalPage from './Pages/SupportApprovalPage/SupportApprovalPage';
 
 const darkTheme = createTheme({
    palette: {
@@ -429,6 +430,14 @@ function App() {
                         element={
                            <ProtectedRoute allowedRoles={['admin']}>
                               <FaqSinglePostPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/support/approval"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin', 'support']}>
+                              <SupportApprovalPage />
                            </ProtectedRoute>
                         }
                      />

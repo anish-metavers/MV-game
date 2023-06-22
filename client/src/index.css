@@ -248,3 +248,7 @@ img {
    background-image: conic-gradient(from 1turn, #8447f6, #5617cb);
    font-size: 15px;
 }
+
+:where(.css-dev-only-do-not-override-lcvlz2).ant-checkbox-wrapper+.ant-checkbox-wrapper {
+   margin-left: 0;
+}

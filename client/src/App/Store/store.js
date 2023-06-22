@@ -10,7 +10,7 @@ import MediaSlice from '../Features/Media/MediaSlice';
 import LuckyDrawSlice from '../Features/LuckyDraw/LuckyDrawSlice';
 import userManagementSlice from '../Features/userManagement/userManagementSlice';
 import faqSlice from '../Features/Faq/faqSlice';
-import liveChatSlice from '../Features/LiveChat/liveChatSlice';
+import liveSupportSlice from '../Features/LiveSupport/liveSupportSlice';
 
 const store = configureStore({
    reducer: {
@@ -25,7 +25,7 @@ const store = configureStore({
       LuckyDraw: LuckyDrawSlice,
       userManagement: userManagementSlice,
       faq: faqSlice,
-      liveChat: liveChatSlice,
+      liveSupport: liveSupportSlice,
    },
    middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

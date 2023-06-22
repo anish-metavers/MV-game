@@ -1,9 +1,9 @@
 import React from 'react';
 import * as styled from './UserProfileListComponent.style';
 
-function UserProfileListComponent({ user, onClick }) {
+function UserProfileListComponent({ user, onClick, active }) {
    return (
-      <styled.div className="space-x-3" onClick={onClick}>
+      <styled.div className="space-x-3" onClick={onClick} active={active}>
          <styled.profileDiv>
             <img src={user?.avatar} alt={user?.avatar} />
          </styled.profileDiv>

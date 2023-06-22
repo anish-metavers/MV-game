@@ -62,6 +62,7 @@ const luckyDraw = require('./routes/luckyDrawRoute');
 const mediaRoute = require('./routes/mediaRoute');
 const userManagementRoute = require('./routes/userManagementRoute');
 const faqRoute = require('./routes/faqRoute');
+const liveSupportRoute = require('./routes/liveSupportRoute');
 
 app.use('/admin', adminRoute);
 app.use('/user-role', userRolesRoute);
@@ -75,6 +76,7 @@ app.use('/lucky-draw', luckyDraw);
 app.use('/media', mediaRoute);
 app.use('/userManagement', userManagementRoute);
 app.use('/faq', faqRoute);
+app.use('/support', liveSupportRoute);
 
 // for build file
 app.get('*', (req, res) => {

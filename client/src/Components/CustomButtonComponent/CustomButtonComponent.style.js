@@ -226,4 +226,14 @@ export const div = styled.div`
          color: var(--main-cl);
       }
    }
+
+   .round {
+      padding: 0.2rem 0.5rem;
+      font-size: 13px;
+      border-radius: 30px;
+   }
+
+   .approved {
+      background-color: var(--primary-color);
+   }
 `;

@@ -26,6 +26,7 @@ import { RiAccountPinBoxFill } from '@react-icons/all-files/ri/RiAccountPinBoxFi
 import { FaQuestion } from '@react-icons/all-files/fa/FaQuestion';
 import { AiOutlineCreditCard } from '@react-icons/all-files/ai/AiOutlineCreditCard';
 import { HiOutlineChatAlt } from '@react-icons/all-files/hi/HiOutlineChatAlt';
+import { VscVerified } from '@react-icons/all-files/vsc/VscVerified';
 import { getUserRole } from '../../App/Features/Admin/adminActions';
 import useRoles from '../../Hooks/useRoles';
 
@@ -135,6 +136,7 @@ function SidebarComponent() {
                </Fragment>
             ) : null}
             <DashboardSidebarTabComponent heading={'Live'}>
+               <IconListComponent icon={<VscVerified />} heading={'Live chat'} link={'/support/approval'} />
                <IconListComponent icon={<HiOutlineChatAlt />} heading={'Live chat'} link={'/live/support'} />
             </DashboardSidebarTabComponent>
          </styled.sclDiv>
