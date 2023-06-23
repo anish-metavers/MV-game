@@ -10,6 +10,8 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const databaseConnection = require('./model/database/db');
 const path = require('path');
+const { removeLiveSupportDocuments } = require('./cron/liveSupportCron');
+const cron = require('node-cron');
 
 // middlewares
 app.use(
@@ -81,6 +83,11 @@ app.use('/support', liveSupportRoute);
 // for build file
 app.get('*', (req, res) => {
    res.sendFile(path.join(path.resolve(__dirname), 'build', 'index.html'));
+});
+
+// Schedule the cron job to run every day at 1 AM
+cron.schedule('0 1 * * *', () => {
+   removeLiveSupportDocuments();
 });
 
 // In this case it is an HTTP server

@@ -8,6 +8,8 @@ import { SocketContext } from '../../Context/SocketContext';
 import { authSelector } from './SendMessage.Selector';
 import { useSelector } from 'react-redux';
 import { message } from 'antd';
+import { useSearchParams } from 'react-router-dom';
+import LiveSuppotFeedbackComponent from '../LiveSuppotFeedbackComponent/LiveSuppotFeedbackComponent';
 
 function SendMessageComponent() {
    const { getValues, control, setValue } = useForm({
@@ -18,6 +20,8 @@ function SendMessageComponent() {
 
    const socket = useContext(SocketContext);
    const auth = useSelector(authSelector);
+   const [searchParams] = useSearchParams();
+   const userId = searchParams.get('chat');
 
    const sendHandler = function () {
       if (!!auth && auth?.user && auth?.user?._id) {
@@ -26,7 +30,9 @@ function SendMessageComponent() {
          const messageObject = {
             name: auth?.user?.name,
             message,
-            sender: auth?.user?._id,
+            supportTeamUserId: auth?.user?._id,
+            chatFrom: 'supportTeamUser',
+            queryUser: userId,
          };
 
          socket.emit('_send_live_support_messsage', messageObject);
@@ -56,6 +62,9 @@ function SendMessageComponent() {
             <CustomButtonComponent btnCl={'send_button'} onClick={sendHandler}>
                <BiSend />
             </CustomButtonComponent>
+            <div className="feed_back_div">
+               <LiveSuppotFeedbackComponent />
+            </div>
          </div>
       </styled.div>
    );

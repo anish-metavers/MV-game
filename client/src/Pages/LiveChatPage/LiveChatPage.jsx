@@ -4,8 +4,9 @@ import * as styled from './LiveChatPage.style';
 import UserListComponent from '../../Components/UserListComponent/UserListComponent';
 import LiveChatScreenComponent from '../../Components/LiveChatScreenComponent/LiveChatScreenComponent';
 import useRoles from '../../Hooks/useRoles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAllQueryUserLists } from '../../App/Features/LiveSupport/liveSupportActions';
+import { authSelector } from './LiveChat.Selector';
 
 function LiveChatPage() {
    const {
@@ -13,10 +14,13 @@ function LiveChatPage() {
    } = useRoles();
 
    const dispatch = useDispatch();
+   const auth = useSelector(authSelector);
 
    useEffect(() => {
       if (isAdmin || isSupport) {
-         dispatch(getAllQueryUserLists());
+         if (!!auth && auth?.user && auth?.user?._id) {
+            dispatch(getAllQueryUserLists({ supportTeamUserId: auth?.user?._id }));
+         }
       }
    }, [isAdmin, isSupport]);
 

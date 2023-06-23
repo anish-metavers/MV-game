@@ -11,6 +11,7 @@ router.get('/get-query-users-lists', varifyJwtToken, liveSupportController.getQu
 
 // API => PATCH
 router.patch('/updated-user-query', varifyJwtToken, liveSupportController.updatedUserQuery);
+router.patch('/update-user-query-feedback', varifyJwtToken, liveSupportController.updateUserQueryFeedBack);
 
 // API => DELETE
 module.exports = router;

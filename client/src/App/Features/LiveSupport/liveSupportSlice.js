@@ -1,5 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getAllQueryUserLists, getQueryUserChats, getQueryUsersLists, updatedUserQuery } from './liveSupportActions';
+import {
+   getAllQueryUserLists,
+   getQueryUserChats,
+   getQueryUsersLists,
+   updatedUserQuery,
+   updateUserQueryFeedBack,
+} from './liveSupportActions';
 
 const INITAL_STATE = {
    queryUsersList: null,
@@ -15,6 +21,8 @@ const INITAL_STATE = {
    rejectUserQueryError: null,
    showReasonPopup: false,
    selectedQuery: null,
+   queryFeedBackLoading: false,
+   queryFeedBackError: null,
 };
 
 const liveSupportSlice = createSlice({
@@ -26,6 +34,15 @@ const liveSupportSlice = createSlice({
       },
       selectedQueryHandler: (state, action) => {
          state.selectedQuery = action.payload;
+      },
+      storeSupportMessages: (state, action) => {
+         state.queryUsersChats = {
+            ...state.queryUsersChats,
+            chats: {
+               ...state.queryUsersChats?.chats,
+               messages: state.queryUsersChats?.chats?.messages.concat(action.payload),
+            },
+         };
       },
    },
    extraReducers: (bulder) => {
@@ -112,9 +129,29 @@ const liveSupportSlice = createSlice({
                state.rejectUserQueryError = null;
             }
          });
+
+      bulder
+         .addCase(updateUserQueryFeedBack.pending, (state) => {
+            state.queryFeedBackLoading = true;
+            state.queryFeedBackError = null;
+         })
+         .addCase(updateUserQueryFeedBack.rejected, (state, action) => {
+            state.queryFeedBackLoading = false;
+            state.queryFeedBackError = action.error.message;
+         })
+         .addCase(updateUserQueryFeedBack.fulfilled, (state, action) => {
+            if (action.payload?.data && action.payload?.data?.success && action.payload?.data?.userId) {
+               state.queryUsersList = {
+                  ...state.queryUsersList,
+                  items: state.queryUsersList?.items.filter((el) => el?.user._id !== action.payload?.data?.userId),
+               };
+               state.queryFeedBackLoading = false;
+               state.queryFeedBackError = null;
+            }
+         });
    },
 });
 
-export const { showAndHideReasonPopup, selectedQueryHandler } = liveSupportSlice.actions;
+export const { showAndHideReasonPopup, selectedQueryHandler, storeSupportMessages } = liveSupportSlice.actions;
 
 export default liveSupportSlice.reducer;

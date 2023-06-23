@@ -14,12 +14,17 @@ import {
 } from './LiveChat.Selector';
 import SpinnerComponent from '../SpinnerComponent/SpinnerComponent';
 import { SocketContext } from '../../Context/SocketContext';
+import useRoles from '../../Hooks/useRoles';
+import { storeSupportMessages } from '../../App/Features/LiveSupport/liveSupportSlice';
 
 function LiveChatScreenComponent() {
    const dispatch = useDispatch();
    let [searchParams] = useSearchParams();
    const socket = useContext(SocketContext);
    const param = searchParams.get('chat');
+   const {
+      userRoles: { isSupport },
+   } = useRoles();
 
    const auth = useSelector(authSelector);
    const queryUsersChats = useSelector(queryUsersChatsSelector);
@@ -48,6 +53,22 @@ function LiveChatScreenComponent() {
       }
    }, [param, queryUsersChats]);
 
+   const supportMessagesHandler = function (args) {
+      dispatch(storeSupportMessages(args));
+   };
+
+   useEffect(() => {
+      if (isSupport) {
+         socket.on('_receive_live_support_messsage', supportMessagesHandler);
+         socket.on('_support_message_received', supportMessagesHandler);
+      }
+
+      return () => {
+         socket.off('_receive_live_support_messsage', supportMessagesHandler);
+         socket.off('_support_message_received', supportMessagesHandler);
+      };
+   }, [isSupport]);
+
    return (
       <styled.div>
          {!param && <ChatHomeScreenComponent />}
@@ -67,7 +88,7 @@ function LiveChatScreenComponent() {
                            createdAt={el?.createdAt}
                            message={el?.message}
                            key={el?._id}
-                           sender={auth?.user?._id === el?.user?._id}
+                           sender={auth?.user?._id === el?.sender}
                         />
                      ))}
                </div>

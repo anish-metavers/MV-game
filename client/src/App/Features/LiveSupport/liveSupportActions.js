@@ -3,9 +3,11 @@ import axiosInstance, { axiosClientInstance } from '../../../Services/AxiosInsta
 
 export const getAllQueryUserLists = createAsyncThunk(
    'liveSupport/getAllQueryUserLists',
-   async (_, { rejectWithValue }) => {
+   async ({ supportTeamUserId }, { rejectWithValue }) => {
       try {
-         const response = await axiosInstance.get('/support/get-all-query-users-list');
+         const response = await axiosInstance.get(
+            `/support/get-all-query-users-list?supportTeamUserId=${supportTeamUserId}`
+         );
          return response;
       } catch (err) {
          if (err) {
@@ -59,3 +61,18 @@ export const updatedUserQuery = createAsyncThunk('liveSupport/updatedUserQuery',
       return rejectWithValue(err.response.data);
    }
 });
+
+export const updateUserQueryFeedBack = createAsyncThunk(
+   'liveSupport/updateUserQueryFeedBack',
+   async (data, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.patch(`/support/update-user-query-feedback`, data);
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);

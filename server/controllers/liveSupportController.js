@@ -3,10 +3,32 @@ const CaptureError = require('../error');
 
 const liveSupportModel = require('../model/schema/liveSupportSchema');
 const supportActivityModel = require('../model/schema/supportActivitySchema');
+const { default: mongoose } = require('mongoose');
+const liveSupportFeedBackModel = require('../model/schema/liveSupportFeedBackSchema');
 
 const getAllQueryUserLists = catchAsync(async function (req, res, next) {
+   const { supportTeamUserId } = req.query;
+
+   if (!supportTeamUserId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Support team user id is required!',
+      });
+   }
+
+   const isValidId = checkIsValidId(supportTeamUserId);
+
+   if (!isValidId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: `Support team user id is not valid id please check.`,
+      });
+   }
+
    const findAllUsers = await liveSupportModel.aggregate([
-      { $match: { isApproved: true } },
+      { $match: { isApproved: true, supportTeamUserId: mongoose.Types.ObjectId(supportTeamUserId) } },
       {
          $lookup: {
             from: 'auths',
@@ -214,6 +236,7 @@ const updatedUserQuery = catchAsync(async function (req, res, next) {
    if (approvedBy) {
       supportObject.approvedBy = approvedBy;
       supportObject.isApproved = true;
+      supportObject.supportTeamUserId = approvedBy;
    } else {
       supportObject.rejectedBy = rejectedBy;
       supportObject.isRejected = true;
@@ -238,4 +261,75 @@ const updatedUserQuery = catchAsync(async function (req, res, next) {
    });
 });
 
-module.exports = { getAllQueryUserLists, getQueryUsersLists, updatedUserQuery };
+const updateUserQueryFeedBack = catchAsync(async function (req, res, next) {
+   const { queryId, supportTeamUserId, feedBack } = req.body;
+
+   if (!queryId || !supportTeamUserId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: `${(!queryId && 'Query') || (!supportTeamUserId && 'Suport team user')} id is required!`,
+      });
+   }
+
+   const isValidId = checkIsValidId(queryId);
+   const isValidIdSuportTeamId = checkIsValidId(supportTeamUserId);
+
+   if (!isValidId || !isValidIdSuportTeamId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: `${
+            (!isValidId && 'Query') || (!isValidIdSuportTeamId && 'Suport team user')
+         } id is not valid id please check.`,
+      });
+   }
+
+   // once the query feedback is recived from the support team side then. store the all old messages into the new
+   // collections. and remove the send input options from the support team. also remove the user query documents.
+   // get all messages from the support team document.
+   const allMessages = await liveSupportModel.findOne({ userId: queryId }, { messages: 1 });
+
+   if (!!allMessages?.messages && allMessages?.messages.length) {
+      const { messages } = allMessages;
+      const deleteUserQuery = await liveSupportModel.deleteOne({ userId: queryId });
+
+      if (!deleteUserQuery?.deletedCount) {
+         return res.status(httpStatusCodes.BAD_REQUEST).json({
+            success: false,
+            error: true,
+            messages: 'User Document is not exists',
+         });
+      }
+
+      const storeUserFeedBack = await liveSupportFeedBackModel({
+         userId: queryId,
+         supportTeamUserId,
+         feedBack,
+         messages,
+      }).save();
+
+      if (storeUserFeedBack) {
+         return res.status(httpStatusCodes.CREATED).json({
+            success: true,
+            error: false,
+            messages: 'Feedback saved',
+            userId: queryId,
+         });
+      }
+
+      return res.status(httpStatusCodes.INTERNAL_SERVER).json({
+         success: false,
+         error: true,
+         messages: 'Internal server error',
+      });
+   }
+
+   return res.status(httpStatusCodes.BAD_REQUEST).json({
+      success: false,
+      error: true,
+      message: 'No Chats',
+   });
+});
+
+module.exports = { getAllQueryUserLists, getQueryUsersLists, updatedUserQuery, updateUserQueryFeedBack };
