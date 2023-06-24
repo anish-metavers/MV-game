@@ -220,7 +220,7 @@ const updatedUserQuery = catchAsync(async function (req, res, next) {
    } else {
       // create new support activity document.
       const newActivityDoc = await supportActivityModel({
-         supportTeamUserId: rejectedBy,
+         supportTeamUserId: approvedBy ? approvedBy : rejectedBy,
          [approvedBy ? 'approved' : 'rejection']: [
             { userId: queryId, rejectionReason: approvedBy ? null : rejectionReason },
          ],
