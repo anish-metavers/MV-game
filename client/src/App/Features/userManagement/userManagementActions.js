@@ -283,3 +283,18 @@ export const getUserRoleLists = createAsyncThunk('userManagement/getUserRoleList
       return rejectWithValue(err.response.data);
    }
 });
+
+export const getUserByRoles = createAsyncThunk(
+   'userManagement/getUserByRoles',
+   async ({ filter }, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(`/userManagement/get-user-by-roles?filter=${filter}`);
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);

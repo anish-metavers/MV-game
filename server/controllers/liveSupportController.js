@@ -332,4 +332,9 @@ const updateUserQueryFeedBack = catchAsync(async function (req, res, next) {
    });
 });
 
-module.exports = { getAllQueryUserLists, getQueryUsersLists, updatedUserQuery, updateUserQueryFeedBack };
+module.exports = {
+   getAllQueryUserLists,
+   getQueryUsersLists,
+   updatedUserQuery,
+   updateUserQueryFeedBack,
+};

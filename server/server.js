@@ -10,7 +10,7 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const databaseConnection = require('./model/database/db');
 const path = require('path');
-const { removeLiveSupportDocuments } = require('./cron/liveSupportCron');
+const { removeLiveSupportDocuments } = require('./cron/liveSupport.service');
 const cron = require('node-cron');
 
 // middlewares

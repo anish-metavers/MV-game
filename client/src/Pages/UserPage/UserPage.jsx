@@ -9,18 +9,17 @@ import { useSearchParams } from 'react-router-dom';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import TableComponent from '../../Components/TableComponent/TableComponent';
 import dayjs from 'dayjs';
-import { usersSelector, userLoadingSelector, userErrorsSelector } from './User.Selector';
+import { usersSelector, userLoadingSelector, userErrorsSelector, userRolesListSelector } from './User.Selector';
 import { ROW } from './UserTable';
 import { useNavigate } from 'react-router-dom';
 import { VscEdit } from '@react-icons/all-files/vsc/VscEdit';
+import { getUserRoleLists } from '../../App/Features/userManagement/userManagementActions';
 
 function UserPage() {
-   const dispatch = useDispatch();
    const {
-      userRoles: { isAdmin, isSupport },
-      isLoading,
-      error,
+      userRoles: { isAdmin },
    } = useRoles();
+   const dispatch = useDispatch();
    const [params] = useSearchParams();
    const page = params.get('page');
    const navigation = useNavigate();
@@ -28,6 +27,7 @@ function UserPage() {
    const users = useSelector(usersSelector);
    const userLoading = useSelector(userLoadingSelector);
    const userErrors = useSelector(userErrorsSelector);
+   const userRolesList = useSelector(userRolesListSelector);
 
    const NextPageHandler = function () {
       navigation(`?page=${+page + 1}`);
@@ -48,6 +48,9 @@ function UserPage() {
    useEffect(() => {
       if (page && isAdmin) {
          dispatch(getAllUsers({ page: page }));
+         if (!userRolesList) {
+            dispatch(getUserRoleLists());
+         }
       }
    }, [page, isAdmin]);
 
@@ -68,31 +71,32 @@ function UserPage() {
                {!!userErrors ? <p className="text-sm error_cl">{userErrors}</p> : null}
                {userLoading ? <SpinnerComponent /> : null}
                {!!users && users?.success && users?.users ? (
-                  <TableComponent
-                     row={ROW}
-                     nextHandler={NextPageHandler}
-                     nextAndPrev={true}
-                     prevHandler={PrevPageHandler}
-                     disablePrevbtn={+page === 0 ? true : false}
-                     disableNextbtn={+page >= users?.totalPages ? true : false}
-                     tableWidth={1400}
-                  >
-                     {users?.users.map((el) => (
-                        <tr key={el?._id}>
-                           <td>{el?.name}</td>
-                           <td>{el?.email}</td>
-                           <td>
-                              <div className="user_profile_div" onClick={() => profileHandler(el?._id)}>
-                                 <img src={el?.avatar} alt="" />
-                              </div>
-                           </td>
-                           <td>{el?.userId}</td>
-                           <td className={`${el?.createdBy}_cl`}>
-                              <div className="box_div shadow">
-                                 <p>{el?.createdBy}</p>
-                              </div>
-                           </td>
-                           {/* <td>{!!el?.statisticsHidden && el?.statisticsHidden.toString()}</td>
+                  <div>
+                     <TableComponent
+                        row={ROW}
+                        nextHandler={NextPageHandler}
+                        nextAndPrev={true}
+                        prevHandler={PrevPageHandler}
+                        disablePrevbtn={+page === 0 ? true : false}
+                        disableNextbtn={+page >= users?.totalPages ? true : false}
+                        tableWidth={1400}
+                     >
+                        {users?.users.map((el) => (
+                           <tr key={el?._id}>
+                              <td>{el?.name}</td>
+                              <td>{el?.email}</td>
+                              <td>
+                                 <div className="user_profile_div" onClick={() => profileHandler(el?._id)}>
+                                    <img src={el?.avatar} alt="" />
+                                 </div>
+                              </td>
+                              <td>{el?.userId}</td>
+                              <td className={`${el?.createdBy}_cl`}>
+                                 <div className="box_div shadow">
+                                    <p>{el?.createdBy}</p>
+                                 </div>
+                              </td>
+                              {/* <td>{!!el?.statisticsHidden && el?.statisticsHidden.toString()}</td>
                            <td>{!!el?.privateChat && el?.privateChat.toString()}</td>
                            <td>{!!el?.online && el?.online.toString()}</td>
                            <td>{!!el?.newFriendRequest && el?.newFriendRequest.toString()}</td>
@@ -100,17 +104,18 @@ function UserPage() {
                            <td>{!!el?.active && el?.active.toString()}</td>
                            <td>{!!el?.level && el?.level}</td>
                            <td>{!!el?.todaySpin && el?.todaySpin.toString()}</td> */}
-                           <td>{dayjs(el?.createdAt).format('DD MMMM YYYY hh:mm:ss A')}</td>
-                           {/* <td>{dayjs(el?.spinTimePeriod).format('DD MMMM YYYY hh:mm:ss A')}</td> */}
-                           <td>{dayjs(el?.updatedAt).format('DD MMMM YYYY hh:mm:ss A')}</td>
-                           <td>
-                              <div>
-                                 <VscEdit className="cursor-pointer" onClick={() => editAccountHandler(el?._id)} />
-                              </div>
-                           </td>
-                        </tr>
-                     ))}
-                  </TableComponent>
+                              <td>{dayjs(el?.createdAt).format('DD MMMM YYYY hh:mm:ss A')}</td>
+                              {/* <td>{dayjs(el?.spinTimePeriod).format('DD MMMM YYYY hh:mm:ss A')}</td> */}
+                              <td>{dayjs(el?.updatedAt).format('DD MMMM YYYY hh:mm:ss A')}</td>
+                              <td>
+                                 <div>
+                                    <VscEdit className="cursor-pointer" onClick={() => editAccountHandler(el?._id)} />
+                                 </div>
+                              </td>
+                           </tr>
+                        ))}
+                     </TableComponent>
+                  </div>
                ) : null}
             </div>
          </div>

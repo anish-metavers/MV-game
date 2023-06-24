@@ -29,6 +29,7 @@ import { HiOutlineChatAlt } from '@react-icons/all-files/hi/HiOutlineChatAlt';
 import { VscVerified } from '@react-icons/all-files/vsc/VscVerified';
 import { getUserRole } from '../../App/Features/Admin/adminActions';
 import useRoles from '../../Hooks/useRoles';
+import { FcCustomerSupport } from '@react-icons/all-files/fc/FcCustomerSupport';
 
 function SidebarComponent() {
    const auth = useSelector(authSelector);
@@ -132,13 +133,18 @@ function SidebarComponent() {
                         heading={'Player accounts'}
                         link={'/players-accounts/create'}
                      />
+                     <IconListComponent icon={<FcCustomerSupport />} heading={'Support Team'} link={'/support/team'} />
                   </DashboardSidebarTabComponent>
                </Fragment>
             ) : null}
-            <DashboardSidebarTabComponent heading={'Live'}>
-               <IconListComponent icon={<VscVerified />} heading={'Live chat'} link={'/support/approval'} />
-               <IconListComponent icon={<HiOutlineChatAlt />} heading={'Live chat'} link={'/live/support'} />
-            </DashboardSidebarTabComponent>
+            {isAdmin || isSupport ? (
+               <DashboardSidebarTabComponent heading={'Live'}>
+                  <IconListComponent icon={<VscVerified />} heading={'Live chat'} link={'/support/approval'} />
+                  {isSupport && (
+                     <IconListComponent icon={<HiOutlineChatAlt />} heading={'Live chat'} link={'/live/support'} />
+                  )}
+               </DashboardSidebarTabComponent>
+            ) : null}
          </styled.sclDiv>
       </styled.div>
    );

@@ -11,6 +11,7 @@ router.get('/get-all-global-chat-groups', varifyJwtToken, userManagementControll
 router.get('/get-user-global-chats', varifyJwtToken, userManagementController.getUserGlobalChats);
 router.get('/get-user-wagered-amount', varifyJwtToken, userManagementController.getUserWageredAmountGraph);
 router.get('/get-user-roles-lists', varifyJwtToken, userManagementController.getUserRoleLists);
+router.get('/get-user-by-roles', varifyJwtToken, userManagementController.getUserByRoles);
 
 // API => POST
 router.post(

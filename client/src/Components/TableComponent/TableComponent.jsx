@@ -42,18 +42,14 @@ function TableComponent({
          {!!nextAndPrev ? (
             <div className="_next_prev_buttons_div mt-5 flex justify-end space-x-2">
                <CustomButtonComponent
-                  btnCl={`next_btn prevbtn shadow ${
-                     disablePrevbtn ? 'disable_btn' : ''
-                  }`}
+                  btnCl={`next_btn prevbtn shadow ${disablePrevbtn ? 'disable_btn' : ''}`}
                   onClick={disablePrevbtn ? null : () => prevHandler()}
                >
                   <IoIosArrowRoundBack className="text-gray-200" />
                   <p>Prev</p>
                </CustomButtonComponent>
                <CustomButtonComponent
-                  btnCl={`next_btn shadow ${
-                     disableNextbtn ? 'disable_btn' : ''
-                  }`}
+                  btnCl={`next_btn shadow ${disableNextbtn ? 'disable_btn' : ''}`}
                   onClick={disableNextbtn ? null : () => nextHandler()}
                >
                   <p>Next</p>

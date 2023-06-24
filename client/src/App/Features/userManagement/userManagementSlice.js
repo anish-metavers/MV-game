@@ -18,6 +18,7 @@ import {
    getUserFriendList,
    getUserWageredAmountGraph,
    getUserRoleLists,
+   getUserByRoles,
 } from './userManagementActions';
 
 const INITAL_STATE = {
@@ -68,6 +69,9 @@ const INITAL_STATE = {
    userRolesList: null,
    userRolesListLoading: false,
    userRolesListError: null,
+   supportTeamUsers: null,
+   supportTeamUsersLoading: false,
+   supportTeamUsersError: null,
 };
 
 const userManagementSlice = createSlice({
@@ -432,6 +436,23 @@ const userManagementSlice = createSlice({
             state.userRolesList = action.payload.data;
             state.userRolesListLoading = false;
             state.userRolesListError = null;
+         });
+
+      bulder
+         .addCase(getUserByRoles.pending, (state) => {
+            state.supportTeamUsers = null;
+            state.supportTeamUsersLoading = true;
+            state.supportTeamUsersError = null;
+         })
+         .addCase(getUserByRoles.rejected, (state, action) => {
+            state.supportTeamUsers = null;
+            state.supportTeamUsersLoading = false;
+            state.supportTeamUsersError = action.error.message;
+         })
+         .addCase(getUserByRoles.fulfilled, (state, action) => {
+            state.supportTeamUsers = action.payload.data;
+            state.supportTeamUsersLoading = false;
+            state.supportTeamUsersError = null;
          });
    },
 });

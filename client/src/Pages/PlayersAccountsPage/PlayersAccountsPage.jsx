@@ -112,7 +112,9 @@ function PlayersAccountsPage() {
    useEffect(() => {
       if (isAdmin && !!param && param?.id) {
          dispatch(getUserSingleAccount({ userId: param?.id }));
-         dispatch(getUserRoleLists());
+         if (!userRolesList) {
+            dispatch(getUserRoleLists());
+         }
       } else {
          reset();
       }

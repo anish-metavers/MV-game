@@ -654,6 +654,66 @@ const getUserRoleLists = catchAsync(async function (req, res, next) {
    });
 });
 
+const getUserByRoles = catchAsync(async function (req, res, next) {
+   const { filter } = req.query;
+
+   if (!filter) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'role filter is required',
+      });
+   }
+
+   const findRole = await roleModel.findOne({ roleName: filter }, { roleName: 1 });
+   const roleId = findRole?._id;
+
+   if (!roleId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Role is not found',
+      });
+   }
+
+   const findUsers = await authModel.aggregate([
+      {
+         $project: {
+            name: 1,
+            email: 1,
+            avatar: 1,
+            userId: 1,
+            username: 1,
+            filteredArray: {
+               $filter: {
+                  input: '$userRole',
+                  as: 'item',
+                  cond: {
+                     $eq: ['$$item.roleId', mongoose.Types.ObjectId(roleId)],
+                  },
+               },
+            },
+         },
+      },
+      { $match: { filteredArray: { $ne: [] } } },
+      { $project: { filteredArray: 0 } },
+   ]);
+
+   if (findUsers) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         users: findUsers,
+      });
+   }
+
+   return res.status(httpStatusCodes.NOT_FOUND).json({
+      success: false,
+      error: true,
+      message: 'Not found',
+   });
+});
+
 module.exports = {
    getUserSingleAccount,
    createPlayerAccount,
@@ -664,4 +724,5 @@ module.exports = {
    getUserGlobalChats,
    getUserWageredAmountGraph,
    getUserRoleLists,
+   getUserByRoles,
 };

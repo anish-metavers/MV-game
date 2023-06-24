@@ -10,6 +10,9 @@ async function removeLiveSupportDocuments() {
          isRejected: false,
       });
 
+      // Also remove documents that have been rejected by the support team.
+      // const deleteRejectedDocuments = await liveSupportModel.deleteMany({})
+
       if (deleteDocuments.deletedCount) {
          console.log('Live support documents deleted');
       }

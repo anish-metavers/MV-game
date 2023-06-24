@@ -49,6 +49,7 @@ import FaqPostsPage from './Pages/FaqPostsPage/FaqPostsPage';
 import FaqSinglePostPage from './Pages/FaqSinglePostPage/FaqSinglePostPage';
 import LiveChatPage from './Pages/LiveChatPage/LiveChatPage';
 import SupportApprovalPage from './Pages/SupportApprovalPage/SupportApprovalPage';
+import SupportTeamPage from './Pages/SupportTeamPage/SupportTeamPage';
 
 const darkTheme = createTheme({
    palette: {
@@ -444,8 +445,16 @@ function App() {
                      <Route
                         path="/live/support"
                         element={
-                           <ProtectedRoute allowedRoles={['admin', 'support']}>
+                           <ProtectedRoute allowedRoles={['support']}>
                               <LiveChatPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/support/team"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin', 'subAdmin']}>
+                              <SupportTeamPage />
                            </ProtectedRoute>
                         }
                      />
