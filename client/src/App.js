@@ -50,6 +50,8 @@ import FaqSinglePostPage from './Pages/FaqSinglePostPage/FaqSinglePostPage';
 import LiveChatPage from './Pages/LiveChatPage/LiveChatPage';
 import SupportApprovalPage from './Pages/SupportApprovalPage/SupportApprovalPage';
 import SupportTeamPage from './Pages/SupportTeamPage/SupportTeamPage';
+import SupportUserDetailsPage from './Pages/SupportUserDetailsPage/SupportUserDetailsPage';
+import SupportTeamQueryChatsPage from './Pages/SupportTeamQueryChatsPage/SupportTeamQueryChatsPage';
 
 const darkTheme = createTheme({
    palette: {
@@ -455,6 +457,22 @@ function App() {
                         element={
                            <ProtectedRoute allowedRoles={['admin', 'subAdmin']}>
                               <SupportTeamPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/support/team/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin', 'subAdmin']}>
+                              <SupportUserDetailsPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/support/team/feedback/:queryId"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin', 'subAdmin']}>
+                              <SupportTeamQueryChatsPage />
                            </ProtectedRoute>
                         }
                      />

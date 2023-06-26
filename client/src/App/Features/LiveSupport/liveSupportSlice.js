@@ -5,6 +5,10 @@ import {
    getQueryUsersLists,
    updatedUserQuery,
    updateUserQueryFeedBack,
+   getSupportTeamUserInfo,
+   getSupportTeamApprovedUsers,
+   getSupportTeamFeedbacks,
+   getSupportTeamConversion,
 } from './liveSupportActions';
 
 const INITAL_STATE = {
@@ -23,6 +27,18 @@ const INITAL_STATE = {
    selectedQuery: null,
    queryFeedBackLoading: false,
    queryFeedBackError: null,
+   supportTeamUserInfo: null,
+   supportTeamUserInfoLoading: false,
+   supportTeamUserInfoError: null,
+   supportTeamApprovedUsers: null,
+   supportTeamApprovedUsersLoading: false,
+   supportTeamApprovedUsersError: null,
+   supportTeamFeedBacks: null,
+   supportTeamFeedBacksLoading: false,
+   supportTeamFeedBacksError: null,
+   supportTeamConversion: null,
+   supportTeamConversionLoading: false,
+   supportTeamConversionError: null,
 };
 
 const liveSupportSlice = createSlice({
@@ -98,6 +114,23 @@ const liveSupportSlice = createSlice({
          });
 
       bulder
+         .addCase(getSupportTeamFeedbacks.pending, (state) => {
+            state.supportTeamFeedBacks = null;
+            state.supportTeamFeedBacksLoading = true;
+            state.supportTeamFeedBacksError = null;
+         })
+         .addCase(getSupportTeamFeedbacks.rejected, (state, action) => {
+            state.supportTeamFeedBacks = null;
+            state.supportTeamFeedBacksLoading = false;
+            state.supportTeamFeedBacksError = action.error.message;
+         })
+         .addCase(getSupportTeamFeedbacks.fulfilled, (state, action) => {
+            state.supportTeamFeedBacks = action.payload.data;
+            state.supportTeamFeedBacksLoading = false;
+            state.supportTeamFeedBacksError = null;
+         });
+
+      bulder
          .addCase(updatedUserQuery.pending, (state) => {
             state.rejectUserQueryLoading = true;
             state.rejectUserQueryError = null;
@@ -117,7 +150,7 @@ const liveSupportSlice = createSlice({
                state.allQueryUserLists = {
                   ...state.allQueryUserLists,
                   items: state.allQueryUserLists?.items.map((el) =>
-                     el?._id === queryId
+                     el?.user?._id === queryId
                         ? {
                              ...el,
                              [isApproved ? 'isApproved' : 'isRejected']: true,
@@ -148,6 +181,57 @@ const liveSupportSlice = createSlice({
                state.queryFeedBackLoading = false;
                state.queryFeedBackError = null;
             }
+         });
+
+      bulder
+         .addCase(getSupportTeamUserInfo.pending, (state) => {
+            state.supportTeamUserInfo = null;
+            state.supportTeamUserInfoLoading = true;
+            state.supportTeamUserInfoError = null;
+         })
+         .addCase(getSupportTeamUserInfo.rejected, (state, action) => {
+            state.supportTeamUserInfo = null;
+            state.supportTeamUserInfoLoading = false;
+            state.supportTeamUserInfoError = action.error.message;
+         })
+         .addCase(getSupportTeamUserInfo.fulfilled, (state, action) => {
+            state.supportTeamUserInfo = action.payload.data;
+            state.supportTeamUserInfoLoading = false;
+            state.supportTeamUserInfoError = null;
+         });
+
+      bulder
+         .addCase(getSupportTeamApprovedUsers.pending, (state) => {
+            state.supportTeamApprovedUsers = null;
+            state.supportTeamApprovedUsersLoading = true;
+            state.supportTeamApprovedUsersError = null;
+         })
+         .addCase(getSupportTeamApprovedUsers.rejected, (state, action) => {
+            state.supportTeamApprovedUsers = null;
+            state.supportTeamApprovedUsersLoading = false;
+            state.supportTeamApprovedUsersError = action.error.message;
+         })
+         .addCase(getSupportTeamApprovedUsers.fulfilled, (state, action) => {
+            state.supportTeamApprovedUsers = action.payload.data;
+            state.supportTeamApprovedUsersLoading = false;
+            state.supportTeamApprovedUsersError = null;
+         });
+
+      bulder
+         .addCase(getSupportTeamConversion.pending, (state) => {
+            state.supportTeamConversion = null;
+            state.supportTeamConversionLoading = true;
+            state.supportTeamConversionError = null;
+         })
+         .addCase(getSupportTeamConversion.rejected, (state, action) => {
+            state.supportTeamConversion = null;
+            state.supportTeamConversionLoading = false;
+            state.supportTeamConversionError = action.error.message;
+         })
+         .addCase(getSupportTeamConversion.fulfilled, (state, action) => {
+            state.supportTeamConversion = action.payload.data;
+            state.supportTeamConversionLoading = false;
+            state.supportTeamConversionError = null;
          });
    },
 });

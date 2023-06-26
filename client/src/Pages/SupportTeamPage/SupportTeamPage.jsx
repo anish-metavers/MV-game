@@ -13,6 +13,7 @@ import NavbarComponent from '../../Components/NavbarComponent/NavbarComponent';
 import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHeadingComponent';
 import TableComponent from '../../Components/TableComponent/TableComponent';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { useNavigate } from 'react-router';
 
 const Row = [{ heading: 'Name' }, { heading: 'Avatar' }, { heading: 'email' }, { heading: 'Options' }];
 
@@ -21,10 +22,15 @@ function SupportTeamPage() {
       userRoles: { isAdmin, isSubAdmin },
    } = useRoles();
 
+   const navigation = useNavigate();
    const dispatch = useDispatch();
    const supportTeamUsers = useSelector(supportTeamUsersSelector);
    const supportTeamUsersLoading = useSelector(supportTeamUsersLoadingSelector);
    const supportTeamUsersError = useSelector(supportTeamUsersErrorSelector);
+
+   const navigationHandler = function (id) {
+      navigation(`/support/team/${id}`);
+   };
 
    useEffect(() => {
       if (isAdmin || isSubAdmin) {
@@ -62,7 +68,10 @@ function SupportTeamPage() {
                            </td>
                            <td>{el?.email}</td>
                            <td>
-                              <RemoveRedEyeIcon className="text-gray-200 cursor-pointer" />
+                              <RemoveRedEyeIcon
+                                 onClick={() => navigationHandler(el?._id)}
+                                 className="text-gray-200 cursor-pointer"
+                              />
                            </td>
                         </tr>
                      ))}

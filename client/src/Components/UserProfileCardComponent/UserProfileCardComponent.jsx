@@ -49,7 +49,9 @@ function UserProfileCardComponent() {
                            <h5 className="text-gray-300 font-medium">Active</h5>
                         </div>
                         <div>
-                           <p className="text-gray-300">{!!userAccountInformation?.data?.item?.active ? 'Yes' : 'No'}</p>
+                           <p className="text-gray-300">
+                              {!!userAccountInformation?.data?.item?.active ? 'Yes' : 'No'}
+                           </p>
                         </div>
                      </div>
                      <div className="flex items-center mt-3">

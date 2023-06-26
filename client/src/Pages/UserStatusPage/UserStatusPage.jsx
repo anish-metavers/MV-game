@@ -28,9 +28,7 @@ function UserStatusPage() {
    const dispatch = useDispatch();
    const params = useParams();
    const {
-      userRoles: { isAdmin, isSupport },
-      isLoading,
-      error,
+      userRoles: { isAdmin },
    } = useRoles();
 
    const userAccountInformation = useSelector(userAccountInformationSelector);

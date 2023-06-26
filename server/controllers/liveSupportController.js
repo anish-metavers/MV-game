@@ -5,6 +5,7 @@ const liveSupportModel = require('../model/schema/liveSupportSchema');
 const supportActivityModel = require('../model/schema/supportActivitySchema');
 const { default: mongoose } = require('mongoose');
 const liveSupportFeedBackModel = require('../model/schema/liveSupportFeedBackSchema');
+const authModel = require('../model/schema/authSchema');
 
 const getAllQueryUserLists = catchAsync(async function (req, res, next) {
    const { supportTeamUserId } = req.query;
@@ -242,7 +243,7 @@ const updatedUserQuery = catchAsync(async function (req, res, next) {
       supportObject.isRejected = true;
    }
 
-   const updateUserQuery = await liveSupportModel.updateOne({ _id: queryId }, { $set: supportObject });
+   const updateUserQuery = await liveSupportModel.updateOne({ userId: queryId }, { $set: supportObject });
 
    if (updateUserQuery.modifiedCount) {
       return res.status(httpStatusCodes.OK).json({
@@ -332,9 +333,267 @@ const updateUserQueryFeedBack = catchAsync(async function (req, res, next) {
    });
 });
 
+const getSupportTeamUserInfo = catchAsync(async function (req, res, next) {
+   const { userId } = req.query;
+
+   if (!userId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'User id is reuqired',
+      });
+   }
+
+   const isValidId = checkIsValidId(userId);
+
+   if (!isValidId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'User id id is not valid id please check.',
+      });
+   }
+
+   const user = await authModel.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(userId) } },
+      {
+         $project: {
+            name: 1,
+            email: 1,
+            avatar: 1,
+         },
+      },
+   ]);
+
+   const data = user?.[0];
+
+   if (data) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         info: data,
+      });
+   }
+
+   return res.status(httpStatusCodes.NOT_FOUND).json({
+      success: false,
+      error: true,
+      message: 'Not found',
+   });
+});
+
+const getSupportTeamActivities = catchAsync(async function (req, res, next) {
+   const { supportTeamUserId, page, filterBy } = req.query;
+
+   if (!supportTeamUserId || !filterBy) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: `${
+            (!supportTeamUserId && 'support team user id is reuqired') || (!filterBy && 'Filter is reuqired')
+         } `,
+      });
+   }
+
+   const isValidId = checkIsValidId(supportTeamUserId);
+
+   if (!isValidId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'User id id is not valid id please check.',
+      });
+   }
+
+   const DOCUMENT_LIMIT = 30;
+
+   const countDocuments = await supportActivityModel.aggregate([
+      { $match: { supportTeamUserId: mongoose.Types.ObjectId(supportTeamUserId) } },
+      { $group: { _id: null, totalArraySize: { $sum: { $size: `$${filterBy}` } } } },
+   ]);
+
+   const usersLists = await supportActivityModel.aggregate([
+      { $match: { supportTeamUserId: mongoose.Types.ObjectId(supportTeamUserId) } },
+      { $unwind: { path: `$${filterBy}`, preserveNullAndEmptyArrays: true } },
+      { $sort: { 'approved.createdAt': -1 } },
+      { $skip: page * DOCUMENT_LIMIT },
+      { $limit: DOCUMENT_LIMIT },
+      {
+         $lookup: {
+            from: 'auths',
+            localField: `${filterBy}.userId`,
+            foreignField: '_id',
+            as: 'user',
+            pipeline: [{ $project: { name: 1, avatar: 1, userId: 1 } }],
+         },
+      },
+      { $unwind: { path: '$user', preserveNullAndEmptyArrays: true } },
+      { $project: { user: 1 } },
+      { $group: { _id: '$_id', [filterBy]: { $push: '$user' } } },
+   ]);
+
+   const data = usersLists?.[0];
+   const documentCount = countDocuments?.[0]?.totalArraySize;
+
+   if (data) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         info: data,
+         page: +page,
+         totalPages: Math.ceil(documentCount / DOCUMENT_LIMIT - 1),
+         totalDocuments: documentCount,
+      });
+   }
+
+   return res.status(httpStatusCodes.OK).json({
+      success: true,
+      error: false,
+      message: 'No documents',
+   });
+});
+
+const getSupportTeamFeedbacks = catchAsync(async function (req, res, next) {
+   const { supportTeamUserId, page } = req.query;
+
+   if (!supportTeamUserId || !page) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: `${(!supportTeamUserId && 'support team user id is reuqired') || (!page && 'page is reuqired')} `,
+      });
+   }
+
+   const isValidId = checkIsValidId(supportTeamUserId);
+
+   if (!isValidId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'User id is not valid id please check.',
+      });
+   }
+
+   const DOCUMENT_LIMIT = 30;
+
+   const documentCount = await liveSupportFeedBackModel.countDocuments({ supportTeamUserId });
+   const documents = await liveSupportFeedBackModel.aggregate([
+      { $match: { supportTeamUserId: mongoose.Types.ObjectId(supportTeamUserId) } },
+      { $sort: { createdAt: -1 } },
+      { $skip: page * DOCUMENT_LIMIT },
+      { $limit: DOCUMENT_LIMIT },
+      {
+         $lookup: {
+            from: 'auths',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'user',
+            pipeline: [{ $project: { name: 1, avatar: 1, userId: 1 } }],
+         },
+      },
+      { $unwind: { path: '$user', preserveNullAndEmptyArrays: true } },
+      {
+         $project: {
+            feedBack: 1,
+            name: '$user.name',
+            avatar: '$user.avatar',
+            userId: '$user.userId',
+         },
+      },
+   ]);
+
+   if (documents) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         page: +page,
+         totalPages: Math.ceil(documentCount / DOCUMENT_LIMIT - 1),
+         totalDocuments: documentCount,
+         items: documents,
+      });
+   }
+
+   return res.status(httpStatusCodes.OK).json({
+      success: true,
+      error: false,
+      message: 'No documents',
+   });
+});
+
+const getSupportTeamConversion = catchAsync(async function (req, res, next) {
+   const { queryId } = req.query;
+
+   if (!queryId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: `${!queryId && 'queryId id is reuqired'}`,
+      });
+   }
+
+   const isValidId = checkIsValidId(queryId);
+
+   if (!isValidId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'query id is not valid id please check.',
+      });
+   }
+
+   const documents = await liveSupportFeedBackModel.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(queryId) } },
+      { $unwind: { path: '$messages', preserveNullAndEmptyArrays: true } },
+      {
+         $lookup: {
+            from: 'auths',
+            localField: 'messages.sender',
+            foreignField: '_id',
+            as: 'messages.user',
+            pipeline: [
+               {
+                  $project: {
+                     name: 1,
+                     avatar: 1,
+                     _id: 0,
+                  },
+               },
+            ],
+         },
+      },
+      { $unwind: { path: '$messages.user', preserveNullAndEmptyArrays: true } },
+      {
+         $project: {
+            message: '$messages.message',
+            createdAt: '$messages.createdAt',
+            name: '$messages.user.name',
+            avatar: '$messages.user.avatar',
+         },
+      },
+   ]);
+
+   if (documents) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         items: documents,
+      });
+   }
+
+   return res.status(httpStatusCodes.NOT_FOUND).json({
+      success: true,
+      error: false,
+      message: 'documents not found',
+   });
+});
+
 module.exports = {
    getAllQueryUserLists,
    getQueryUsersLists,
    updatedUserQuery,
    updateUserQueryFeedBack,
+   getSupportTeamUserInfo,
+   getSupportTeamActivities,
+   getSupportTeamFeedbacks,
+   getSupportTeamConversion,
 };

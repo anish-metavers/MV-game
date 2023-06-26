@@ -135,12 +135,12 @@ function SupportApprovalPage() {
                               ) : (
                                  <div className="flex items-center space-x-3">
                                     <CustomButtonComponent
-                                       onClick={() => approvedHandler(el?._id)}
+                                       onClick={() => approvedHandler(el?.user?._id)}
                                        text={'Approved'}
                                        btnCl={'approved round'}
                                     />
                                     <CustomButtonComponent
-                                       onClick={() => rejectedHandler(el?._id)}
+                                       onClick={() => rejectedHandler(el?.user?._id)}
                                        text={'Rejected'}
                                        btnCl={'rejected round'}
                                     />
