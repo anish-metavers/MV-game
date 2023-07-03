@@ -289,10 +289,12 @@ const updatePlayerAccount = catchAsync(async function (req, res, next) {
       });
    }
 
-   let userRole;
+   let userRole = [];
    if (!!roles && roles.length) {
       userRole = roles.map((el) => ({ roleId: el?._id, roleName: el?.roleName }));
    }
+
+   console.log(userRole);
 
    const findAndUpdateInfo = await authModel.updateOne(
       { _id: userId },

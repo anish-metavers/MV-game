@@ -139,7 +139,7 @@ function SidebarComponent() {
             ) : null}
             {isAdmin || isSupport ? (
                <DashboardSidebarTabComponent heading={'Live'}>
-                  <IconListComponent icon={<VscVerified />} heading={'Live chat'} link={'/support/approval'} />
+                  <IconListComponent icon={<VscVerified />} heading={'Support approval'} link={'/support/approval'} />
                   {isSupport && (
                      <IconListComponent icon={<HiOutlineChatAlt />} heading={'Live chat'} link={'/live/support'} />
                   )}
