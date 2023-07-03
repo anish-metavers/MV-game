@@ -67,9 +67,7 @@ function PlayersAccountsPage() {
    });
 
    const {
-      userRoles: { isAdmin, isSupport },
-      isLoading,
-      error,
+      userRoles: { isAdmin },
    } = useRoles();
    const dispatch = useDispatch();
    const param = useParams();
@@ -110,8 +108,10 @@ function PlayersAccountsPage() {
    };
 
    useEffect(() => {
-      if (isAdmin && !!param && param?.id) {
-         dispatch(getUserSingleAccount({ userId: param?.id }));
+      if (isAdmin) {
+         if (!!param && param?.id) {
+            dispatch(getUserSingleAccount({ userId: param?.id }));
+         }
          if (!userRolesList) {
             dispatch(getUserRoleLists());
          }
