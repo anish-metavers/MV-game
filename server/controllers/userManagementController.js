@@ -83,13 +83,21 @@ const getUserSingleAccount = catchAsync(async function (req, res, next) {
 });
 
 const createPlayerAccount = catchAsync(async function (req, res, next) {
-   const { name, email, active, avatar, accountEnable } = req.body;
+   const { name, email, active, avatar, accountEnable, roles } = req.body;
 
    if (!name || !email || !active) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
          message: `${(!name && 'name') || (!email && 'email') || (!active && 'active')} is required`,
+      });
+   }
+
+   if (!roles) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Roles is reuqired fields',
       });
    }
 
@@ -208,6 +216,11 @@ const createPlayerAccount = catchAsync(async function (req, res, next) {
             });
          }
 
+         const rolesAr = roles.map((el) => ({
+            roleId: el?._id,
+            _id: mongoose.Types.ObjectId(),
+         }));
+
          // store user information into the database
          const storeUserInfo = await authModel({
             _id,
@@ -217,7 +230,7 @@ const createPlayerAccount = catchAsync(async function (req, res, next) {
             active,
             avatar: avatar || process.env.DEFAULT_IMAGE,
             otp,
-            userRole: [{ roleId: '63ee025a88d1991b27b2caec' }],
+            userRole: rolesAr,
             coins: [
                {
                   coin: 'Gold',
