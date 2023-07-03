@@ -65,7 +65,9 @@ const mediaRoute = require('./routes/mediaRoute');
 const userManagementRoute = require('./routes/userManagementRoute');
 const faqRoute = require('./routes/faqRoute');
 const liveSupportRoute = require('./routes/liveSupportRoute');
+const authRoute = require('./routes/authRouter');
 
+app.use('/auth', authRoute);
 app.use('/admin', adminRoute);
 app.use('/user-role', userRolesRoute);
 app.use('/game-provider', gameProviderRoute);

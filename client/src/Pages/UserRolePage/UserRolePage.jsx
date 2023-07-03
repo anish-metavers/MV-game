@@ -17,9 +17,7 @@ import { rolesSelector, getRolesLoadingSelector, getRolesErrorSelector } from '.
 
 function UserRolePage() {
    const {
-      userRoles: { isAdmin, isSupport },
-      isLoading,
-      error,
+      userRoles: { isAdmin },
    } = useRoles();
    const navigation = useNavigate();
    const dispatch = useDispatch();

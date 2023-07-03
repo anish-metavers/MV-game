@@ -13,7 +13,7 @@ import { SiNintendogamecube } from '@react-icons/all-files/si/SiNintendogamecube
 import { MdDashboard } from '@react-icons/all-files/md/MdDashboard';
 import { VscSymbolMethod } from '@react-icons/all-files/vsc/VscSymbolMethod';
 import { RiNotificationBadgeFill } from '@react-icons/all-files/ri/RiNotificationBadgeFill';
-import { authSelector } from './Sidebar.Selector';
+import { authSelector, userRoleSelector } from './Sidebar.Selector';
 import { useSelector, useDispatch } from 'react-redux';
 import { SocketContext } from '../../Context/SocketContext';
 import { MdPayment } from '@react-icons/all-files/md/MdPayment';
@@ -32,12 +32,14 @@ import useRoles from '../../Hooks/useRoles';
 import { FcCustomerSupport } from '@react-icons/all-files/fc/FcCustomerSupport';
 
 function SidebarComponent() {
-   const auth = useSelector(authSelector);
    const socket = useContext(SocketContext);
    const dispatch = useDispatch();
    const {
       userRoles: { isAdmin, isSupport, isSubAdmin },
    } = useRoles();
+
+   const userRole = useSelector(userRoleSelector);
+   const auth = useSelector(authSelector);
 
    useEffect(() => {
       if (!!auth && auth?.user && auth?.user?._id) {
@@ -46,7 +48,9 @@ function SidebarComponent() {
             userCrId: auth?.user?.userId,
          });
 
-         dispatch(getUserRole({ userId: auth?.user?._id }));
+         if (!userRole) {
+            dispatch(getUserRole({ userId: auth?.user?._id }));
+         }
       }
    }, [auth]);
 

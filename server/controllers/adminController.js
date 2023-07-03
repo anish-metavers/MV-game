@@ -1,4 +1,6 @@
 const { catchAsync, httpStatusCodes, uploadToS3, checkIsValidId } = require('../helper/helper');
+const { default: mongoose } = require('mongoose');
+
 const currencyModel = require('../model/schema/currencySchema');
 const roleModel = require('../model/schema/roleSchema');
 const gameModel = require('../model/schema/gameSchema');
@@ -6,7 +8,6 @@ const gameProviderModel = require('../model/schema/gameProvidersSchema');
 const avatarModel = require('../model/schema/avatarSchema');
 const authModel = require('../model/schema/authSchema');
 const gameCategoryModel = require('../model/schema/gameCategorySchema');
-const { default: mongoose } = require('mongoose');
 
 const getUsersAvatars = catchAsync(async function (req, res, next) {
    const findAllAvatar = await avatarModel.find({}).sort({ createdAt: -1 });

@@ -68,6 +68,9 @@ const adminSlice = createSlice({
       showAndHidePwdPopupHandler: (state, action) => {
          state.showSetPasswordPopup = action.payload;
       },
+      setUserRoles: (state, action) => {
+         state.userRole = action.payload;
+      },
    },
    extraReducers: (bulder) => {
       bulder
@@ -281,6 +284,6 @@ const adminSlice = createSlice({
    },
 });
 
-export const { removeSingleRoleInfo, removeAvatarInfo, showAndHidePwdPopupHandler } = adminSlice.actions;
+export const { removeSingleRoleInfo, removeAvatarInfo, showAndHidePwdPopupHandler, setUserRoles } = adminSlice.actions;
 
 export default adminSlice.reducer;

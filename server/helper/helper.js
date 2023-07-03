@@ -3,8 +3,25 @@ const multer = require('multer');
 const AWS = require('aws-sdk');
 const sharp = require('sharp');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 require('aws-sdk/lib/maintenance_mode_message').suppress = true;
+
+// genrate access token.
+const genrateAccessToken = function (data) {
+   const accessToken = jwt.sign(data, process.env.JWT_ACCESS_TOKEN_SECRET, {
+      expiresIn: '5m',
+   });
+   return accessToken;
+};
+
+// genrate refresh token function
+const genrateRefreshToken = function (user) {
+   const refreshToken = jwt.sign(user, process.env.JWT_REFRESH_TOKEN_SECRET, {
+      expiresIn: '1y',
+   });
+   return refreshToken;
+};
 
 const catchAsync = function (fn) {
    /**
@@ -124,4 +141,6 @@ module.exports = {
    awsConfig,
    comporessImage,
    checkIsValidId,
+   genrateAccessToken,
+   genrateRefreshToken,
 };

@@ -16,7 +16,10 @@ const schema = yup.object({
    password: yup
       .string()
       .required('Account password is required')
-      .matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, 'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character'),
+      .matches(
+         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+         'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character'
+      ),
 });
 
 function LoginPage() {
@@ -63,10 +66,19 @@ function LoginPage() {
                            <TextField label="Email" type={'email'} variant="standard" {...register('email')} />
                            {errors?.email ? <p className="text-red-400 text-sm">{errors?.email?.message}</p> : null}
                            <TextField label="Password" type={'password'} variant="standard" {...register('password')} />
-                           {errors?.password ? <p className="text-red-400 text-sm">{errors?.password?.message}</p> : null}
+                           {errors?.password ? (
+                              <p className="text-red-400 text-sm">{errors?.password?.message}</p>
+                           ) : null}
                         </Box>
-                        <CustomButtonComponent type={'submit'} btnCl={'login_btn mt-4'} text={'Log in'} isLoading={authLoading} />
-                        <p className="mt-3 text-sm text-gray-500">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum, labore.</p>
+                        <CustomButtonComponent
+                           type={'submit'}
+                           btnCl={'login_btn mt-4'}
+                           text={'Log in'}
+                           isLoading={authLoading}
+                        />
+                        <p className="mt-3 text-sm text-gray-500">
+                           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum, labore.
+                        </p>
                         {!!authError ? <p className="text-sm error_cl mt-2">{authError}</p> : null}
                         {!!auth && !auth?.success ? <p className="text-sm error_cl mt-2">{auth?.message}</p> : null}
                      </form>
