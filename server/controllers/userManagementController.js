@@ -97,7 +97,7 @@ const createPlayerAccount = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: 'Roles is reuqired fields',
+         message: 'Roles is reuqired field',
       });
    }
 
@@ -278,6 +278,14 @@ const updatePlayerAccount = catchAsync(async function (req, res, next) {
          success: false,
          error: true,
          message: 'Selected is not valid id please check.',
+      });
+   }
+
+   if (!roles) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Roles is reuqired field',
       });
    }
 
