@@ -34,7 +34,6 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router';
 
 function SidebarComponent() {
-   const [_, _2, removeCookie] = useCookies();
    const {
       userRoles: { isAdmin, isSupport, isSubAdmin, roles },
    } = useRoles();
@@ -45,10 +44,15 @@ function SidebarComponent() {
    const dispatch = useDispatch();
    const navigation = useNavigate();
 
+   const deleteCookie = function (name) {
+      console.log(name);
+      document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;';
+   };
+
    const logout = function () {
-      removeCookie('_mv_games_access_token', { path: '/' });
-      removeCookie('_mv_games_auth', { path: '/' });
-      removeCookie('_mv_games_refresh_token', { path: '/' });
+      deleteCookie('_mv_games_access_token');
+      deleteCookie('_mv_games_auth');
+      deleteCookie('_mv_games_refresh_token');
       navigation('/dashboard/auth/login');
    };
 
