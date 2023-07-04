@@ -6,11 +6,6 @@ const USER_API_ROUTE_URL = process.env.REACT_APP_CLIENT_BACKEND_URL;
 const ADMIN_DASHBOARD_URL = process.env.REACT_APP_BACKEND_BASE_ADMIN_URL;
 const ADMIN_KEY = process.env.REACT_APP_ADMIN_SECRET_KEY;
 
-const getCookieValues = function () {
-   const cookieObj = new URLSearchParams(document.cookie.replaceAll('&', '%26').replaceAll('; ', '&'));
-   return cookieObj;
-};
-
 const axiosInstance = axios.create({
    baseURL: ADMIN_DASHBOARD_URL,
 });
@@ -25,9 +20,8 @@ export const cryptoPaymentServer = axios.create({
 
 const interceptorsRequestFunction = async function (req) {
    try {
-      const cookieObj = getCookieValues();
-      const refreshToken = cookieObj.get('_mv_games_refresh_token');
-      const accessToken = cookieObj.get('_mv_games_access_token');
+      const refreshToken = localStorage.getItem('_mv_games_refresh_token');
+      const accessToken = localStorage.getItem('_mv_games_access_token');
 
       if (!refreshToken) {
          console.log('login again');

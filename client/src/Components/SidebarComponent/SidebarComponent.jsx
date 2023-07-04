@@ -30,7 +30,6 @@ import { VscVerified } from '@react-icons/all-files/vsc/VscVerified';
 import { getUserRole } from '../../App/Features/Admin/adminActions';
 import useRoles from '../../Hooks/useRoles';
 import { FcCustomerSupport } from '@react-icons/all-files/fc/FcCustomerSupport';
-import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router';
 
 function SidebarComponent() {
@@ -42,19 +41,6 @@ function SidebarComponent() {
    const userRole = useSelector(userRoleSelector);
    const auth = useSelector(authSelector);
    const dispatch = useDispatch();
-   const navigation = useNavigate();
-
-   const deleteCookie = function (name) {
-      console.log(name);
-      document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;';
-   };
-
-   const logout = function () {
-      deleteCookie('_mv_games_access_token');
-      deleteCookie('_mv_games_auth');
-      deleteCookie('_mv_games_refresh_token');
-      navigation('/dashboard/auth/login');
-   };
 
    useEffect(() => {
       if (!!auth && auth?.user && auth?.user?._id) {
@@ -62,14 +48,6 @@ function SidebarComponent() {
             userId: auth?.user?._id,
             userCrId: auth?.user?.userId,
          });
-
-         if (!!auth.length) {
-            logout();
-         }
-
-         if (!!roles && roles.length === 1 && roles.includes('user')) {
-            logout();
-         }
 
          if (!userRole) {
             dispatch(getUserRole({ userId: auth?.user?._id }));

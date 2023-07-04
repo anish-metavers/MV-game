@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router';
-import { useCookies } from 'react-cookie';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { setLoginUser } from './App/Features/Auth/authSlice';
+import { logOut, setLoginUser } from './App/Features/Auth/authSlice';
 import { ConfigProvider, theme } from 'antd';
 
 // components
@@ -52,6 +51,7 @@ import SupportApprovalPage from './Pages/SupportApprovalPage/SupportApprovalPage
 import SupportTeamPage from './Pages/SupportTeamPage/SupportTeamPage';
 import SupportUserDetailsPage from './Pages/SupportUserDetailsPage/SupportUserDetailsPage';
 import SupportTeamQueryChatsPage from './Pages/SupportTeamQueryChatsPage/SupportTeamQueryChatsPage';
+import useRoles from './Hooks/useRoles';
 
 const darkTheme = createTheme({
    palette: {
@@ -60,18 +60,37 @@ const darkTheme = createTheme({
 });
 
 function App() {
-   const [cookie] = useCookies();
    const dispatch = useDispatch();
    const navigation = useNavigate();
    const { darkAlgorithm } = theme;
 
+   const {
+      userRoles: { roles },
+   } = useRoles();
+
+   const logout = function () {
+      dispatch(logOut());
+      localStorage.removeItem('_mv_games_access_token');
+      localStorage.removeItem('_mv_games_auth');
+      localStorage.removeItem('_mv_games_refresh_token');
+      navigation('/dashboard/auth/login');
+   };
+
    useEffect(() => {
-      if (!!cookie && !!cookie?._mv_games_auth && cookie?._mv_games_auth?._id) {
-         dispatch(setLoginUser({ auth: cookie?._mv_games_auth }));
+      const authData = JSON.parse(localStorage.getItem('_mv_games_auth'));
+
+      if (!!authData && authData?._id) {
+         dispatch(setLoginUser({ auth: authData }));
       } else {
          navigation('/dashboard/auth/login');
       }
    }, []);
+
+   useEffect(() => {
+      if (!!roles && roles.length === 1 && roles.includes('user')) {
+         logout();
+      }
+   }, [roles]);
 
    return (
       <div className="App">

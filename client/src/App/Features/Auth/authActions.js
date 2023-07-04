@@ -25,9 +25,9 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
          loginUserInfo?.data?.refreshToken &&
          loginUserInfo?.data?.user
       ) {
-         document.cookie = `_mv_games_access_token=${loginUserInfo?.data?.accessToken}`;
-         document.cookie = `_mv_games_refresh_token=${loginUserInfo?.data?.refreshToken}`;
-         document.cookie = `_mv_games_auth=${JSON.stringify(loginUserInfo?.data?.user)}`;
+         localStorage.setItem('_mv_games_access_token', loginUserInfo?.data?.accessToken);
+         localStorage.setItem('_mv_games_refresh_token', loginUserInfo?.data?.refreshToken);
+         localStorage.setItem('_mv_games_auth', JSON.stringify(loginUserInfo?.data?.user));
 
          const roles = loginUserInfo?.data?.roles;
 
