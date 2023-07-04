@@ -283,14 +283,6 @@ function PlayersAccountsPage() {
                                  btnCl={'Publish'}
                               />
                            </div>
-                           {!!createPlayerAccountError && (
-                              <div className="py-2">
-                                 <p className="text-sm error_cl">{createPlayerAccountError}</p>
-                              </div>
-                           )}
-                           {!!createPlayerAccountInfo && createPlayerAccountInfo?.error && (
-                              <p className="py-2 text-sm error_cl">{createPlayerAccountInfo?.message}</p>
-                           )}
                         </div>
                         {!!param &&
                            param?.id &&
@@ -303,6 +295,16 @@ function PlayersAccountsPage() {
                                  btnCl={'Publish'}
                               />
                            )}
+                     </div>
+                     <div>
+                        {!!createPlayerAccountError && (
+                           <div className="py-2">
+                              <p className="text-sm error_cl">{createPlayerAccountError}</p>
+                           </div>
+                        )}
+                        {!!createPlayerAccountInfo && createPlayerAccountInfo?.error && (
+                           <p className="py-2 text-sm error_cl">{createPlayerAccountInfo?.message}</p>
+                        )}
                      </div>
                   </Box>
                </form>
