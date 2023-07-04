@@ -45,6 +45,16 @@ import AutoCompleteTagComponent from '../../Components/AutoCompleteTagComponent/
 const schema = yup.object({
    name: yup.string().required('Name is reuqired'),
    email: yup.string().email('Must be a valid email').max(255).required('Email is required'),
+   roles: yup
+      .array()
+      .of(
+         yup.object().shape({
+            _id: yup.string(),
+            roleName: yup.string(),
+         })
+      )
+      .required('Roles is a required filed')
+      .min(1),
 });
 
 function PlayersAccountsPage() {
@@ -62,6 +72,7 @@ function PlayersAccountsPage() {
          active: false,
          avatar: '',
          accountEnable: true,
+         roles: null,
       },
       resolver: yupResolver(schema),
    });
@@ -111,12 +122,13 @@ function PlayersAccountsPage() {
       if (isAdmin) {
          if (!!param && param?.id) {
             dispatch(getUserSingleAccount({ userId: param?.id }));
+         } else {
+            reset();
          }
+
          if (!userRolesList) {
             dispatch(getUserRoleLists());
          }
-      } else {
-         reset();
       }
    }, [isAdmin, param]);
 
@@ -128,7 +140,7 @@ function PlayersAccountsPage() {
          setValue('email', item?.email);
          setValue('avatar', item?.avatar);
          setValue('accountEnable', item?.accountEnable);
-         setValue('roles', roles);
+         setValue('roles', !!roles && roles.length ? roles : null);
       }
    }, [singleUserAccountInfo]);
 
@@ -221,6 +233,7 @@ function PlayersAccountsPage() {
                                  )}
                               />
                            )}
+                           {errors?.roles?.message && <p className="text-sm error_cl">{errors?.roles?.message}</p>}
                         </div>
                      </div>
                      <div className="flex items-center space-x-5">

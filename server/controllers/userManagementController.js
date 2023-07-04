@@ -93,7 +93,7 @@ const createPlayerAccount = catchAsync(async function (req, res, next) {
       });
    }
 
-   if (!roles) {
+   if (!roles || !roles.length) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
@@ -268,6 +268,14 @@ const updatePlayerAccount = catchAsync(async function (req, res, next) {
          success: false,
          error: true,
          message: 'User id is required',
+      });
+   }
+
+   if (!roles || !roles.length) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Roles is reuqired field',
       });
    }
 

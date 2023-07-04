@@ -13,7 +13,6 @@ const axiosAuthInstance = axios.create({
 
 export const login = createAsyncThunk('auth/login', async ({ email, password }, { rejectWithValue, dispatch }) => {
    try {
-      // const loginUserInfo = await axiosAuthInstance.get(`/auth/signIn?email=${email}&password=${password}`);
       const loginUserInfo = await axiosAuthInstance.post('/auth/login', {
          email,
          password,
