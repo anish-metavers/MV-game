@@ -55,7 +55,7 @@ const interceptorsRequestFunction = async function (req) {
          );
 
          if (accessTokenResponse?.data && accessTokenResponse?.data?.success) {
-            document.cookie = `_mv_games_access_token=${accessTokenResponse?.data?.accessToken}`;
+            localStorage.setItem('_mv_games_access_token', accessTokenResponse?.data?.accessToken);
 
             // set new access token in headers.
             req.headers['Authorization'] = `Bearer ${accessTokenResponse?.data?.accessToken}`;
