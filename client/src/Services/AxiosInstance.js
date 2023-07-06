@@ -2,21 +2,9 @@ import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import { message } from 'antd';
 
-const USER_API_ROUTE_URL = process.env.REACT_APP_CLIENT_BACKEND_URL;
-const ADMIN_DASHBOARD_URL = process.env.REACT_APP_BACKEND_BASE_ADMIN_URL;
-const ADMIN_KEY = process.env.REACT_APP_ADMIN_SECRET_KEY;
-
-const axiosInstance = axios.create({
-   baseURL: ADMIN_DASHBOARD_URL,
-});
-
-export const axiosClientInstance = axios.create({
-   baseURL: process.env.REACT_APP_CLIENT_BACKEND_URL,
-});
-
-export const cryptoPaymentServer = axios.create({
-   baseURL: process.env.REACT_APP_CRYPTO_PAYMENT_SERVER,
-});
+const axiosInstance = axios.create({ baseURL: process.env.REACT_APP_BACKEND_BASE_ADMIN_URL });
+export const axiosClientInstance = axios.create({ baseURL: process.env.REACT_APP_CLIENT_BACKEND_URL });
+export const cryptoPaymentServer = axios.create({ baseURL: process.env.REACT_APP_CRYPTO_PAYMENT_SERVER });
 
 const interceptorsRequestFunction = async function (req) {
    try {
@@ -27,7 +15,7 @@ const interceptorsRequestFunction = async function (req) {
          console.log('login again');
       }
 
-      req.headers['x-admin-api-key'] = ADMIN_KEY;
+      req.headers['x-admin-api-key'] = process.env.REACT_APP_ADMIN_SECRET_KEY;
 
       /**
        * get user refresh token.
@@ -48,10 +36,8 @@ const interceptorsRequestFunction = async function (req) {
          axios.defaults.headers.common['Authorization'] = `Bearer ${refreshToken}`;
 
          const accessTokenResponse = await axios.post(
-            `${USER_API_ROUTE_URL}/auth/refresh-token?userId=${decodeAccessToken._id}`,
-            {
-               withCredentials: true,
-            }
+            `${process.env.REACT_APP_CLIENT_BACKEND_URL}/auth/refresh-token?userId=${decodeAccessToken._id}`,
+            { withCredentials: true }
          );
 
          if (accessTokenResponse?.data && accessTokenResponse?.data?.success) {
@@ -87,7 +73,6 @@ axiosClientInstance.interceptors.request.use(interceptorsRequestFunction, functi
 });
 
 cryptoPaymentServer.interceptors.request.use(interceptorsRequestFunction);
-
 cryptoPaymentServer.interceptors.response.use(interceptorsRequestFunction, (err) => errorFunction(err));
 
 const successMessage = function (config) {

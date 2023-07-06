@@ -14,6 +14,7 @@ const { removeLiveSupportDocuments } = require('./cron/liveSupport.service');
 const cron = require('node-cron');
 
 // middlewares
+app.disable('x-powered-by');
 app.use(
    cors({
       origin: '*',

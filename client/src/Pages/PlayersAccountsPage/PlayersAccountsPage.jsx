@@ -288,13 +288,14 @@ function PlayersAccountsPage() {
                      </div>
                      <div className="pt-2 flex items-center space-x-2">
                         <div>
-                           <div className="flex">
+                           <div className="flex items-center space-x-3">
                               <CustomButtonComponent
                                  isLoading={createPlayerAccountLoading}
                                  type={'submit'}
                                  text={!!param && param?.id ? 'Updated' : 'Create'}
                                  btnCl={'Publish'}
                               />
+                              <CustomButtonComponent onClick={() => reset()} text={'Clear'} btnCl={'Publish'} />
                            </div>
                         </div>
                         {!!param &&
