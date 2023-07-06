@@ -36,7 +36,7 @@ const interceptorsRequestFunction = async function (req) {
          axios.defaults.headers.common['Authorization'] = `Bearer ${refreshToken}`;
 
          const accessTokenResponse = await axios.post(
-            `${process.env.REACT_APP_CLIENT_BACKEND_URL}/auth/refresh-token?userId=${decodeAccessToken._id}`,
+            `${process.env.REACT_APP_BACKEND_BASE_ADMIN_URL}/auth/refresh-token?userId=${decodeAccessToken._id}`,
             { withCredentials: true }
          );
 

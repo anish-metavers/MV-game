@@ -1,4 +1,10 @@
-const { catchAsync, httpStatusCodes, genrateAccessToken, genrateRefreshToken } = require('../helper/helper');
+const {
+   catchAsync,
+   httpStatusCodes,
+   genrateAccessToken,
+   genrateRefreshToken,
+   checkIsValidId,
+} = require('../helper/helper');
 const bcryptjs = require('bcryptjs');
 
 const authModel = require('../model/schema/authSchema');
@@ -147,6 +153,29 @@ const login = catchAsync(async function (req, res, next) {
    }
 });
 
+const genrateUserAccessToken = catchAsync(async function (req, res, next) {
+   const { userId } = req.query;
+
+   const isValidId = checkIsValidId(userId);
+
+   if (!isValidId) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+         success: false,
+         error: true,
+         message: 'Selected id is not valid id please check.',
+      });
+   }
+
+   const accessToken = genrateAccessToken({ _id: userId });
+
+   return res.status(httpStatusCodes.OK).json({
+      error: false,
+      success: true,
+      accessToken,
+   });
+});
+
 module.exports = {
    login,
+   genrateUserAccessToken,
 };

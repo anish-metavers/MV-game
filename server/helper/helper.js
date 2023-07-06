@@ -36,6 +36,32 @@ const catchAsync = function (fn) {
    };
 };
 
+const getUserTokenInfromation = function (req) {
+   const authToken = req.headers['authorization'];
+
+   if (!authToken) {
+      return {
+         error: true,
+         success: false,
+         message: 'Unauthrization',
+         status: httpStatusCodes.UNAUTHORIZATION,
+      };
+   }
+
+   const token = authToken.split(' ')[1];
+
+   if (!token) {
+      return {
+         error: true,
+         success: false,
+         message: 'Unauthrization',
+         status: httpStatusCodes.UNAUTHORIZATION,
+      };
+   }
+
+   return token;
+};
+
 const httpStatusCodes = {
    OK: 200,
    CREATED: 201,
@@ -131,6 +157,27 @@ const checkIsValidId = function (string, res) {
    return isValidId;
 };
 
+// varify user jwt tokens
+const jwtRefreshTokenVarification = function (req, res, next) {
+   const token = getUserTokenInfromation(req, res);
+
+   if (!!token?.error && !token?.success) {
+      return res.status(token?.status).json(token);
+   }
+
+   // validate the user token.
+   jwt.verify(token, process.env.JWT_REFRESH_TOKEN_SECRET, (err, payload) => {
+      if (err) {
+         return res.status(httpStatusCodes.UNAUTHORIZATION).json({
+            error: true,
+            message: 'Unauthorized',
+         });
+      }
+
+      next();
+   });
+};
+
 module.exports = {
    catchAsync,
    httpStatusCodes,
@@ -143,4 +190,5 @@ module.exports = {
    checkIsValidId,
    genrateAccessToken,
    genrateRefreshToken,
+   jwtRefreshTokenVarification,
 };
