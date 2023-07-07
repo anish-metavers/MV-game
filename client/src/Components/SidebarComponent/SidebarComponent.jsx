@@ -142,12 +142,10 @@ function SidebarComponent() {
                   </DashboardSidebarTabComponent>
                </Fragment>
             ) : null}
-            {isAdmin || isSupport ? (
+            {isSupport ? (
                <DashboardSidebarTabComponent heading={'Live'}>
                   <IconListComponent icon={<VscVerified />} heading={'Support approval'} link={'/support/approval'} />
-                  {isSupport && (
-                     <IconListComponent icon={<HiOutlineChatAlt />} heading={'Live chat'} link={'/live/support'} />
-                  )}
+                  <IconListComponent icon={<HiOutlineChatAlt />} heading={'Live chat'} link={'/live/support'} />
                </DashboardSidebarTabComponent>
             ) : null}
          </styled.sclDiv>

@@ -458,7 +458,7 @@ function App() {
                      <Route
                         path="/support/approval"
                         element={
-                           <ProtectedRoute allowedRoles={['admin', 'support']}>
+                           <ProtectedRoute allowedRoles={['support']}>
                               <SupportApprovalPage />
                            </ProtectedRoute>
                         }
