@@ -52,6 +52,8 @@ import SupportTeamPage from './Pages/SupportTeamPage/SupportTeamPage';
 import SupportUserDetailsPage from './Pages/SupportUserDetailsPage/SupportUserDetailsPage';
 import SupportTeamQueryChatsPage from './Pages/SupportTeamQueryChatsPage/SupportTeamQueryChatsPage';
 import useRoles from './Hooks/useRoles';
+import CreateRewardPage from './Pages/CreateRewardPage/CreateRewardPage';
+import RewardsPage from './Pages/RewardsPage/RewardsPage';
 
 const darkTheme = createTheme({
    palette: {
@@ -492,6 +494,30 @@ function App() {
                         element={
                            <ProtectedRoute allowedRoles={['admin', 'subAdmin']}>
                               <SupportTeamQueryChatsPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/rewards"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <RewardsPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/rewards/create-reward"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <CreateRewardPage />
+                           </ProtectedRoute>
+                        }
+                     />
+                     <Route
+                        path="/rewards/edit-reward/:id"
+                        element={
+                           <ProtectedRoute allowedRoles={['admin']}>
+                              <CreateRewardPage />
                            </ProtectedRoute>
                         }
                      />

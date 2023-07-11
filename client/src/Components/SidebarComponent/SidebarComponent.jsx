@@ -150,6 +150,10 @@ function SidebarComponent() {
                   )}
                </DashboardSidebarTabComponent>
             ) : null}
+            <DashboardSidebarTabComponent heading={'Rewards Management'}>
+               <IconListComponent icon={<MdDashboard />} heading={'Rewards'} link={'/rewards?page=0'} />
+               <IconListComponent icon={<VscExtensions />} heading={'Create Reward'} link={'/rewards/create-reward'} />
+            </DashboardSidebarTabComponent>
          </styled.sclDiv>
       </styled.div>
    );

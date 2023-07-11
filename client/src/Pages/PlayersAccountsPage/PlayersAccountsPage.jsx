@@ -57,7 +57,7 @@ const schema = yup.object({
       .min(1),
 });
 
-function PlayersAccountsPage() {
+function PlayersAccountsPage() { 
    const {
       control,
       handleSubmit,
