@@ -83,9 +83,7 @@ app.use('/media', mediaRoute);
 app.use('/userManagement', userManagementRoute);
 app.use('/faq', faqRoute);
 app.use('/support', liveSupportRoute);
-app.use('/create', vipClubRoute);
-app.use('/get', vipClubRoute);
-app.use('/update', vipClubRoute);
+app.use('/vip-club', vipClubRoute);
 
 // for build file
 app.get('*', (req, res) => {
