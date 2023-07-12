@@ -7,8 +7,10 @@ const vipClubController = require('../controllers/vipClubController');
 //     vipClubController(req, res, next);
 // });
 
-router.post('/create-vip-club', vipClubController.insertVipClub);
-router.get('/get-vip-club/:page', vipClubController.findAllVipClub);
-router.put('/update-vip-club/:id', vipClubController.updateVipClub);
+router.post('/create', vipClubController.insertVipClub);
+router.get('/get-all', vipClubController.findAllVipClub);
+router.put('/update/:id', vipClubController.updateVipClub);
+router.get('get/:id', vipClubController.findOneVipClub);
+router.delete('delete/:id', vipClubController.deleteVipClub);
 
 module.exports = router;
