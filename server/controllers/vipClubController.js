@@ -175,13 +175,14 @@ const deleteVipClub = catchAsync(async function (req, res, next) {
 })
 
 const currencyList = catchAsync(async function (req, res, next) {
-   const list = await currencyModel.find({});
-   console.log(list);
+   const list = await currencyModel.find({}).lean();
+   // console.log(list);
    if (list.length) {
       const currencyList = [];
       for (let x of list) {
          currencyList.push({ ...x, label: x.currencyName });
       }
+      console.log(currencyList)
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
