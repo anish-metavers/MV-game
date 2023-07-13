@@ -182,7 +182,6 @@ const currencyList = catchAsync(async function (req, res, next) {
       for (let x of list) {
          currencyList.push({ ...x, label: x.currencyName });
       }
-      console.log(currencyList)
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
