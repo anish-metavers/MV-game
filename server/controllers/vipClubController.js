@@ -1,5 +1,6 @@
 const { catchAsync, httpStatusCodes } = require('../helper/helper');
 const vipClubModel = require('../model/schema/vipClubSchema');
+const currencyModel = require('../model/schema/currencySchema');
 
 const insertVipClub = catchAsync(async function (req, res, next) {
    const { userRole, reward, currency, amount, points, name, level } = req.body;
@@ -75,7 +76,7 @@ const findAllVipClub = catchAsync(async function (req, res, next) {
       filter.level = level;
    }
 
-   const vipList = await vipClubModel.find({ filter }).populate("currency", "currencyName")
+   const vipList = await vipClubModel.find(filter).populate("currency", "currencyName")
       .skip(skip)
       .limit(perPage)
       .sort({ updatedAt: -1 })
@@ -173,10 +174,28 @@ const deleteVipClub = catchAsync(async function (req, res, next) {
    })
 })
 
+const currencyList = catchAsync(async function (req, res, next) {
+   const list = await currencyModel.find({});
+   console.log(list);
+   if (list) {
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         list
+      });
+   }
+   return res.status(httpStatusCodes.NOT_FOUND).json({
+      success: false,
+      error: true,
+      message: 'Not found',
+   });
+})
+
 module.exports = {
    insertVipClub,
    findAllVipClub,
    updateVipClub,
    findOneVipClub,
    deleteVipClub,
+   currencyList
 };
