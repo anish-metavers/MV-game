@@ -16,3 +16,18 @@ export const getRewardList = createAsyncThunk(
      }
   }
 );
+
+export const getCurrencyList = createAsyncThunk(
+   'vipClub/getCurrencyList',
+   async ( { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(`/vip-club/currency/get`);
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+ );

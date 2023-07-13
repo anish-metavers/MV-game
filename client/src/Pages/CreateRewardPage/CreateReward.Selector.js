@@ -1,9 +1,9 @@
 import { createSelector } from "@reduxjs/toolkit";
 
-// const rewardsReducerSelector = (state) => state.vipClub;
+const rewardsReducerSelector = (state) => state.vipClub;
 
-// export const rewardsSelector = createSelector([rewardsReducerSelector], (rewardsSlice) => rewardsSlice.rewardListInfo);
+export const currencySelector = createSelector([rewardsReducerSelector], (rewardsSlice) => rewardsSlice.currencyListInfo);
 
-// export const rewardsLoadingSelector = createSelector([rewardsReducerSelector], (rewardsSlice) => rewardsSlice.rewardListLoading);
+export const currencyLoadingSelector = createSelector([rewardsReducerSelector], (rewardsSlice) => rewardsSlice.currencyListLoading);
 
-// export const rewardsErrorsSelector = createSelector([rewardsReducerSelector], (rewardsSlice) => rewardsSlice.rewardListError);
+export const currencyErrorsSelector = createSelector([rewardsReducerSelector], (rewardsSlice) => rewardsSlice.currencyListError);
