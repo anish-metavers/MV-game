@@ -3,23 +3,23 @@ import axiosInstance from "../../../Services/AxiosInstance";
 
 
 export const getRewardList = createAsyncThunk(
-  'vipClub/getRewardList',
-  async ( { rejectWithValue }) => {
-     try {
-        const response = await axiosInstance.get(`/vip-club/get-all`);
-        return response;
-     } catch (err) {
-        if (err) {
-           throw err;
-        }
-        return rejectWithValue(err.response.data);
-     }
-  }
+   'vipClub/getRewardList',
+   async ({ rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(`/vip-club/get-all`);
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
 );
 
 export const getCurrencyList = createAsyncThunk(
    'vipClub/getCurrencyList',
-   async ( { rejectWithValue }) => {
+   async ({ rejectWithValue }) => {
       try {
          const response = await axiosInstance.get(`/vip-club/currency/get`);
          return response;
@@ -30,4 +30,34 @@ export const getCurrencyList = createAsyncThunk(
          return rejectWithValue(err.response.data);
       }
    }
- );
+);
+
+export const createReward = createAsyncThunk(
+   'vipClub/createReward',
+   async (data, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.post(`/vip-club/create`);
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
+
+export const editReward = createAsyncThunk(
+   'vipClub/getCurrencyList',
+   async ({ rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get(`/vip-club/currency/get`);
+         return response;
+      } catch (err) {
+         if (err) {
+            throw err;
+         }
+         return rejectWithValue(err.response.data);
+      }
+   }
+);

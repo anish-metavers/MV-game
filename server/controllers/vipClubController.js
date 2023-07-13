@@ -99,10 +99,10 @@ const findAllVipClub = catchAsync(async function (req, res, next) {
 const updateVipClub = catchAsync(async function (req, res, next) {
    const id = req.params.id;
    const { userRole, reward, currency, amount, points, name, level } = req.body;
-   if (userRole == 'Admin') {
-      const findAllVipClub = await vipClubModel.findOne({ id: id });
-      if (findAllVipClub.id == id) {
-         await vipClubModel.updateOne({
+   if (userRole == 'Admin' && id) {
+      const findAllVipClub = await vipClubModel.findOneAndUpdate(
+         { _id: id },
+         {
             amount: amount,
             points: points,
             name: name,
@@ -110,29 +110,16 @@ const updateVipClub = catchAsync(async function (req, res, next) {
             reward: reward,
             currency: currency,
             userRole: userRole
-         })
-         const resData = await vipClubModel.findOne({});
-
-         return res.status(httpStatusCodes.OK).json({
-            success: true,
-            error: false,
-            message: "Updated successfully",
-            data: {
-               amount: resData.amount,
-               points: resData.points,
-               name: resData.name,
-               level: resData.level,
-               reward: resData.reward,
-               currency: resData.currency,
-               userRole: resData.userRole
-            }
-         });
-      }
-      return res.status(httpStatusCodes.NOT_ACCEPTABLE).json({
-         success: false,
-         error: true,
-         message: `Invalid objectid.!!!`
-      })
+         },
+         {new: true}
+      ).lean();
+      console.log(findAllVipClub);
+      return res.status(httpStatusCodes.OK).json({
+         success: true,
+         error: false,
+         message: "Updated successfully",
+         data: findAllVipClub
+      });
    }
    return res.status(httpStatusCodes.NOT_ACCEPTABLE).json({
       success: false,

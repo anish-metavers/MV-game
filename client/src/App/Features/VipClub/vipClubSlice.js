@@ -1,13 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   getRewardList,
-  getCurrencyList
+  getCurrencyList,
+  createReward
 } from './vipClubActions';
 
 const INITAL_STATE = {
   rewardListInfo: null,
   rewardListLoading: false,
   rewardListError: null,
+
+  singleRewardInfo: null,
+  singleRewardLoading: false,
+  singleRewardError: null,
 
   currencyListInfo: null,
   currencyListLoading: false,
@@ -22,6 +27,10 @@ const vipClubSlice = createSlice({
       state.rewardListInfo = null;
       state.rewardListLoading = false;
       state.rewardListError = null;
+
+      state.singleRewardInfo = null;
+      state.singleRewardLoading = false;
+      state.singleRewardError = null;
 
       state.currencyListInfo = null;
       state.currencyListLoading = false;
@@ -47,6 +56,23 @@ const vipClubSlice = createSlice({
         state.rewardListInfo = action.payload?.data;
         state.rewardListLoading = false;
         state.rewardListError = null;
+      });
+
+    bulder
+      .addCase(createReward.pending, (state) => {
+        state.singleRewardInfo = null;
+        state.singleRewardLoading = true;
+        state.singleRewardError = null;
+      })
+      .addCase(createReward.rejected, (state, action) => {
+        state.singleRewardInfo = null;
+        state.singleRewardLoading = false;
+        state.singleRewardError = action.error.message;
+      })
+      .addCase(createReward.fulfilled, (state, action) => {
+        state.singleRewardInfo = action.payload?.data;
+        state.singleRewardLoading = false;
+        state.singleRewardError = null;
       });
 
     bulder

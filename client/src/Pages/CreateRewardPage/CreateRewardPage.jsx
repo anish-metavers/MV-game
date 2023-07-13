@@ -9,7 +9,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomButtonComponent from "../../Components/CustomButtonComponent/CustomButtonComponent";
 import { useDispatch, useSelector } from "react-redux";
-import { getCurrencyList, getRewardList } from "../../App/Features/VipClub/vipClubActions";
+import { createReward, getCurrencyList, getRewardList } from "../../App/Features/VipClub/vipClubActions";
 import { rewardsErrorsSelector, rewardsLoadingSelector, rewardsSelector } from "../RewardsPage/Rewards.Selector";
 import { useParams } from "react-router";
 import { currencyErrorsSelector, currencyLoadingSelector, currencySelector } from "./CreateReward.Selector";
@@ -67,11 +67,12 @@ const CreateRewardPage = () => {
   });
 
   const createHandler = (data) => {
-    const body = { ...data, userRole: isAdmin ? 'Admin' : '' };
+    const currencyId = currency.currencyList.find(c => c.currencyName === data.currency)._id;
+    const body = { ...data, currency: currencyId, userRole: isAdmin ? 'Admin' : '' };
     if(id) {
       body._id = id;
       // call edit api
-    } else // call create api
+    } else dispatch(createReward(body));
     console.log(body);
   }
 
@@ -79,7 +80,8 @@ const CreateRewardPage = () => {
 
   useEffect(() => {
     dispatch(getCurrencyList(1));
-    if(id && !rewards) dispatch(getRewardList(1));
+    // if(id && !rewards?.vipList) dispatch(getRewardList(1));
+    dispatch(getRewardList(1));
   },[]);
 
   useEffect(() => {
@@ -88,17 +90,17 @@ const CreateRewardPage = () => {
       setValue('title', selectedReward?.name);
       setValue('reward', selectedReward?.reward?.$numberDecimal);
       setValue('amount', selectedReward?.amount);
-      setValue('currency', selectedReward?.currency?.currencyName);
       setValue('points', selectedReward?.points);
       setValue('level', selectedReward?.level);
-      console.log(selectedReward?.currency?.currencyName);
+      setValue('currency', selectedReward?.currency?.currencyName);
+      console.log(rewards.vipList);
     }
-    if(currency?.list?.length) {
-      console.log(currency.list);
+    if(currency?.currencyList?.length) {
+      console.log(currency.currencyList);
     }
-  },[rewards, rewardsLoading, rewardsErrors, currencyLoading, currency]);
+  },[rewards, currency]);
 
-  useEffect(() => {});
+  
 
   return (
     <div>
@@ -156,7 +158,7 @@ const CreateRewardPage = () => {
                 </div>
                 <div className="w-full">
                   {!!currencyLoading && <SpinnerComponent />}
-                  {currency?.list && (
+                  {currency?.currencyList?.length && (
                     <Controller
                       name="currency"
                       control={control}
@@ -165,8 +167,7 @@ const CreateRewardPage = () => {
                           disablePortal
                           id="combo-box-demo"
                           value={value}
-                          options={currency.list.map(item=>({...item,label:item.currencyName}))}
-                          // getOptionLabel={(option)=>{  console.log(option,"option"); return "]}}
+                          options={currency.currencyList}
                           sx={{ width: '100%' }}
                           onSelect={onChange}
                           renderInput={(params) => <TextField {...params} label="Currency" />}
