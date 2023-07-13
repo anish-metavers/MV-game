@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   getRewardList,
   getCurrencyList,
-  createReward
+  createReward,
+  editReward
 } from './vipClubActions';
 
 const INITAL_STATE = {
@@ -36,6 +37,11 @@ const vipClubSlice = createSlice({
       state.currencyListLoading = false;
       state.currencyListError = null;
     },
+    resetSingleReward: (state) => {
+      state.singleRewardInfo = null;
+      state.singleRewardLoading = false;
+      state.singleRewardError = null;
+    }
     // selectedGroupHandler: (state, action) => {
     //   state.selectedGroup = action.payload;
     // },
@@ -76,6 +82,23 @@ const vipClubSlice = createSlice({
       });
 
     bulder
+      .addCase(editReward.pending, (state) => {
+        state.singleRewardInfo = null;
+        state.singleRewardLoading = true;
+        state.singleRewardError = null;
+      })
+      .addCase(editReward.rejected, (state, action) => {
+        state.singleRewardInfo = null;
+        state.singleRewardLoading = false;
+        state.singleRewardError = action.error.message;
+      })
+      .addCase(editReward.fulfilled, (state, action) => {
+        state.singleRewardInfo = action.payload?.data;
+        state.singleRewardLoading = false;
+        state.singleRewardError = null;
+      });
+
+    bulder
       .addCase(getCurrencyList.pending, (state) => {
         state.currencyListInfo = null;
         state.currencyListLoading = true;
@@ -94,6 +117,6 @@ const vipClubSlice = createSlice({
   },
 });
 
-export const { resetVipClub } = vipClubSlice.actions;
+export const { resetVipClub, resetSingleReward } = vipClubSlice.actions;
 
 export default vipClubSlice.reducer;

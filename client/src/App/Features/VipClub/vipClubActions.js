@@ -36,7 +36,7 @@ export const createReward = createAsyncThunk(
    'vipClub/createReward',
    async (data, { rejectWithValue }) => {
       try {
-         const response = await axiosInstance.post(`/vip-club/create`);
+         const response = await axiosInstance.post(`/vip-club/create`, data);
          return response;
       } catch (err) {
          if (err) {
@@ -48,10 +48,10 @@ export const createReward = createAsyncThunk(
 );
 
 export const editReward = createAsyncThunk(
-   'vipClub/getCurrencyList',
-   async ({ rejectWithValue }) => {
+   'vipClub/editReward',
+   async (data, { rejectWithValue }) => {
       try {
-         const response = await axiosInstance.get(`/vip-club/currency/get`);
+         const response = await axiosInstance.put(`/vip-club/update/${data._id}`,data );
          return response;
       } catch (err) {
          if (err) {

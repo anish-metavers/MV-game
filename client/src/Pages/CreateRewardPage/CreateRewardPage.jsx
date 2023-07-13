@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import SpinnerComponent from "../../Components/SpinnerComponent/SpinnerComponent";
 import NavbarComponent from "../../Components/NavbarComponent/NavbarComponent";
 import useRoles from "../../Hooks/useRoles";
@@ -9,10 +9,11 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomButtonComponent from "../../Components/CustomButtonComponent/CustomButtonComponent";
 import { useDispatch, useSelector } from "react-redux";
-import { createReward, getCurrencyList, getRewardList } from "../../App/Features/VipClub/vipClubActions";
+import { createReward, editReward, getCurrencyList, getRewardList } from "../../App/Features/VipClub/vipClubActions";
 import { rewardsErrorsSelector, rewardsLoadingSelector, rewardsSelector } from "../RewardsPage/Rewards.Selector";
-import { useParams } from "react-router";
-import { currencyErrorsSelector, currencyLoadingSelector, currencySelector } from "./CreateReward.Selector";
+import { useNavigate, useParams } from "react-router";
+import { currencyErrorsSelector, currencyLoadingSelector, currencySelector, singleRewardErrorsSelector, singleRewardLoadingSelector, singleRewardSelector } from "./CreateReward.Selector";
+import { resetSingleReward } from "../../App/Features/VipClub/vipClubSlice";
 
 const schema = yup.object({
   title: yup.string().required('Title is reuqired'),
@@ -23,16 +24,10 @@ const schema = yup.object({
   level: yup.number().required('Level is required'),
 });
 
-const currencyList = [
-  { label: "INR", _id: 1 },
-  { label: "USD", _id: 2 },
-  { label: "EUR", _id: 3 },
-  { label: "GBP", _id: 4 }
-];
-
 const CreateRewardPage = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const rewards = useSelector(rewardsSelector);
   const rewardsLoading = useSelector(rewardsLoadingSelector);
@@ -40,6 +35,9 @@ const CreateRewardPage = () => {
   const currency = useSelector(currencySelector);
   const currencyLoading = useSelector(currencyLoadingSelector);
   const currencyErrors = useSelector(currencyErrorsSelector);
+  const singleReward = useSelector(singleRewardSelector);
+  const singleRewardLoading = useSelector(singleRewardLoadingSelector);
+  const singleRewardErrors = useSelector(singleRewardErrorsSelector);
 
   const {
     userRoles: { isAdmin, isSupport, isSubAdmin, roles },
@@ -68,19 +66,18 @@ const CreateRewardPage = () => {
 
   const createHandler = (data) => {
     const currencyId = currency.currencyList.find(c => c.currencyName === data.currency)._id;
-    const body = { ...data, currency: currencyId, userRole: isAdmin ? 'Admin' : '' };
+    const body = { ...data, name: data.title, currency: currencyId, userRole: isAdmin ? 'Admin' : '' };
     if(id) {
       body._id = id;
-      // call edit api
+      dispatch(editReward(body));
     } else dispatch(createReward(body));
     console.log(body);
   }
 
   console.log(errors)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatch(getCurrencyList(1));
-    // if(id && !rewards?.vipList) dispatch(getRewardList(1));
     dispatch(getRewardList(1));
   },[]);
 
@@ -93,14 +90,15 @@ const CreateRewardPage = () => {
       setValue('points', selectedReward?.points);
       setValue('level', selectedReward?.level);
       setValue('currency', selectedReward?.currency?.currencyName);
-      console.log(rewards.vipList);
     }
-    if(currency?.currencyList?.length) {
-      console.log(currency.currencyList);
-    }
-  },[rewards, currency]);
+  },[rewards]);
 
-  
+  useEffect(() => {
+    if(singleReward && !singleRewardLoading) {
+      navigate('/rewards');
+      dispatch(resetSingleReward());
+    }
+  },[singleReward]);
 
   return (
     <div>
