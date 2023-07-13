@@ -1,17 +1,17 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import SpinnerComponent from "../../Components/SpinnerComponent/SpinnerComponent";
-import NavbarComponent from "../../Components/NavbarComponent/NavbarComponent";
-import useRoles from "../../Hooks/useRoles";
-import PageHeadingComponent from "../../Components/PageHeadingComponent/PageHeadingComponent";
+import React, { useEffect, useLayoutEffect } from "react";
 import { Autocomplete, Box, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import CustomButtonComponent from "../../Components/CustomButtonComponent/CustomButtonComponent";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router";
+import SpinnerComponent from "../../Components/SpinnerComponent/SpinnerComponent";
+import NavbarComponent from "../../Components/NavbarComponent/NavbarComponent";
+import useRoles from "../../Hooks/useRoles";
+import PageHeadingComponent from "../../Components/PageHeadingComponent/PageHeadingComponent";
+import CustomButtonComponent from "../../Components/CustomButtonComponent/CustomButtonComponent";
 import { createReward, editReward, getCurrencyList, getRewardList } from "../../App/Features/VipClub/vipClubActions";
 import { rewardsErrorsSelector, rewardsLoadingSelector, rewardsSelector } from "../RewardsPage/Rewards.Selector";
-import { useNavigate, useParams } from "react-router";
 import { currencyErrorsSelector, currencyLoadingSelector, currencySelector, singleRewardErrorsSelector, singleRewardLoadingSelector, singleRewardSelector } from "./CreateReward.Selector";
 import { resetSingleReward } from "../../App/Features/VipClub/vipClubSlice";
 
