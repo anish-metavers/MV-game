@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useRoles from "../../Hooks/useRoles";
 import { AnimatePresence } from "framer-motion";
 import dayjs from 'dayjs';
@@ -9,6 +9,9 @@ import NavbarComponent from "../../Components/NavbarComponent/NavbarComponent";
 import TableComponent from "../../Components/TableComponent/TableComponent";
 import { ROW } from "./RewardsTable";
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { rewardsErrorsSelector, rewardsLoadingSelector, rewardsSelector } from "./Rewards.Selector";
+import { useDispatch, useSelector } from "react-redux";
+import { getRewardList } from "../../App/Features/VipClub/vipClubActions";
 
 const rewards = [
   {
@@ -160,6 +163,12 @@ const rewards = [
 const totalPages = 0;
 
 const RewardsPage = () => {
+  const dispatch = useDispatch();
+
+  const rewardsInfo = useSelector(rewardsSelector);
+  const rewardsLoading = useSelector(rewardsLoadingSelector);
+  const rewardsErrors = useSelector(rewardsErrorsSelector);
+
   const {
     userRoles: { isAdmin, isSupport, isSubAdmin, roles },
     isLoading, error
@@ -168,11 +177,21 @@ const RewardsPage = () => {
   const page = params.get('page');
   const navigate = useNavigate();
 
-  const editAccountHandler = (id) => {navigate('/edit-reward/'+id)};
+  const editAccountHandler = (id) => {navigate('/rewards/edit-reward/'+id)};
 
   const NextPageHandler = () => {};
 
   const PrevPageHandler = () => {};
+
+  useEffect(() => {
+    dispatch(getRewardList(1));
+  },[]);
+
+  useEffect(() => {
+    if(rewardsInfo){
+      console.log(rewardsInfo);
+    }
+  },[rewardsInfo, rewardsLoading]);
 
   return (
     <div>
@@ -195,26 +214,14 @@ const RewardsPage = () => {
           disableNextbtn={+page >= totalPages ? true : false}
           tableWidth={1400}
         >
-          {rewards.map((el) => (
+          {rewardsInfo?.vipList?.length && rewardsInfo.vipList.map((el) => (
               <tr key={el?._id}>
                 <td>{el?.name}</td>
-                <td>{el?.reward}</td>
-                <td>{el?.currency}</td>
+                <td>{el?.reward?.$numberDecimal}</td>
+                <td>{el?.currency?.currencyName}</td>
                 <td>{el?.amount}</td>
-                {/* <td>
-                    <div className="user_profile_div" 
-                      onClick={() => profileHandler(el?._id)}
-                    >
-                      <img src={el?.avatar} alt="" />
-                    </div>
-                </td> */}
                 <td>{el?.points}</td>
                 <td>{el?.level}</td>
-                {/* <td className={`${el?.createdBy}_cl`}>
-                    <div className="box_div shadow">
-                      <p>{el?.createdBy}</p>
-                    </div>
-                </td> */}
                 <td>{dayjs(el?.createdAt).format('DD MMMM YYYY hh:mm:ss A')}</td>
                 <td>{dayjs(el?.updatedAt).format('DD MMMM YYYY hh:mm:ss A')}</td>
                 <td>

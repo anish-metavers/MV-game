@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SpinnerComponent from "../../Components/SpinnerComponent/SpinnerComponent";
 import NavbarComponent from "../../Components/NavbarComponent/NavbarComponent";
 import useRoles from "../../Hooks/useRoles";
@@ -8,6 +8,10 @@ import { Controller, useForm } from "react-hook-form";
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomButtonComponent from "../../Components/CustomButtonComponent/CustomButtonComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { getRewardList } from "../../App/Features/VipClub/vipClubActions";
+import { rewardsErrorsSelector, rewardsLoadingSelector, rewardsSelector } from "../RewardsPage/Rewards.Selector";
+import { useParams } from "react-router";
 
 const schema = yup.object({
   title: yup.string().required('Title is reuqired'),
@@ -26,6 +30,13 @@ const currencyList = [
 ];
 
 const CreateRewardPage = () => {
+  const dispatch = useDispatch();
+  const { id } = useParams();
+
+  const rewards = useSelector(rewardsSelector);
+  const rewardsLoading = useSelector(rewardsLoadingSelector);
+  const rewardsErrors = useSelector(rewardsErrorsSelector);
+
   const {
     userRoles: { isAdmin, isSupport, isSubAdmin, roles },
     isLoading, error
@@ -47,17 +58,38 @@ const CreateRewardPage = () => {
       currency: '',
       points: '',
       level: '',
-      // userRole: 'Admin',
     },
     resolver: yupResolver(schema),
   });
 
   const createHandler = (data) => {
     const body = { ...data, userRole: isAdmin ? 'Admin' : '' };
+    if(id) {
+      body._id = id;
+      // call edit api
+    } else // call create api
     console.log(body);
   }
 
   console.log(errors)
+
+  useEffect(() => {
+    if(id && !rewards) dispatch(getRewardList(1));
+  },[]);
+
+  useEffect(() => {
+    if(rewards?.vipList?.length){
+      const selectedReward = rewards.vipList.find(vip => vip._id === id); 
+      console.log(selectedReward);
+      setValue('title', selectedReward?.name);
+      setValue('reward', selectedReward?.reward?.$numberDecimal);
+      setValue('amount', selectedReward?.amount);
+      setValue('currency', selectedReward?.currency?.currencyName);
+      setValue('points', selectedReward?.points);
+      setValue('level', selectedReward?.level);
+      console.log(selectedReward?.currency?.currencyName);
+    }
+  },[rewards, rewardsLoading, rewardsErrors]);
 
   return (
     <div>
@@ -123,6 +155,7 @@ const CreateRewardPage = () => {
                         <Autocomplete
                           disablePortal
                           id="combo-box-demo"
+                          value={value}
                           options={currencyList}
                           sx={{ width: '100%' }}
                           onSelect={onChange}
