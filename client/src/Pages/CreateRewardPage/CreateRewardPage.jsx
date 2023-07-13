@@ -94,11 +94,15 @@ const CreateRewardPage = () => {
   },[rewards]);
 
   useEffect(() => {
+    if(!id) reset();
+  },[id])
+
+  useEffect(() => {
     if(singleReward && !singleRewardLoading) {
       navigate('/rewards');
       dispatch(resetSingleReward());
     }
-  },[singleReward]);
+  },[singleReward, singleRewardLoading]);
 
   return (
     <div>
@@ -106,8 +110,8 @@ const CreateRewardPage = () => {
       <div className="container_div">
         {isLoading && <SpinnerComponent />}
         <PageHeadingComponent
-          pageName={'Create Reward'}
-          heading={'Create Reward'}
+          pageName={(id ? 'Edit':'Create') + ' Reward'}
+          heading={(id ? 'Edit':'Create') + ' Reward'}
           para={
             'Please Note: Please first manually verify player accounts by reviewing and approving required documents or identification proofs. then create the player account'
           }
