@@ -11,6 +11,7 @@ import LuckyDrawSlice from '../Features/LuckyDraw/LuckyDrawSlice';
 import userManagementSlice from '../Features/userManagement/userManagementSlice';
 import faqSlice from '../Features/Faq/faqSlice';
 import liveSupportSlice from '../Features/LiveSupport/liveSupportSlice';
+import vipClub from '../Features/VipClub/vipClubSlice';
 
 const store = configureStore({
    reducer: {
@@ -26,6 +27,7 @@ const store = configureStore({
       userManagement: userManagementSlice,
       faq: faqSlice,
       liveSupport: liveSupportSlice,
+      vipClub,
    },
    middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

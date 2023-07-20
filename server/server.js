@@ -67,6 +67,7 @@ const userManagementRoute = require('./routes/userManagementRoute');
 const faqRoute = require('./routes/faqRoute');
 const liveSupportRoute = require('./routes/liveSupportRoute');
 const authRoute = require('./routes/authRouter');
+const vipClubRoute = require('./routes/vipClubRoute');
 
 app.use('/auth', authRoute);
 app.use('/admin', adminRoute);
@@ -82,6 +83,7 @@ app.use('/media', mediaRoute);
 app.use('/userManagement', userManagementRoute);
 app.use('/faq', faqRoute);
 app.use('/support', liveSupportRoute);
+app.use('/vip-club', vipClubRoute);
 
 // for build file
 app.get('*', (req, res) => {

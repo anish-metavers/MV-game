@@ -190,5 +190,5 @@ module.exports = {
    checkIsValidId,
    genrateAccessToken,
    genrateRefreshToken,
-   jwtRefreshTokenVarification,
+   jwtRefreshTokenVarification
 };
