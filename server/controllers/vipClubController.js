@@ -11,9 +11,10 @@ const insertVipClub = catchAsync(async function (req, res, next) {
          return res.status(httpStatusCodes.NOT_ACCEPTABLE).json({
             success: false,
             error: true,
-            message: `reward with this details already exists`
-         })
+            message: `reward with this details already exists`,
+         });
       }
+
       createVipClub = await vipClubModel.create({
          userRole,
          reward,
@@ -21,22 +22,21 @@ const insertVipClub = catchAsync(async function (req, res, next) {
          amount,
          points,
          name,
-         level
-      })
+         level,
+      });
       res.status(httpStatusCodes.CREATED).json({
          success: true,
          error: false,
          message: `vip club created successfully`,
-         data: createVipClub
-      })
+         data: createVipClub,
+      });
    }
    return res.status(httpStatusCodes.NOT_ACCEPTABLE).json({
       success: false,
       error: true,
-      message: `User role is not admin`
-   })
-
-})
+      message: `User role is not admin`,
+   });
+});
 
 const findAllVipClub = catchAsync(async function (req, res, next) {
    const page = +req.query.page || 1;
@@ -76,17 +76,16 @@ const findAllVipClub = catchAsync(async function (req, res, next) {
       filter.level = level;
    }
 
-   const vipList = await vipClubModel.find(filter).populate("currency", "currencyName")
-      .skip(skip)
-      .limit(perPage)
-      .sort({ updatedAt: -1 })
-      .exec();
+   const vipList = await vipClubModel.find(filter).populate('currency', 'currencyName').skip(skip).limit(perPage).sort({ updatedAt: -1 }).exec();
 
    if (findAllVipClub) {
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
-         vipList, currentPage: page, perPage: perPage, totalPage
+         vipList,
+         currentPage: page,
+         perPage: perPage,
+         totalPage,
       });
    }
    return res.status(httpStatusCodes.NOT_FOUND).json({
@@ -94,39 +93,41 @@ const findAllVipClub = catchAsync(async function (req, res, next) {
       error: true,
       message: 'Not found',
    });
-})
+});
 
 const updateVipClub = catchAsync(async function (req, res, next) {
    const id = req.params.id;
    const { userRole, reward, currency, amount, points, name, level } = req.body;
    if (userRole == 'Admin' && id) {
-      const findAllVipClub = await vipClubModel.findOneAndUpdate(
-         { _id: id },
-         {
-            amount: amount,
-            points: points,
-            name: name,
-            level: level,
-            reward: reward,
-            currency: currency,
-            userRole: userRole
-         },
-         {new: true}
-      ).lean();
+      const findAllVipClub = await vipClubModel
+         .findOneAndUpdate(
+            { _id: id },
+            {
+               amount: amount,
+               points: points,
+               name: name,
+               level: level,
+               reward: reward,
+               currency: currency,
+               userRole: userRole,
+            },
+            { new: true },
+         )
+         .lean();
       console.log(findAllVipClub);
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
-         message: "Updated successfully",
-         data: findAllVipClub
+         message: 'Updated successfully',
+         data: findAllVipClub,
       });
    }
    return res.status(httpStatusCodes.NOT_ACCEPTABLE).json({
       success: false,
       error: true,
-      message: `User role is not admin`
-   })
-})
+      message: `User role is not admin`,
+   });
+});
 
 const findOneVipClub = catchAsync(async function (req, res, next) {
    const id = req.params.id;
@@ -135,15 +136,15 @@ const findOneVipClub = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
-         data: { findOne }
+         data: { findOne },
       });
    }
    return res.status(httpStatusCodes.NOT_ACCEPTABLE).json({
       success: false,
       error: true,
-      message: `Invalid objectid.!!`
-   })
-})
+      message: `Invalid objectid.!!`,
+   });
+});
 
 const deleteVipClub = catchAsync(async function (req, res, next) {
    const id = req.params.id;
@@ -152,14 +153,15 @@ const deleteVipClub = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
-         message: "Deleted successfully"
+         message: 'Deleted successfully',
       });
-   } return res.status(httpStatusCodes.NOT_ACCEPTABLE).json({
+   }
+   return res.status(httpStatusCodes.NOT_ACCEPTABLE).json({
       success: false,
       error: true,
-      message: `Invalid objectid.!!`
-   })
-})
+      message: `Invalid objectid.!!`,
+   });
+});
 
 const currencyList = catchAsync(async function (req, res, next) {
    const list = await currencyModel.find({}).lean();
@@ -172,7 +174,7 @@ const currencyList = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.OK).json({
          success: true,
          error: false,
-         currencyList
+         currencyList,
       });
    }
    return res.status(httpStatusCodes.NOT_FOUND).json({
@@ -180,7 +182,7 @@ const currencyList = catchAsync(async function (req, res, next) {
       error: true,
       message: 'Not found',
    });
-})
+});
 
 module.exports = {
    insertVipClub,
@@ -188,5 +190,5 @@ module.exports = {
    updateVipClub,
    findOneVipClub,
    deleteVipClub,
-   currencyList
+   currencyList,
 };
