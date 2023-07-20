@@ -18,7 +18,7 @@ app.disable('x-powered-by');
 app.use(
    cors({
       origin: '*',
-   })
+   }),
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -30,7 +30,7 @@ app.use(
       directives: {
          'img-src': ["'self'", 'https: data:'],
       },
-   })
+   }),
 );
 app.use(express.static(path.join(path.resolve(__dirname), 'build')));
 
@@ -41,7 +41,7 @@ app.use(function (req, res, next) {
    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
    res.setHeader(
       'Access-Control-Allow-Headers',
-      'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers'
+      'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers',
    );
    next();
 });

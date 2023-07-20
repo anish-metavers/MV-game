@@ -177,10 +177,7 @@ const updatedUserQuery = catchAsync(async function (req, res, next) {
    }
 
    // check query is already rejected or not.
-   const checkQueryIsRejected = await liveSupportModel.findOne(
-      { _id: queryId },
-      { [approvedBy ? 'approvedBy' : 'rejectedBy']: 1 }
-   );
+   const checkQueryIsRejected = await liveSupportModel.findOne({ _id: queryId }, { [approvedBy ? 'approvedBy' : 'rejectedBy']: 1 });
 
    if (checkQueryIsRejected?.rejectedBy || checkQueryIsRejected?.approvedBy) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
@@ -212,7 +209,7 @@ const updatedUserQuery = catchAsync(async function (req, res, next) {
       // push new document inside the exists document.
       const updateActivityDocument = await supportActivityModel.updateOne(
          { supportTeamUserId: approvedBy ? approvedBy : rejectedBy },
-         { $push: updatedObject }
+         { $push: updatedObject },
       );
 
       if (!updateActivityDocument) {
@@ -222,9 +219,7 @@ const updatedUserQuery = catchAsync(async function (req, res, next) {
       // create new support activity document.
       const newActivityDoc = await supportActivityModel({
          supportTeamUserId: approvedBy ? approvedBy : rejectedBy,
-         [approvedBy ? 'approved' : 'rejection']: [
-            { userId: queryId, rejectionReason: approvedBy ? null : rejectionReason },
-         ],
+         [approvedBy ? 'approved' : 'rejection']: [{ userId: queryId, rejectionReason: approvedBy ? null : rejectionReason }],
       }).save();
 
       if (!newActivityDoc) {
@@ -280,9 +275,7 @@ const updateUserQueryFeedBack = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: `${
-            (!isValidId && 'Query') || (!isValidIdSuportTeamId && 'Suport team user')
-         } id is not valid id please check.`,
+         message: `${(!isValidId && 'Query') || (!isValidIdSuportTeamId && 'Suport team user')} id is not valid id please check.`,
       });
    }
 
@@ -389,9 +382,7 @@ const getSupportTeamActivities = catchAsync(async function (req, res, next) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
          success: false,
          error: true,
-         message: `${
-            (!supportTeamUserId && 'support team user id is reuqired') || (!filterBy && 'Filter is reuqired')
-         } `,
+         message: `${(!supportTeamUserId && 'support team user id is reuqired') || (!filterBy && 'Filter is reuqired')} `,
       });
    }
 
