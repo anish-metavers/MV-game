@@ -10,11 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import CheckBoxComponent from '../CheckBoxComponent/CheckBoxComponent';
 import CustomButtonComponent from '../../Components/CustomButtonComponent/CustomButtonComponent';
 import { useDispatch } from 'react-redux';
-import {
-   createNewPaymentOptionField,
-   getSinglePaymentOptionField,
-   updatePaymentOptionField,
-} from '../../App/Features/Payment/paymentActions';
+import { createNewPaymentOptionField, getSinglePaymentOptionField, updatePaymentOptionField } from '../../App/Features/Payment/paymentActions';
 import useRoles from '../../Hooks/useRoles';
 import { message } from 'antd';
 import { useParams } from 'react-router';
@@ -44,14 +40,13 @@ function CreatePaymentFieldsPage() {
          fieldType: '',
          hide: false,
          readOnly: false,
+         validation: '',
       },
       resolver: yupResolver(Schema),
    });
    const dispatch = useDispatch();
    const {
-      userRoles: { isAdmin, isSupport },
-      isLoading,
-      error,
+      userRoles: { isAdmin },
    } = useRoles();
    const [loading, setLoading] = useState(false);
    const params = useParams();
@@ -136,9 +131,7 @@ function CreatePaymentFieldsPage() {
                                  />
                               )}
                            />
-                           {!!errors && errors?.label && errors?.label?.message && (
-                              <p className="text-sm error_cl">{errors?.label?.message}</p>
-                           )}
+                           {!!errors && errors?.label && errors?.label?.message && <p className="text-sm error_cl">{errors?.label?.message}</p>}
                         </div>
                         <div className="w-full">
                            <Controller
@@ -165,14 +158,7 @@ function CreatePaymentFieldsPage() {
                               name="fieldType"
                               control={control}
                               render={({ field: { onChange, value } }) => (
-                                 <TextField
-                                    value={value}
-                                    onChange={onChange}
-                                    className="w-full"
-                                    select
-                                    required
-                                    label="Field type"
-                                 >
+                                 <TextField value={value} onChange={onChange} className="w-full" select required label="Field type">
                                     {currencies.map((option) => (
                                        <MenuItem key={option.value} value={option.value}>
                                           {option.label}
@@ -185,22 +171,32 @@ function CreatePaymentFieldsPage() {
                               <p className="text-sm error_cl">{errors?.fieldType?.message}</p>
                            )}
                         </div>
+                        <div className="w-full">
+                           <Controller
+                              name="validation"
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                 <TextField
+                                    value={value}
+                                    onChange={onChange}
+                                    label="validation"
+                                    variant="outlined"
+                                    className="w-full"
+                                    type={'text'}
+                                    required
+                                 />
+                              )}
+                           />
+                           {!!errors && errors?.validation && errors?.validation?.message && (
+                              <p className="text-sm error_cl">{errors?.validation?.message}</p>
+                           )}
+                        </div>
                      </div>
                      <CheckBoxComponent heading={'Field hide'} name="hide" control={control} Controller={Controller} />
-                     <CheckBoxComponent
-                        heading={'Field read only'}
-                        name="readOnly"
-                        control={control}
-                        Controller={Controller}
-                     />
+                     <CheckBoxComponent heading={'Field read only'} name="readOnly" control={control} Controller={Controller} />
                   </Box>
                   <div className="flex mt-4">
-                     <CustomButtonComponent
-                        type={'submit'}
-                        text={editId ? 'Update' : 'Save'}
-                        btnCl={'Publish'}
-                        isLoading={loading}
-                     />
+                     <CustomButtonComponent type={'submit'} text={editId ? 'Update' : 'Save'} btnCl={'Publish'} isLoading={loading} />
                   </div>
                </form>
             </div>

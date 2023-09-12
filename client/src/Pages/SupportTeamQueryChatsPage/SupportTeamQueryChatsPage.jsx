@@ -47,10 +47,7 @@ function SupportTeamQueryChatsPage() {
             <div className="mt-4">
                {!!supportTeamConversionLoading && <SpinnerComponent />}
                {!!supportTeamConversionError && <p className="error_cl text-sm">{supportTeamConversionError}</p>}
-               {!!supportTeamConversion &&
-               supportTeamConversion?.success &&
-               !!supportTeamConversion?.items &&
-               supportTeamConversion?.items.length
+               {!!supportTeamConversion && supportTeamConversion?.success && !!supportTeamConversion?.items && supportTeamConversion?.items.length
                   ? supportTeamConversion?.items.map((el) => (
                        <div className="content my-5" key={el?._id}>
                           <div className="msg_div flex items-center space-x-3">

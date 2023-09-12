@@ -22,18 +22,12 @@ router.post(
    varifyJwtToken,
    validatePaymentOptions,
    upload.single('image'),
-   paymentController.insertNewCurrencyPaymentOption
+   paymentController.insertNewCurrencyPaymentOption,
 );
-router.post('/create-new-payment-options-filed', varifyJwtToken, paymentController.createNewPaymentOptionField);
+router.post('/create-new-payment-options', varifyJwtToken, paymentController.createNewPaymentOptionField);
 
 // API => PATCH
-router.patch(
-   '/update-single-payment-option',
-   varifyJwtToken,
-   validatePaymentOptions,
-   upload.single('image'),
-   paymentController.updatePaymentOption
-);
+router.patch('/update-single-payment-option', varifyJwtToken, validatePaymentOptions, upload.single('image'), paymentController.updatePaymentOption);
 router.patch('/update-single-payment-option-field', varifyJwtToken, paymentController.updatePaymentOptionField);
 router.patch('/update-fiat-withdraw-transaction', varifyJwtToken, paymentController.updateFiatWithdrawTransaction);
 

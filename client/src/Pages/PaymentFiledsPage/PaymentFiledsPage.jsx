@@ -7,11 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import useRoles from '../../Hooks/useRoles';
 import { deletePaymentOptionsFiled, getAllPaymentOptionFields } from '../../App/Features/Payment/paymentActions';
-import {
-   paymentOptionsFieldsSelector,
-   paymentOptionsFieldsLoadingSelector,
-   paymentOptionsFieldsErrorSelector,
-} from './PaymentFields.Selector';
+import { paymentOptionsFieldsSelector, paymentOptionsFieldsLoadingSelector, paymentOptionsFieldsErrorSelector } from './PaymentFields.Selector';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import TableComponent from '../../Components/TableComponent/TableComponent';
 import dayjs from 'dayjs';
@@ -32,9 +28,7 @@ const ROW = [
 function PaymentFiledsPage() {
    const navigation = useNavigate();
    const {
-      userRoles: { isAdmin, isSupport },
-      isLoading,
-      error,
+      userRoles: { isAdmin },
    } = useRoles();
    const dispatch = useDispatch();
    const [Page, setPage] = useState(0);

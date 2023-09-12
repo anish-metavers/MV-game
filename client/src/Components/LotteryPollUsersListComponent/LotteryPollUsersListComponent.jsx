@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as styled from './LotteryPollUsersListComponent.style';
-import {
-   singleLotteryPollUsersSelector,
-   singleLotteryPollUsersLoadingSelector,
-   singleLotteryPollUsersErrorSelector,
-} from './LotteryPoll.Selector';
+import { singleLotteryPollUsersSelector, singleLotteryPollUsersLoadingSelector, singleLotteryPollUsersErrorSelector } from './LotteryPoll.Selector';
 import { useDispatch, useSelector } from 'react-redux';
 import SpinnerComponent from '../SpinnerComponent/SpinnerComponent';
 import UserTicketListComponent from '../UserTicketListComponent/UserTicketListComponent';
@@ -56,7 +52,7 @@ function LotteryPollUsersListComponent({ filter }) {
                gameId: id,
                filter: filter,
                page: Page,
-            })
+            }),
          );
       }
    }, [isAdmin, Page]);

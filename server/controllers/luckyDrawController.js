@@ -312,7 +312,7 @@ const updateLuckyDrawPollResult = catchAsync(async function (req, res, next) {
                jackpotBallNumber: jackpotBall,
             },
          },
-      }
+      },
    );
 
    if (findAndUpdateResult?.modifiedCount) {

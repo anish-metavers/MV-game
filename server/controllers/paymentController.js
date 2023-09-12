@@ -232,7 +232,7 @@ const updatePaymentOption = catchAsync(async function (req, res, next) {
             icon,
             paymentFields: selectedFields,
          },
-      }
+      },
    );
 
    if (!!findDocumentAndUpdate.modifiedCount) {
@@ -674,7 +674,7 @@ const updateFiatWithdrawTransaction = catchAsync(async function (req, res, next)
                paymentApprovedBy: actionUserId,
                status: 'COMPLETED',
             },
-         }
+         },
       );
 
       if (findDocumentAndUpdate.modifiedCount) {

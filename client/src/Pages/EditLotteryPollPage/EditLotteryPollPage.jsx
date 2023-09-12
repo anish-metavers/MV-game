@@ -5,12 +5,7 @@ import PageHeadingComponent from '../../Components/PageHeadingComponent/PageHead
 import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import useRoles from '../../Hooks/useRoles';
-import {
-   authSelector,
-   singleLotteryPollSelector,
-   singleLotteryPollLoadingSelector,
-   singleLotteryPollErrorSelector,
-} from './EditLottery.Selector';
+import { authSelector, singleLotteryPollSelector, singleLotteryPollLoadingSelector, singleLotteryPollErrorSelector } from './EditLottery.Selector';
 import { getSingleLuckyDrawPoll } from '../../App/Features/LuckyDraw/LuckyDrawActions';
 import SpinnerComponent from '../../Components/SpinnerComponent/SpinnerComponent';
 import dayjs from 'dayjs';
@@ -20,9 +15,7 @@ import LotteryParticipateUserGraphComponent from '../../Components/LotteryPartic
 
 function EditLotteryPollPage() {
    const {
-      userRoles: { isAdmin, isSupport },
-      isLoading,
-      error,
+      userRoles: { isAdmin },
    } = useRoles();
 
    const params = useParams();
@@ -105,17 +98,13 @@ function EditLotteryPollPage() {
                            <div className="hd">
                               <h5 className="text-gray-100 font-medium">Lottery poll result show</h5>
                            </div>
-                           <p className="text-gray-300 font-semibold">
-                              {singleLotteryPoll?.item?.lotteryPollResultShow ? 'Yes' : 'No'}
-                           </p>
+                           <p className="text-gray-300 font-semibold">{singleLotteryPoll?.item?.lotteryPollResultShow ? 'Yes' : 'No'}</p>
                         </div>
                         <div className="box_div space-x-2">
                            <div className="hd">
                               <h5 className="text-gray-100 font-medium">Lottery poll created time</h5>
                            </div>
-                           <p className="text-gray-300 font-semibold">
-                              {dayjs(singleLotteryPoll?.item?.createdAt).format('MMM DD hh:mm:ss A')}
-                           </p>
+                           <p className="text-gray-300 font-semibold">{dayjs(singleLotteryPoll?.item?.createdAt).format('MMM DD hh:mm:ss A')}</p>
                         </div>
                      </div>
                      <div className="pt-5 pb-3">
